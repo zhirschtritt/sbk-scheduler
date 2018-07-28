@@ -36,7 +36,6 @@
     "bluebird": "^3.5.1",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
-    "drive-db": "^4.1.0",
     "google-spreadsheet": "^2.0.5",
     "helmet": "^3.13.0",
     "moment": "^2.22.2",

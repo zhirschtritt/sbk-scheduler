@@ -3,7 +3,6 @@ const createService = require('./term.class.js');
 const hooks = require('./term.hooks');
 
 module.exports = function (app) {
-  
   const termLength = app.get('termLength');
   const paginate = app.get('paginate');
 
