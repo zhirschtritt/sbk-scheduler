@@ -36,6 +36,7 @@
     "bluebird": "^3.5.1",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
+    "feathers-swagger": "^0.7.2",
     "google-spreadsheet": "^2.0.5",
     "helmet": "^3.13.0",
     "moment": "^2.22.2",

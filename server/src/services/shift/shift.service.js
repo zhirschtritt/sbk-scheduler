@@ -15,10 +15,10 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/shifts', createService(options));
+  app.use('/api/shifts', createService(options));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('shifts');
+  const service = app.service('api/shifts');
 
   service.hooks(hooks);
 };

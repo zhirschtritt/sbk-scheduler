@@ -28,7 +28,7 @@ class Service {
     return allTerms
       .map((term) => {
         return {
-          id: term.id,
+          id: Number(term.id),
           start: term.start,
           end: term.end
         };
@@ -43,7 +43,7 @@ class Service {
     }); 
 
     return {
-      id: term[0].id,
+      id: Number(term[0].id),
       start: term[0].start,
       end: term[0].end
     };
