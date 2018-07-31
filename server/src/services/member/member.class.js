@@ -1,21 +1,46 @@
 /* eslint-disable no-unused-vars */
-class Service {
-  constructor (options) {
-    this.options = options || {};
-  }
+const moment = require('moment');
 
-  setup(app) {
-    this.drive = app.get('driveClient');
+class Service {
+  constructor ({sheets}) {
+    this.sheets = sheets;
+  }
+  
+  async getSheets () {
+    const sheets = await this.sheets.getInfoAsync();
+    let membersSheet = sheets.worksheets.filter((sheet) => sheet.title === 'Members');
+    return {
+      membersSheet: Promise.promisifyAll(membersSheet[0]),
+      sheetId: membersSheet.id
+    };
   }
 
   async find (params) {
-    return [];
+    const { membersSheet } = await this.getSheets();
+
+    const allMembers =  await membersSheet.getRowsAsync();
+    
+    return allMembers
+      .map((member) => {
+        return {
+          id: Number(member.id),
+          name: member.name
+        };
+      });
   }
 
   async get (id, params) {
+    const { membersSheet } = await this.getSheets();
+
+    const member =  await membersSheet.getRowsAsync({
+      query: `id = ${id}`
+    });
+    
     return {
-      id, text: `A new message with ID: ${id}!`
+      id: Number(member[0].id),
+      name: member[0].name
     };
+
   }
 
   async create (data, params) {

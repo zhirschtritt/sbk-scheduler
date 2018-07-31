@@ -5,9 +5,11 @@ const hooks = require('./member.hooks');
 module.exports = function (app) {
   
   const paginate = app.get('paginate');
+  const sheets = app.get('sheetsClient');
 
   const options = {
-    paginate
+    paginate,
+    sheets
   };
 
   const members = createService(options);
