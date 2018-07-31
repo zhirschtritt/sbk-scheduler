@@ -1,0 +1,45 @@
+{
+  "title": "shift",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number",
+      "title": "ID",
+      "default": 0,
+      "example": 12
+    },
+    "date": {
+      "type": "string",
+      "title": "Date of shift",
+      "default": "",
+      "example": "2018-02-04",
+      "pattern": "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$"
+    },
+    "primary_staff": {
+      "type": "string",
+      "title": "Primary staff Member",
+      "default": "",
+      "example": "Jessie"
+      
+    },
+    "secondary_staff": {
+      "type": "string",
+      "title": "Secondary staff Member",
+      "default": "",
+      "example": "Sue"
+    },
+    "fulfilled": {
+      "type": "number",
+      "title": "Is shift covered by staff member",
+      "default": 0,
+      "examples": [
+        1, 0, true, false
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "date",
+    "primary_staff"
+  ]
+}

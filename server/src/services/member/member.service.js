@@ -10,8 +10,24 @@ module.exports = function (app) {
     paginate
   };
 
-  // Initialize our service with any options it requires
-  app.use('/api/members', createService(options));
+  const members = createService(options);
+  
+  members.docs = {
+    find: {
+      parameters: [
+        {
+          description: 'Property to query results',
+          in: 'query',
+          name: '$search',
+          type: 'string'
+        }
+      ]
+    },
+    definitions: {
+      member: require('./member.schema')
+    }
+  };
+  app.use('/api/members', members);
 
   // Get our initialized service so that we can register hooks
   const service = app.service('api/members');
