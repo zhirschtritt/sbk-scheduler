@@ -1,7 +1,7 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import feathersVuex from "feathers-vuex";
-import feathersClient from "./feathersClient";
+import Vue from 'vue';
+import Vuex from 'vuex';
+import feathersVuex from 'feathers-vuex';
+import feathersClient from './feathersClient';
 
 const { service } = feathersVuex(feathersClient);
 
@@ -12,7 +12,8 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   plugins: [
-    service("shifts"), 
-    service("memebers"), 
-    service("terms")]
+    service('shifts'),
+    service('members'),
+    service('terms'),
+  ],
 });

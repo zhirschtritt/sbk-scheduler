@@ -62,16 +62,37 @@ class Service {
     if (Array.isArray(data)) {
       return Promise.all(data.map(current => this.create(current, params)));
     }
-
     return data;
   }
 
   async update (id, data, params) {
-    return data;
+    if (Array.isArray(data)) {
+      return Promise.all(data.map(current => this.update(current, params)));
+    }
+    return {id};
   }
 
   async patch (id, data, params) {
-    return data;
+    const { shiftsSheet } = await this.getSheets();
+
+    const [ originalShift ] = await shiftsSheet.getRowsAsync({
+      query: `id = ${id}`
+    });
+
+    const newShift = {
+      primarystaff: data.primary_staff,
+      secondarystaff: data.secondary_staff,
+    };
+
+    Object.assign(originalShift, newShift);
+
+    try { 
+      originalShift.save();
+    } catch (err) {
+      return new Error(err);
+    }
+
+    return originalShift;
   }
 
   async remove (id, params) {

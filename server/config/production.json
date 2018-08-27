@@ -1,4 +1,4 @@
 {
-  "host": "sbk-schedule-app.feathersjs.com",
+  "host": "HOST",
   "port": "PORT"
 }

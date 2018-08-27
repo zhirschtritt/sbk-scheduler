@@ -18,7 +18,7 @@ class Service {
   async find (params) {
     const { membersSheet } = await this.getSheets();
 
-    const allMembers =  await membersSheet.getRowsAsync();
+    const allMembers = await membersSheet.getRowsAsync();
     
     return allMembers
       .map((member) => {

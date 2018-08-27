@@ -34,10 +34,10 @@ module.exports = function (app) {
       term: require('./term.schema')
     }
   };
-  app.use('/api/terms', terms);
+  app.use('/terms', terms);
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('api/terms');
+  const service = app.service('terms');
 
   service.hooks(hooks);
 };

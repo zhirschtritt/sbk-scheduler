@@ -29,10 +29,10 @@ module.exports = function (app) {
       member: require('./member.schema')
     }
   };
-  app.use('/api/members', members);
+  app.use('/members', members);
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('api/members');
+  const service = app.service('members');
 
   service.hooks(hooks);
 };

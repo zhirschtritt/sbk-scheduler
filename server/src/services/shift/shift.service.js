@@ -50,10 +50,10 @@ module.exports = function (app) {
       shift: require('./shift.schema')
     }
   };
-  app.use('/api/shifts', shifts);
+  app.use('/shifts', shifts);
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('api/shifts');
+  const service = app.service('shifts');
 
   service.hooks(hooks);
 };

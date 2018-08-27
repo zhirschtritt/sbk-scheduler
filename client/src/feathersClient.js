@@ -3,7 +3,7 @@ import rest from '@feathersjs/rest-client';
 import feathers from '@feathersjs/feathers';
 
 const app = feathers();
-const restClient = rest();
+const restClient = rest('http://localhost:3030');
 app.configure(restClient.axios(axios));
 
-module.exports = app;
+export default app;

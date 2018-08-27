@@ -1,4 +1,4 @@
-global.Promise=require('bluebird');
+global.Promise = require('bluebird');
 
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -35,7 +35,6 @@ app.configure(express.rest());
 app.configure(swagger({
   docsPath: '/swagger',
   uiIndex: path.join(__dirname, 'docs.html'),
-  prefix: /api\//,
   info: {
     title: 'SBK Scheduler',
     description: 'Terms, Shifts, Members'
