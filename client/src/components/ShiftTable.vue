@@ -16,6 +16,7 @@
       :items="shifts"
       hide-actions
       flat
+      :loading="areShiftsLoading"
     >
       <template
         slot="items"
@@ -71,7 +72,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
 
@@ -94,20 +95,10 @@ export default {
       return this.findMembersInStore().data;
     },
   },
-  created() {
-    this.initialize();
-  },
 
   methods: {
-    ...mapActions('shifts', { findShifts: 'find' }),
-    ...mapActions('members', { findMembers: 'find' }),
-    initialize() {
-      this.findShifts();
-      this.findMembers();
-    },
     setNewStaff(memberName, shift, staffLevel) {
       const updateShift = shift.clone();
-
       // TODO: clean up
       // If primary staff position not filled, save as primary staff
       if (staffLevel === 'primary') {

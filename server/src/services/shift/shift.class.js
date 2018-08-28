@@ -18,16 +18,23 @@ class Service {
   }
 
   async find (params) {
-    const todayishString = moment()
-      .subtract(this.termLength - 1, 'days').format('YYYY-MM-DD');
-    let query = `date >= ${todayishString}`;
+    const todayishString = moment().subtract(this.termLength - 1, 'days').format('YYYY-MM-DD');
+
+    const { start, end } = params.query;
+
+    let query;
+
+    if (start && end) {
+      query = `date >= ${start} && date <= ${end}`;
+    } else {
+      query = `date >= ${todayishString}`;
+    }
 
     const { shiftsSheet } = await this.getSheets();
 
     const allShifts =  await shiftsSheet.getRowsAsync({
       query,
-      limit: 100,
-      skip: params.query.skip
+      limit: 90,
     });
     
     return allShifts

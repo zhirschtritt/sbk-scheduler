@@ -21,7 +21,7 @@ class Service {
     const { termsSheet } = await this.getSheets();
     const todayishString = moment().subtract(this.termLength - 1, 'days').format('YYYY-MM-DD');
 
-    const allTerms =  await termsSheet.getRowsAsync({
+    const allTerms = await termsSheet.getRowsAsync({
       query: `start >= ${todayishString}`
     });
 

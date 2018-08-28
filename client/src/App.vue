@@ -9,13 +9,26 @@
     </v-toolbar>
     <v-content>
       <v-container
-        fluid
-        fill-height
-        class="grey lighten-4">
+        grid-list-md
+        fluid>
         <v-layout
-          justify-center
-          align-center>
-          <ShiftTable/>
+          row
+          wrap>
+          <v-flex
+            xs12
+          >
+            <TermSelector/>
+          </v-flex>
+          <v-flex
+            xs12
+            sm6>
+            <MemberTable/>
+          </v-flex>
+          <v-flex
+            xs12
+            sm6>
+            <ShiftTable/>
+          </v-flex>
         </v-layout>
       </v-container>
     </v-content>
@@ -23,12 +36,31 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import ShiftTable from './components/ShiftTable.vue';
+import MemberTable from './components/MemberTable.vue';
+import TermSelector from './components/TermSelector.vue';
 
 export default {
   name: 'App',
   components: {
     ShiftTable,
+    MemberTable,
+    TermSelector,
+  },
+  created() {
+    this.initialize();
+  },
+  methods: {
+    ...mapActions('shifts', { findShifts: 'find' }),
+    ...mapActions('members', { findMembers: 'find' }),
+    ...mapActions('terms', { findTerms: 'find' }),
+
+    async initialize() {
+      await this.findTerms();
+      this.findShifts();
+      this.findMembers();
+    },
   },
 };
 </script>
