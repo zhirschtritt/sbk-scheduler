@@ -16,6 +16,7 @@
       :items="members"
       hide-actions
       flat
+      dense
       :loading="areMembersLoading"
     >
       <template

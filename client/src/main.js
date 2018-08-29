@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import colors from 'vuetify/es5/util/colors';
+import 'vuetify/dist/vuetify.min.css';
 import App from './App.vue';
 import store from './store';
 

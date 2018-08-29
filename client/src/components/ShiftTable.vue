@@ -4,11 +4,6 @@
       flat
       color="white">
       <v-toolbar-title>Volunteer Schedule</v-toolbar-title>
-      <v-divider
-        class="mx-2"
-        inset
-        vertical
-      />
       <v-spacer/>
     </v-toolbar>
     <v-data-table
@@ -16,6 +11,7 @@
       :items="shifts"
       hide-actions
       flat
+      dense
       :loading="areShiftsLoading"
     >
       <template
@@ -29,7 +25,9 @@
           <v-menu>
             <v-btn
               flat
-              slot="activator">{{ props.item.primary_staff }}</v-btn>
+              slot="activator">
+              {{ props.item.primary_staff }}
+            </v-btn>
             <v-list dense>
               <v-list-tile
                 @click="setNewStaff('', props.item, 'primary')">
@@ -88,6 +86,7 @@ export default {
     ...mapState('shifts', { areShiftsLoading: 'isFindPending' }),
     ...mapGetters('shifts', { findShiftsInStore: 'find' }),
     ...mapGetters('members', { findMembersInStore: 'find' }),
+
     shifts() {
       return this.findShiftsInStore().data;
     },

@@ -10,22 +10,18 @@
       max-width="200px"
       return-object
       :value="getCurrentTerm"
-      @input="setCurrentTerm"
+      @input="updateSelectedTerm"
     />
   </v-flex>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   computed: {
     ...mapGetters('terms', { findTermsInStore: 'find' }),
     ...mapGetters('terms', { getCurrentTerm: 'current' }),
-
-    selectedTerm() {
-      return this.getCurrentTerm();
-    },
 
     terms() {
       const terms = this.findTermsInStore().data;
@@ -37,15 +33,18 @@ export default {
     },
   },
 
-  created() {
-    this.initialize();
-  },
-
   methods: {
     ...mapMutations('terms', { setCurrentTerm: 'setCurrent' }),
+    ...mapMutations('shifts', { clearAllShifts: 'clearAll' }),
+    ...mapActions('shifts', { findShifts: 'find' }),
 
-    initialize() {
-      this.setCurrentTerm(1);
+    updateSelectedTerm(term) {
+      this.setCurrentTerm(term);
+
+      const { start, end } = this.getCurrentTerm;
+
+      this.clearAllShifts();
+      this.findShifts({ query: { start, end } });
     },
   },
 };
