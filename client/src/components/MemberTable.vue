@@ -1,14 +1,7 @@
 <template>
   <div>
-    <v-toolbar
-      flat
-      color="white">
+    <v-toolbar flat>
       <v-toolbar-title>Members</v-toolbar-title>
-      <v-divider
-        class="mx-2"
-        inset
-        vertical
-      />
       <v-spacer/>
     </v-toolbar>
     <v-data-table
@@ -24,9 +17,20 @@
         slot-scope="props"
       >
         <td>{{ props.item.name | capitalize }}</td>
+        <td>
+          <v-chip
+            label
+            outline
+            color="primary"
+            :key="shift.id"
+            v-for="shift in shiftsForMember(props.item.name)"
+          >
+            {{ shift.date }}
+          </v-chip>
+        </td>
       </template>
       <template slot="no-data">
-        No data
+        Loading...
       </template>
     </v-data-table>
   </div>
@@ -46,6 +50,7 @@ export default {
   data: () => ({
     headers: [
       { text: 'Member', value: 'name' },
+      { text: 'ShiftDates', sortable: false },
     ],
   }),
 
@@ -53,19 +58,21 @@ export default {
     ...mapState('members', { areMembersLoading: 'isFindPending' }),
     ...mapGetters('shifts', { findShiftsInStore: 'find' }),
     ...mapGetters('members', { findMembersInStore: 'find' }),
-    shifts() {
-      return this.findShiftsInStore().data;
-    },
+
     members() {
       return this.findMembersInStore().data;
     },
   },
-  created() {
-    // this.initialize();
-  },
 
   methods: {
-    initialize() {
+    shiftsForMember(memberName) {
+      const query = {
+        $or: [
+          { primary_staff: memberName },
+          { secondary_staff: memberName },
+        ],
+      };
+      return this.findShiftsInStore({ query }).data;
     },
 
   },

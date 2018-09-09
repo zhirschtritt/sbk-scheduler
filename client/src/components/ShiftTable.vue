@@ -2,7 +2,7 @@
   <div>
     <v-toolbar
       flat
-      color="white">
+    >
       <v-toolbar-title>Volunteer Schedule</v-toolbar-title>
       <v-spacer/>
     </v-toolbar>
@@ -19,51 +19,25 @@
         slot-scope="props"
       >
         <td>{{ props.item.date }}</td>
-        <td
-          class="text-xs-right"
-        >
-          <v-menu>
-            <v-btn
-              flat
-              slot="activator">
-              {{ props.item.primary_staff }}
-            </v-btn>
-            <v-list dense>
-              <v-list-tile
-                @click="setNewStaff('', props.item, 'primary')">
-                Clear</v-list-tile>
-              <v-divider/>
-              <v-list-tile
-                v-for="(member, i) in members"
-                :key="i"
-                @click="setNewStaff(member.name, props.item, 'primary')">
-                <v-list-tile-title>{{ member.name }}</v-list-tile-title>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
+        <td>
+          <MemberSelector
+            :shift="props.item"
+            :members="members"
+            :set-new-staff="setNewStaff"
+            :primary="true"
+          />
         </td>
-        <td class="text-xs-right">
-          <v-menu>
-            <v-btn
-              flat
-              slot="activator">{{ props.item.secondary_staff }}</v-btn>
-            <v-list dense>
-              <v-list-tile
-                @click="setNewStaff('', props.item, 'secondary')">
-                Clear</v-list-tile>
-              <v-divider/>
-              <v-list-tile
-                v-for="(member, i) in members"
-                :key="i"
-                @click="setNewStaff(member.name, props.item, 'secondary')">
-                <v-list-tile-title>{{ member.name }}</v-list-tile-title>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
+        <td>
+          <MemberSelector
+            :shift="props.item"
+            :members="members"
+            :set-new-staff="setNewStaff"
+            :primary="false"
+          />
         </td>
       </template>
       <template slot="no-data">
-        No data
+        Loading...
       </template>
     </v-data-table>
   </div>
@@ -71,8 +45,12 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import MemberSelector from './MemberSelector.vue';
 
 export default {
+  components: {
+    MemberSelector,
+  },
 
   data: () => ({
     headers: [
@@ -96,11 +74,10 @@ export default {
   },
 
   methods: {
-    setNewStaff(memberName, shift, staffLevel) {
+    setNewStaff(memberName, shift, isPrimary) {
       const updateShift = shift.clone();
-      // TODO: clean up
-      // If primary staff position not filled, save as primary staff
-      if (staffLevel === 'primary') {
+
+      if (isPrimary) {
         updateShift.primary_staff = memberName;
       } else {
         updateShift.secondary_staff = memberName;

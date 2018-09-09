@@ -5,9 +5,9 @@
     offset-sm3
   >
     <v-select
+      outline
       :items="terms"
       label="Term"
-      max-width="200px"
       return-object
       :value="getCurrentTerm"
       @input="updateSelectedTerm"
