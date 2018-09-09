@@ -1,0 +1,7 @@
+{
+  "env": {
+    "NODE_ENV": "production",
+    "IAM_EMAIL": "@iam_email",
+    "IAM_PRIVATE_KEY_BASE64": "@iam_private_key"
+  }
+}
