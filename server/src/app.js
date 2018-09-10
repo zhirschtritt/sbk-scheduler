@@ -26,7 +26,7 @@ app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const homeRoute = process.env.NODE_ENV === 'production' ? 'client' : 'public'
+const homeRoute = process.env.NODE_ENV === 'production' ? 'client' : 'public';
 
 app.use(favicon(path.join(__dirname, '..', homeRoute, 'favicon.ico')));
 app.use('/', express.static(path.join(__dirname, '..', homeRoute)));
