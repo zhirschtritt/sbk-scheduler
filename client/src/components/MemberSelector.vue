@@ -11,7 +11,8 @@
     <v-list dense>
       <v-list-tile
         @click="setNewStaff('', shift, isPrimary)">
-        Clear</v-list-tile>
+        <strong>Clear</strong>
+      </v-list-tile>
       <v-divider/>
       <v-list-tile
         v-for="(member, i) in members"
