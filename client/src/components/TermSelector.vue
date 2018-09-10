@@ -4,8 +4,17 @@
     xs12
     offset-sm3
   >
+    <v-toolbar
+      dark
+      color="primary"
+      dense
+      flat>
+      <v-icon>date_range</v-icon>
+      <v-toolbar-title>Term</v-toolbar-title>
+    </v-toolbar>
     <v-select
-      outline
+      flat
+      solo
       :items="terms"
       label="Term"
       return-object

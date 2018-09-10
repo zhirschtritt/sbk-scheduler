@@ -1,8 +1,11 @@
 <template>
   <div>
     <v-toolbar
-      flat
-    >
+      dark
+      color="primary"
+      dense
+      flat>
+      <v-icon>today</v-icon>
       <v-toolbar-title>Volunteer Schedule</v-toolbar-title>
       <v-spacer/>
     </v-toolbar>
@@ -10,7 +13,6 @@
       :headers="headers"
       :items="shifts"
       hide-actions
-      flat
       dense
       :loading="areShiftsLoading"
     >

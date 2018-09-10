@@ -3,9 +3,12 @@
     id="inspire"
   >
     <v-toolbar
+      dark
+      color="primary"
       app
       absolute
       clipped-left>
+      <v-icon>schedule</v-icon>
       <span class="title ml-3 mr-5">SBK Schedule</span>
       <v-spacer/>
     </v-toolbar>

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-toolbar flat>
+    <v-toolbar
+      dark
+      color="primary"
+      dense
+      flat>
+      <v-icon>people</v-icon>
       <v-toolbar-title>Members</v-toolbar-title>
       <v-spacer/>
     </v-toolbar>
@@ -8,7 +13,6 @@
       :headers="headers"
       :items="members"
       hide-actions
-      flat
       dense
       :loading="areMembersLoading"
     >
