@@ -93,11 +93,7 @@ class Service {
 
     Object.assign(originalShift, newShift);
 
-    try { 
-      originalShift.save();
-    } catch (err) {
-      return new Error(err);
-    }
+    await originalShift.save().catch((e) => new Error(e));
 
     return originalShift;
   }

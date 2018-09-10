@@ -17,6 +17,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import formatDate from '../filters/formatDate';
 
 export default {
   computed: {
@@ -27,8 +28,7 @@ export default {
       const terms = this.findTermsInStore().data;
 
       return terms.map(term => Object.assign(term, {
-        value: `${term.start} - ${term.end}`,
-        text: `${term.start} - ${term.end}`,
+        text: `${formatDate(term.start)} - ${formatDate(term.end)}`,
       }));
     },
   },

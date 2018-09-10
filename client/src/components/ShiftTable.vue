@@ -18,7 +18,7 @@
         slot="items"
         slot-scope="props"
       >
-        <td>{{ props.item.date }}</td>
+        <td>{{ props.item.date | formatDateWithWeekday }}</td>
         <td>
           <MemberSelector
             :shift="props.item"

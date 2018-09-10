@@ -6,7 +6,7 @@
       label
       :color="fulfilledColor"
       slot="activator">
-      {{ staffMemberName }}
+      {{ staffMemberName | capitalize }}
     </v-chip>
     <v-list dense>
       <v-list-tile
@@ -17,7 +17,7 @@
         v-for="(member, i) in members"
         :key="i"
         @click="setNewStaff(member.name, shift, isPrimary)">
-        <v-list-tile-title>{{ member.name }}</v-list-tile-title>
+        <v-list-tile-title>{{ member.name | capitalize }}</v-list-tile-title>
       </v-list-tile>
     </v-list>
   </v-menu>

@@ -4,6 +4,7 @@ import colors from 'vuetify/es5/util/colors';
 import 'vuetify/dist/vuetify.min.css';
 import App from './App.vue';
 import store from './store';
+import filters from './filters';
 
 Vue.use(Vuetify, {
   theme: {
@@ -13,6 +14,8 @@ Vue.use(Vuetify, {
     error: colors.red.accent3,
   },
 });
+
+Vue.use(filters);
 
 Vue.config.productionTip = false;
 

@@ -25,7 +25,7 @@
             :key="shift.id"
             v-for="shift in shiftsForMember(props.item.name)"
           >
-            {{ shift.date }}
+            {{ shift.date | formatDateWithWeekday }}
           </v-chip>
         </td>
       </template>
@@ -40,13 +40,6 @@
 import { mapState, mapGetters } from 'vuex';
 
 export default {
-  filters: {
-    capitalize(value) {
-      if (!value) return '';
-      return value.charAt(0).toUpperCase() + value.slice(1);
-    },
-  },
-
   data: () => ({
     headers: [
       { text: 'Member', value: 'name' },
