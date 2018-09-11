@@ -8,9 +8,9 @@
       app
       absolute
       clipped-left>
-      <v-icon>schedule</v-icon>
-      <span class="title ml-3 mr-5">SBK Schedule</span>
+      <v-toolbar-title>SBK Schedule</v-toolbar-title>
       <v-spacer/>
+      <v-toolbar-title>Today: {{ todaysDate | formatDate }}</v-toolbar-title>
     </v-toolbar>
     <v-content>
       <v-container
@@ -52,6 +52,12 @@ export default {
     ShiftTable,
     MemberTable,
     TermSelector,
+  },
+
+  computed: {
+    todaysDate() {
+      return new Date();
+    },
   },
 
   methods: {

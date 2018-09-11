@@ -47,7 +47,7 @@ export default {
   data: () => ({
     headers: [
       { text: 'Member', value: 'name' },
-      { text: 'ShiftDates', sortable: false },
+      { text: 'Scheduled Shifts', sortable: false },
     ],
   }),
 
