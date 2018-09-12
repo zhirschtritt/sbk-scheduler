@@ -22,18 +22,18 @@ class Service {
 
     const { start, end } = params.query;
 
-    let query;
+    let googleSheetsQuery;
 
     if (start && end) {
-      query = `date >= ${start} && date <= ${end}`;
+      googleSheetsQuery = `date >= ${start} && date <= ${end}`;
     } else {
-      query = `date >= ${todayishString}`;
+      googleSheetsQuery = `date >= ${todayishString}`;
     }
 
     const { shiftsSheet } = await this.getSheets();
 
     const allShifts =  await shiftsSheet.getRowsAsync({
-      query,
+      query: googleSheetsQuery,
       limit: 90,
     });
     
@@ -65,20 +65,6 @@ class Service {
     };
   }
 
-  async create (data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
-    }
-    return data;
-  }
-
-  async update (id, data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.update(current, params)));
-    }
-    return {id};
-  }
-
   async patch (id, data, params) {
     const { shiftsSheet } = await this.getSheets();
 
@@ -89,6 +75,7 @@ class Service {
     const newShift = {
       primarystaff: data.primary_staff,
       secondarystaff: data.secondary_staff,
+      fulfilled: data.fulfilled,
     };
 
     Object.assign(originalShift, newShift);
@@ -100,10 +87,6 @@ class Service {
     }
 
     return originalShift;
-  }
-
-  async remove (id, params) {
-    return { id };
   }
 }
 

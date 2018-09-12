@@ -29,6 +29,7 @@ module.exports = function (app) {
       member: require('./member.schema')
     }
   };
+  
   app.use('/members', members);
 
   // Get our initialized service so that we can register hooks

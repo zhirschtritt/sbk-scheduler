@@ -14,7 +14,9 @@ const swagger = require('feathers-swagger');
 
 const services = require('./services');
 const appHooks = require('./app.hooks');
+
 const sheetsAdapter = require('./sheetsAdapter');
+const mailer = require('./mailer');
 
 const app = express(feathers());
 
@@ -26,12 +28,11 @@ app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const homeRoute = process.env.NODE_ENV === 'production' ? 'client' : 'public';
-
-app.use(favicon(path.join(__dirname, '..', homeRoute, 'favicon.ico')));
-app.use('/', express.static(path.join(__dirname, '..', homeRoute)));
+app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+app.use('/', express.static(app.get('public')));
 
 app.configure(sheetsAdapter);
+app.configure(mailer);
 
 app.configure(express.rest());
 

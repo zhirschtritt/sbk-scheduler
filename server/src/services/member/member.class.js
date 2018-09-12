@@ -24,7 +24,8 @@ class Service {
       .map((member) => {
         return {
           id: Number(member.id),
-          name: member.name
+          name: member.name,
+          email: member.email,
         };
       });
   }
@@ -38,7 +39,8 @@ class Service {
     
     return {
       id: Number(member[0].id),
-      name: member[0].name
+      name: member[0].name,
+      email: member.email,
     };
 
   }

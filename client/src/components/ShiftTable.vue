@@ -85,6 +85,8 @@ export default {
         updateShift.secondary_staff = memberName;
       }
 
+      updateShift.fulfilled = (updateShift.primary_staff || updateShift.secondary_staff) ? 1 : 0;
+
       updateShift.commit();
       updateShift.patch();
     },
