@@ -1,0 +1,9 @@
+<html>
+  <p>Please note your upcoming shift on <strong>{{formatDate date}}</strong>. </p>
+  <ul>
+    <li>Primary staff: <strong>{{capitalize primary_staff}}</strong></li>
+    {{#if secondary_staff}}
+    <li>Secondary staff: <strong>{{capitalize secondary_staff}}</strong></li>
+    {{/if}}
+  </ul>
+</html>

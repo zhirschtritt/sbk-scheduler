@@ -2,7 +2,7 @@ const moment = require('moment');
 const Handlebars = require('handlebars');
 
 Handlebars.registerHelper('formatDate', function(date) {
-  return moment(date).format('ddd, MMM D, YYYY');
+  return moment(date).format('dddd, MMM D, YYYY');
 });
 
 Handlebars.registerHelper('capitalize', function(value) {

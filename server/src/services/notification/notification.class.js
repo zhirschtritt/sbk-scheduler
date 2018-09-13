@@ -30,7 +30,7 @@ class Service {
       nextShifts.map(async (shift) => {
         const isStaffAssigned = shift.primary_staff || shift.secondary_staff;
 
-        // if no members assigned to upcoming shifts
+        // if no members assigned to upcoming shifts, draft email to staff
         if (!isStaffAssigned) { 
           return await this.mailer.sendEmail({
             template: {
@@ -42,7 +42,7 @@ class Service {
           });
         }
 
-        // get member emails
+        // else draft emails to all assigned members per shift
         const allMembers = await this.members.find();
 
         const assignedMemberEmails = allMembers
@@ -53,7 +53,6 @@ class Service {
           })
           .map((member) => member.email);
         
-        // else send email to all assigned members per shift
         return await this.mailer.sendEmail({
           template: {
             name: 'upcomingShift',
