@@ -45,7 +45,7 @@ class Service {
         // get member emails
         const allMembers = await this.members.find();
 
-        const assingedMemberEmails = allMembers
+        const assignedMemberEmails = allMembers
           .filter((member) => {
             return [shift.primary_staff, shift.secondary_staff]
               .map((name) => name.toLowerCase())
@@ -59,7 +59,7 @@ class Service {
             name: 'upcomingShift',
             context: shift,
           },
-          recipients: assingedMemberEmails,
+          recipients: assignedMemberEmails,
           subject: 'SBK Reminder: Upcoming Shift'
         });
       })
