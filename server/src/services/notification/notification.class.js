@@ -51,6 +51,7 @@ class Service {
               .map((name) => name.toLowerCase())
               .includes(member.name.toLowerCase());
           })
+          .filter((member) => !!member.notifications)
           .map((member) => member.email);
         
         return await this.mailer.sendEmail({

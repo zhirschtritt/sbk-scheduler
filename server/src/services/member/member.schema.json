@@ -17,10 +17,24 @@
       "examples": [
         "Jane"
       ]
+    },
+    "email": {
+      "type": "string",
+      "title": "email of member",
+      "default": "",
+      "examples": [
+        "Jane@foo.com"
+      ]
+    },
+    "notifications": {
+      "type": "number",
+      "title": "Notification setting",
+      "default": 1
     }
   },
   "required": [
     "id",
-    "name"
+    "name",
+    "email"
   ]
 }

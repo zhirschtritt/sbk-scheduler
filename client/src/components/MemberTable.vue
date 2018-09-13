@@ -22,6 +22,15 @@
       >
         <td>{{ props.item.name | capitalize }}</td>
         <td>
+          <v-switch
+            :value="props.item.notifications"
+            :value-comparator="function(val) { return(!!val)}"
+            color="primary"
+            light
+            @change="updateNotifications(props.item)"
+          />
+        </td>
+        <td>
           <v-chip
             label
             outline
@@ -47,6 +56,7 @@ export default {
   data: () => ({
     headers: [
       { text: 'Member', value: 'name' },
+      { text: 'Shift Reminders', sortable: false },
       { text: 'Scheduled Shifts', sortable: false },
     ],
   }),
@@ -72,6 +82,15 @@ export default {
       return this.findShiftsInStore({ query }).data;
     },
 
+    updateNotifications(member) {
+      const newNotificationValue = member.notifications ? 0 : 1;
+      const updatedMember = member.clone();
+
+      updatedMember.notifications = newNotificationValue;
+
+      updatedMember.commit();
+      updatedMember.patch();
+    },
   },
 };
 </script>

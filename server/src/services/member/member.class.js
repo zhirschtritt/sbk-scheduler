@@ -26,6 +26,7 @@ class Service {
           id: Number(member.id),
           name: member.name,
           email: member.email,
+          notifications: Number(member.notifications),
         };
       });
   }
@@ -41,28 +42,31 @@ class Service {
       id: Number(member[0].id),
       name: member[0].name,
       email: member.email,
+      notifications: Number(member.notifications),
     };
 
   }
 
-  async create (data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
+  async patch (id, data, params) {
+    const { membersSheet } = await this.getSheets();
+
+    const [ member ] = await membersSheet.getRowsAsync({
+      query: `id = ${id}`
+    });
+
+    const newMember = {
+      notifications: data.notifications,
+    };
+
+    Object.assign(member, newMember);
+
+    try { 
+      member.save();
+    } catch (err) {
+      return new Error(err);
     }
 
-    return data;
-  }
-
-  async update (id, data, params) {
-    return data;
-  }
-
-  async patch (id, data, params) {
-    return data;
-  }
-
-  async remove (id, params) {
-    return { id };
+    return member;
   }
 }
 
