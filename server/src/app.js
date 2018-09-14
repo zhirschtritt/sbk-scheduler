@@ -10,9 +10,11 @@ const logger = require('./logger');
 const feathers = require('@feathersjs/feathers');
 const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');
+const socketio = require('@feathersjs/socketio');
 const swagger = require('feathers-swagger');
 
 const services = require('./services');
+const channels = require('./channels');
 const appHooks = require('./app.hooks');
 
 const sheetsAdapter = require('./sheetsAdapter');
@@ -35,6 +37,9 @@ app.configure(sheetsAdapter);
 app.configure(mailer);
 
 app.configure(express.rest());
+app.configure(socketio({
+  wsEngine: 'uws'
+}));
 
 app.configure(swagger({
   docsPath: '/swagger',
@@ -46,6 +51,7 @@ app.configure(swagger({
 }));
 
 app.configure(services);
+app.configure(channels);
 
 app.use(express.notFound());
 app.use(express.errorHandler({ logger }));

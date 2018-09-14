@@ -1,9 +1,12 @@
-import axios from 'axios';
-import rest from '@feathersjs/rest-client';
 import feathers from '@feathersjs/feathers';
+import socketio from '@feathersjs/socketio-client';
+import io from 'socket.io-client';
 
-const app = feathers();
-const restClient = rest(process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3030');
-app.configure(restClient.axios(axios));
+const feathersClient = feathers();
 
-export default app;
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3030';
+const socket = io(baseUrl, { transports: ['websocket'] });
+
+feathersClient.configure(socketio(socket));
+
+export default feathersClient;
