@@ -1,33 +1,46 @@
 # sbk-schedule
 
-> 
+Production build deployed at [schedule.somervillebikekitchen.org](https://schedule.somervillebikekitchen.org) 🙌
 
 ## About
 
-This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
+Built for the somervillebikekitchen, a volunteer-run bike repair space in Davis Square, Somerville, MA. 
 
-## Getting Started
+Features: 
+- Needlessly real-time using [featherjs](https://feathersjs.com/) and websocket.io
+- [Vue](https://vuejs.org/) / [Vuex](https://vuex.vuejs.org/) / [Vuetify](https://vuetifyjs.com) clientside trifecta 
+- Also using the ridiculously awesome [feathers-vuex](https://feathers-plus.github.io/v1/feathers-vuex/)
+- Deployed via [now.sh](https://now.sh)
 
-Getting up and running is as easy as 1, 2, 3.
+## Developing
 
 1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
 2. Install your dependencies
 
     ```
-    cd path/to/sbk-schedule; npm install
+    cd path/to/sbk-schedule/server; npm install
+    cd path/to/sbk-schedule/client; npm install
     ```
 
-3. Start your app
+3. Start server and client separately 
 
     ```
-    npm start
+    cd path/to/sbk-schedule/server; npm start
+    cd path/to/sbk-schedule/client; npm start
     ```
 
-## Testing
+## Deploying
 
-Simply run `npm test` and all your tests in the `test/` directory will be run.
+Deployed via multi-stage Dockerfile in root directory. 
 
-## Scaffolding
+1. TODO: deploy via CI.
+2. Currently: 
+    ```
+    cd path/to/sbk-schedule; now --public
+    now alias <RANDOM URL> <URL YOU WANT>
+    ```
+
+## Scaffolding Feathers Server
 
 Feathers has a powerful command line interface. Here are a few things it can do:
 
@@ -39,16 +52,6 @@ $ feathers generate hook                  # Generate a new Hook
 $ feathers generate model                 # Generate a new Model
 $ feathers help                           # Show all commands
 ```
-
-## Help
-
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
-
-## Changelog
-
-__0.1.0__
-
-- Initial release
 
 ## License
 
