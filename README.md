@@ -4,7 +4,7 @@ Production build deployed at [schedule.somervillebikekitchen.org](https://schedu
 
 ## About
 
-Built for the somervillebikekitchen, a volunteer-run bike repair space in Davis Square, Somerville, MA. 
+Built for the [Somerville Bike Kitchen](https://somervillebikekitchen.org), a volunteer-run bike repair space in Davis Square, Somerville, MA. 
 
 Features: 
 - Needlessly real-time using [featherjs](https://feathersjs.com/) and websocket.io
