@@ -10,9 +10,11 @@
   "dependencies": {
     "@feathersjs/feathers": "^3.1.7",
     "@feathersjs/rest-client": "^1.4.1",
+    "@feathersjs/socketio-client": "^1.1.2",
     "axios": "^0.18.0",
     "feathers-vuex": "^1.4.8",
     "moment": "^2.22.2",
+    "socket.io-client": "^2.1.1",
     "vue": "^2.5.17",
     "vuetify": "^1.1.13",
     "vuex": "^3.0.1"

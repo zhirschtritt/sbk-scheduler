@@ -1,5 +1,5 @@
 <template>
-  <v-menu>
+  <v-menu :disabled="isPastShift">
     <v-chip
       flat
       outline
@@ -9,11 +9,13 @@
       {{ staffMemberName | capitalize }}
     </v-chip>
     <v-list dense>
-      <v-list-tile
-        @click="setNewStaff('', shift, isPrimary)">
-        <strong>Clear</strong>
-      </v-list-tile>
-      <v-divider/>
+      <div v-if="canBeCleared">
+        <v-list-tile
+          @click="setNewStaff('', shift, isPrimary)">
+          <strong>Clear</strong>
+        </v-list-tile>
+        <v-divider/>
+      </div>
       <v-list-tile
         v-for="(member, i) in members"
         :key="i"
@@ -62,10 +64,23 @@ export default {
     fulfilledColor() {
       const staffLevel = this.primary ? 'primary_staff' : 'secondary_staff';
 
-      if (this.shift[staffLevel]) {
+      if (this.shift[staffLevel] && !this.isPastShift) {
         return 'primary';
       }
       return 'grey';
+    },
+    canBeCleared() {
+      if ((this.primary && this.shift.primary_staff)
+      || (!this.primary && this.shift.secondary_staff)) {
+        return true;
+      }
+      return false;
+    },
+    isPastShift() {
+      if (new Date(this.shift.date) < new Date()) {
+        return true;
+      }
+      return false;
     },
   },
 };

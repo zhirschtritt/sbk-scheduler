@@ -34,13 +34,13 @@ class Service {
   async get (id, params) {
     const { membersSheet } = await this.getSheets();
 
-    const member =  await membersSheet.getRowsAsync({
+    const [ member ] =  await membersSheet.getRowsAsync({
       query: `id = ${id}`
     });
     
     return {
-      id: Number(member[0].id),
-      name: member[0].name,
+      id: Number(member.id),
+      name: member.name,
       email: member.email,
       notifications: Number(member.notifications),
     };
@@ -66,7 +66,12 @@ class Service {
       return new Error(err);
     }
 
-    return member;
+    return {
+      id: Number(member.id),
+      name: member.name,
+      email: member.email,
+      notifications: Number(member.notifications),
+    };
   }
 }
 

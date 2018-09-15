@@ -11,5 +11,7 @@ module.exports = {
       "airbnb-base",
       "plugin:vue/strongly-recommended"
   ],
-  "rules": {}
+  "rules": {
+    "no-param-reassign": [2, { "props": false }]
+  }
 }

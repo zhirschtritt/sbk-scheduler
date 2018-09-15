@@ -22,15 +22,6 @@
       >
         <td>{{ props.item.name | capitalize }}</td>
         <td>
-          <v-switch
-            :value="props.item.notifications"
-            :value-comparator="function(val) { return(!!val)}"
-            color="primary"
-            light
-            @change="updateNotifications(props.item)"
-          />
-        </td>
-        <td>
           <v-chip
             label
             outline
@@ -40,6 +31,15 @@
           >
             {{ shift.date | formatDateWithWeekday }}
           </v-chip>
+        </td>
+        <td>
+          <v-switch
+            :value="props.item.notifications"
+            :value-comparator="function(val) { return(!!val)}"
+            color="primary"
+            light
+            @change="updateNotifications(props.item)"
+          />
         </td>
       </template>
       <template slot="no-data">
@@ -56,8 +56,8 @@ export default {
   data: () => ({
     headers: [
       { text: 'Member', value: 'name' },
-      { text: 'Shift Reminders', sortable: false },
       { text: 'Scheduled Shifts', sortable: false },
+      { text: 'Shift Reminders', sortable: false },
     ],
   }),
 

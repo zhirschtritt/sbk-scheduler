@@ -37,9 +37,7 @@ app.configure(sheetsAdapter);
 app.configure(mailer);
 
 app.configure(express.rest());
-app.configure(socketio({
-  wsEngine: 'uws'
-}));
+app.configure(socketio());
 
 app.configure(swagger({
   docsPath: '/swagger',

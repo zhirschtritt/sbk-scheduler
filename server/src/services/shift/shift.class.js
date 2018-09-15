@@ -68,25 +68,31 @@ class Service {
   async patch (id, data, params) {
     const { shiftsSheet } = await this.getSheets();
 
-    const [ originalShift ] = await shiftsSheet.getRowsAsync({
+    const [ shift ] = await shiftsSheet.getRowsAsync({
       query: `id = ${id}`
     });
 
-    const newShift = {
+    const updatedShiftData = {
       primarystaff: data.primary_staff,
       secondarystaff: data.secondary_staff,
       fulfilled: data.fulfilled,
     };
 
-    Object.assign(originalShift, newShift);
+    Object.assign(shift, updatedShiftData);
 
     try { 
-      originalShift.save();
+      shift.save();
     } catch (err) {
       return new Error(err);
     }
 
-    return originalShift;
+    return {
+      id: Number(shift.id),
+      date: shift.date,
+      primary_staff: shift.primarystaff,
+      secondary_staff: shift.secondarystaff,
+      fulfilled: Number(shift.fulfilled)
+    };
   }
 }
 

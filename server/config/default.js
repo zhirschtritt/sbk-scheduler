@@ -3,6 +3,7 @@ require('dotenv').config();
 module.exports = {
   host: 'localhost',
   port: 3030,
+  socketioPort: 3031,
   public: '../public/',
   paginate: {
     default: 10,

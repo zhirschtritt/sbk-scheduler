@@ -9,21 +9,24 @@ class Service {
     this.shifts = shifts;
   }
 
-  async find (params) {
-    return [];
-  }
-
-  async get (id, params) {
-    return {
-      id, text: `A new message with ID: ${id}!`
-    };
-  }
-
   async create (data, params) { 
+    // if a shift has been cleared by the client 
+    if (data.message && data.message.type === 'cancelledShift') {
+      const {shift, messageDetails} = data.message;
+
+      return await this.mailer.sendEmail({
+        template: {
+          name: 'cancelledShift',
+          context: {shift, messageDetails}
+        },
+        recipients: this.mailer.staffEmail,
+        subject: `Cancelled Upcoming Shift ${shift.date}`
+      });
+    }
+
+    // get next upcoming shift
     const today = moment().format('YYYY-MM-DD');
     const endOfWeek = moment().add(7, 'days').format('YYYY-MM-DD');
-    
-    // get next upcoming shift
     const nextShifts = await this.shifts.find({query: {start: today, end: endOfWeek }});
 
     return Promise.all(
@@ -38,7 +41,7 @@ class Service {
               context: shift
             },
             recipients: this.mailer.staffEmail,
-            subject: 'SBK Reminder: Unassigned Upcoming Shifts'
+            subject: `⚠️ SBK Reminder: Unassigned Upcoming Shift ${shift.date}`
           });
         }
 
@@ -60,22 +63,10 @@ class Service {
             context: shift,
           },
           recipients: assignedMemberEmails,
-          subject: 'SBK Reminder: Upcoming Shift'
+          subject: `👋 SBK Reminder: Upcoming Shift ${shift.date}`
         });
       })
     );
-  }
-
-  async update (id, data, params) {
-    return data;
-  }
-
-  async patch (id, data, params) {
-    return data;
-  }
-
-  async remove (id, params) {
-    return { id };
   }
 }
 

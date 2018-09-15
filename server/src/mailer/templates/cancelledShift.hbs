@@ -1,0 +1,9 @@
+<html>
+  <p>Upcoming shift on <strong>{{formatDate shift.date}}</strong> that was assigned to: {{messageDetails.member}} 
+  has been cleared.</p>
+  {{#if messageDetails.text}}
+  <p><strong>{{messageDetails.member}} says:</strong></p>
+  <p>{{messageDetails.text}}</p>
+  {{/if}}
+  </br>
+</html>

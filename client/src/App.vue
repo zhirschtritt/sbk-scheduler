@@ -18,6 +18,11 @@
         fluid>
         <v-layout
           row
+          justify-center>
+          <CancelConfirmDialog/>
+        </v-layout>
+        <v-layout
+          row
           wrap>
           <v-flex
             xs12
@@ -45,6 +50,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import ShiftTable from './components/ShiftTable.vue';
 import MemberTable from './components/MemberTable.vue';
 import TermSelector from './components/TermSelector.vue';
+import CancelConfirmDialog from './components/CancelConfirmDialog.vue';
 
 export default {
   name: 'App',
@@ -52,6 +58,7 @@ export default {
     ShiftTable,
     MemberTable,
     TermSelector,
+    CancelConfirmDialog,
   },
 
   computed: {

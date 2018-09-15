@@ -46,7 +46,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import {
+  mapState, mapGetters, mapMutations, mapActions,
+} from 'vuex';
 import MemberSelector from './MemberSelector.vue';
 
 export default {
@@ -76,19 +78,22 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['toggleCancelShiftDialog']),
+    ...mapActions('shifts', ['updateShift', 'stageUpdateShift']),
+    ...mapActions('members', { setCurrentMember: 'setCurrentByName' }),
+
     setNewStaff(memberName, shift, isPrimary) {
-      const updateShift = shift.clone();
+      // set current member for use by confirm workflow
+      this.setCurrentMember(shift.primary_staff);
 
-      if (isPrimary) {
-        updateShift.primary_staff = memberName;
+      this.stageUpdateShift({ memberName, shift, isPrimary });
+
+      if (!memberName && isPrimary) {
+        // if clearing primary member, signal confirm dialog, else, clear immediately
+        this.toggleCancelShiftDialog();
       } else {
-        updateShift.secondary_staff = memberName;
+        this.updateShift();
       }
-
-      updateShift.fulfilled = (updateShift.primary_staff || updateShift.secondary_staff) ? 1 : 0;
-
-      updateShift.commit();
-      updateShift.patch();
     },
   },
 };
