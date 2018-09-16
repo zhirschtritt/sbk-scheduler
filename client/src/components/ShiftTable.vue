@@ -46,8 +46,9 @@
 </template>
 
 <script>
+import moment from 'moment';
 import {
-  mapState, mapGetters, mapMutations, mapActions,
+  mapState, mapGetters, mapActions,
 } from 'vuex';
 import MemberSelector from './MemberSelector.vue';
 
@@ -78,18 +79,21 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['toggleCancelShiftDialog']),
+    ...mapActions(['toggleCancelShiftDialog']),
     ...mapActions('shifts', ['updateShift', 'stageUpdateShift']),
     ...mapActions('members', { setCurrentMember: 'setCurrentByName' }),
 
     setNewStaff(memberName, shift, isPrimary) {
       // set current member for use by confirm workflow
-      this.setCurrentMember(shift.primary_staff);
-
       this.stageUpdateShift({ memberName, shift, isPrimary });
 
-      if (!memberName && isPrimary) {
-        // if clearing primary member, signal confirm dialog, else, clear immediately
+      const now = moment();
+      const lastChange = shift.updatedAt ? moment(shift.updatedAt) : moment();
+      const minutesSinceLastUpdate = now.diff(lastChange, 'minutes');
+
+      // if clearing primary member, signal confirm dialog, else, clear immediately
+      if (!memberName && isPrimary && minutesSinceLastUpdate > 59) {
+        this.setCurrentMember(shift.primary_staff);
         this.toggleCancelShiftDialog();
       } else {
         this.updateShift();

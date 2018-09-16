@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'MemberSelector',
   props: {
@@ -52,6 +54,10 @@ export default {
   },
 
   computed: {
+    ...mapState('shifts', ['isPatchPending']),
+    shiftPatchPending() {
+      return this.isPatchPending;
+    },
     isPrimary() {
       return this.primary;
     },

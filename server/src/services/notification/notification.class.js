@@ -9,22 +9,35 @@ class Service {
     this.shifts = shifts;
   }
 
+  formatDate(date) {
+    return moment(date).format('dddd, MMM D, YYYY');
+  }
+
   async create (data, params) { 
+    // notification = {
+    //   notificationType: String,
+    //   message: String,
+    //   context: {
+    //     shift: Shift
+    //   }
+    // }
+
     // if a shift has been cleared by the client 
-    if (data.message && data.message.type === 'cancelledShift') {
-      const {shift, messageDetails} = data.message;
+    if (data && data.notificationType === 'cancelledShift') {
+      const { shift, member } = data.context;
+      const { message } = data;
 
       return await this.mailer.sendEmail({
         template: {
           name: 'cancelledShift',
-          context: {shift, messageDetails}
+          context: {shift, member, message}
         },
         recipients: this.mailer.staffEmail,
-        subject: `Cancelled Upcoming Shift ${shift.date}`
+        subject: `⚠️ Cancelled Upcoming Shift: ${this.formatDate(shift.date)}`
       });
     }
 
-    // get next upcoming shift
+    // get next upcoming shift`
     const today = moment().format('YYYY-MM-DD');
     const endOfWeek = moment().add(7, 'days').format('YYYY-MM-DD');
     const nextShifts = await this.shifts.find({query: {start: today, end: endOfWeek }});
@@ -41,7 +54,7 @@ class Service {
               context: shift
             },
             recipients: this.mailer.staffEmail,
-            subject: `⚠️ SBK Reminder: Unassigned Upcoming Shift ${shift.date}`
+            subject: `⚠️ SBK Reminder: Unassigned Upcoming Shift ${this.formatDate(shift.date)}`
           });
         }
 
@@ -63,7 +76,7 @@ class Service {
             context: shift,
           },
           recipients: assignedMemberEmails,
-          subject: `👋 SBK Reminder: Upcoming Shift ${shift.date}`
+          subject: `👋 SBK Reminder: Upcoming Shift ${this.formatDate(shift.date)}`
         });
       })
     );

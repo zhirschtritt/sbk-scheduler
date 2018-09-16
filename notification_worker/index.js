@@ -7,7 +7,7 @@ const baseUrl = process.env.NODE_ENV === 'production' ?
 
 const sundayNotification = new CronJob('0 0 10 * * SUN', async function() {
   axios.post(`${baseUrl}/notifications`, {})
-    .then((res) => console.log(res)) // eslint-disable-line
+    .then((res) => console.log(res ? res.data : res)) // eslint-disable-line
     .catch((err) => console.log(err)); // eslint-disable-line
 
 }, null, false, 'America/New_York');

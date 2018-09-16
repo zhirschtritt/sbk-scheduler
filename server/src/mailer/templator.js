@@ -10,4 +10,8 @@ Handlebars.registerHelper('capitalize', function(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 });
 
+Handlebars.registerHelper('replaceLineBreaks', function(value) {
+  JSON.parse(value).replace(/\n/g, '<br />' );
+});
+
 module.exports = Handlebars;

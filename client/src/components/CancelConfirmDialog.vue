@@ -1,24 +1,50 @@
 <template>
   <v-dialog
-    v-model="dialog"
+    v-model="dialogWindow"
     lazy
-    max-width="400px"
+    max-width="450px"
   >
     <v-card>
-      <v-card-title>
-        <span>Confirm cancelling shift for {{ currentMemberName | capitalize }}</span>
-        <v-spacer/>
+      <v-card-title
+        primary-title
+        mx-2>
+        <h3 class="subheading">Confirm cancelling shift for
+          {{ currentMemberName | capitalize }}
+          on {{ shiftDate | formatDateWithWeekday }}
+        </h3>
+        <span class="caption font-weight-thin">
+          By cancelling this shift, an email will be sent to SBK staff to inform them
+          that this shift is now available. You can add a personalized message to include in
+          the email below.
+        </span>
       </v-card-title>
-      <v-card-actions>
-        <v-btn
+      <v-spacer/>
+      <v-form
+        ref="form"
+        class="mx-4"
+      >
+        <v-textarea
+          v-model="emailMessage"
+          auto-grow
+          box
+          row-height=18
+          label="Custom message to staff"
+          persistent
+          autofocus
           color="primary"
-          flat
-          @click="confirmUpdateShift">Confirm</v-btn>
-        <v-btn
-          color="primary"
-          flat
-          @click="cancelUpdate">Go Back</v-btn>
-      </v-card-actions>
+        />
+        <v-card-actions>
+          <v-btn
+            :loading="notificationLoading"
+            color="primary"
+            flat
+            @click="confirmUpdateShift">Confirm and Send Notification</v-btn>
+          <v-btn
+            color="primary"
+            flat
+            @click="cancelUpdate">Go Back</v-btn>
+        </v-card-actions>
+      </v-form>
     </v-card>
 
   </v-dialog>
@@ -26,13 +52,16 @@
 
 <script>
 import {
-  mapState, mapMutations, mapGetters, mapActions,
+  mapState, mapGetters, mapActions,
 } from 'vuex';
 
 export default {
   name: 'CancelConfirmDialog',
+  data: () => ({
+    emailMessage: '',
+  }),
   methods: {
-    ...mapMutations(['toggleCancelShiftDialog']),
+    ...mapActions(['toggleCancelShiftDialog']),
     ...mapActions('shifts', [
       'updateShift',
       'rejectUpdateShift',
@@ -43,7 +72,21 @@ export default {
       this.rejectUpdateShift();
     },
 
-    confirmUpdateShift() {
+    async confirmUpdateShift() {
+      const { Notification } = this.$FeathersVuex;
+
+      const notification = new Notification({
+        message: JSON.stringify(this.emailMessage),
+        notificationType: 'cancelledShift',
+        context: {
+          shift: this.shift,
+          member: this.getCurrentMember,
+        },
+      });
+
+      await notification.save();
+
+      this.emailMessage = '';
       this.toggleCancelShiftDialog();
       this.updateShift();
     },
@@ -51,12 +94,22 @@ export default {
   computed: {
     ...mapState(['cancelShiftDialog']),
     ...mapGetters('members', { getCurrentMember: 'current' }),
+    ...mapGetters('shifts', { getCurrentShift: 'current' }),
+    ...mapState('notifications', { notificationLoading: 'isCreatePending' }),
+
+    shift() {
+      return this.getCurrentShift;
+    },
+
+    shiftDate() {
+      return this.getCurrentShift ? this.getCurrentShift.date : '';
+    },
 
     currentMemberName() {
       return this.getCurrentMember ? this.getCurrentMember.name : '';
     },
 
-    dialog: {
+    dialogWindow: {
       get() {
         return this.cancelShiftDialog;
       },

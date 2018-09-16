@@ -9,8 +9,8 @@ import filters from './filters';
 Vue.use(Vuetify, {
   theme: {
     primary: colors.teal.base,
-    secondary: colors.purple.lighten1,
-    accent: colors.teal.lighten2,
+    secondary: colors.purple.base, // eslint-disable-line
+    accent: colors.teal.accent2,
     error: colors.red.accent3,
   },
 });

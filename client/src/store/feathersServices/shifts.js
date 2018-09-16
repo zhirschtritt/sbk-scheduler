@@ -1,41 +1,53 @@
-export default {
-  name: 'shifts',
-  methods: {
-    debug: true,
-    actions: {
-      updateShift({ commit, state, dispatch }) {
-        const { currentId, copy: updatedShift } = state;
+import feathersVuex from 'feathers-vuex';
+import feathersClient from '../feathersClient';
 
-        dispatch('patch', [currentId, updatedShift, {}])
-          .then(() => {
-            commit('commitCopy', currentId);
-          })
-          .catch(() => {
-            commit('rejectCopy', currentId);
-          });
-      },
+const { service } = feathersVuex(feathersClient, { idField: 'id' });
 
-      rejectUpdateShift({ commit, state }) {
-        const { currentId } = state;
+const servicePath = 'shifts';
 
-        commit('rejectCopy', currentId);
-      },
+const servicePlugin = service(servicePath, {
+  instanceDefaults: {
+    date: '',
+    primary_staff: '',
+    secondary_staff: '',
+    fulfilled: 0,
+    updatedAt: '',
+  },
+  actions: {
+    updateShift({ commit, state, dispatch }) {
+      const { currentId, copy: updatedShift } = state;
 
-      stageUpdateShift({ commit, state }, { memberName, shift, isPrimary }) {
-        const shiftCopy = Object.assign({}, shift);
+      dispatch('patch', [currentId, updatedShift, {}])
+        .then(() => {
+          commit('commitCopy', currentId);
+        })
+        .catch(() => {
+          commit('rejectCopy', currentId);
+        });
+    },
 
-        commit('setCurrent', shiftCopy);
+    rejectUpdateShift({ commit, state }) {
+      const { currentId } = state;
 
-        if (isPrimary) {
-          state.copy.primary_staff = memberName;
-        } else {
-          state.copy.secondary_staff = memberName;
-        }
+      commit('rejectCopy', currentId);
+    },
 
-        const hasAtLeastOneStaff = !!(state.copy.primary_staff || state.copy.secondary_staff);
+    stageUpdateShift({ commit, state }, { memberName, shift, isPrimary }) {
+      const shiftCopy = Object.assign({}, shift);
 
-        state.copy.fulfilled = hasAtLeastOneStaff ? 1 : 0;
-      },
+      commit('setCurrent', shiftCopy);
+
+      if (isPrimary) {
+        state.copy.primary_staff = memberName;
+      } else {
+        state.copy.secondary_staff = memberName;
+      }
+
+      const hasAtLeastOneStaff = !!(state.copy.primary_staff || state.copy.secondary_staff);
+
+      state.copy.fulfilled = hasAtLeastOneStaff ? 1 : 0;
     },
   },
-};
+});
+
+export default servicePlugin;
