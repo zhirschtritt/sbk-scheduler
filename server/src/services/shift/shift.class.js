@@ -44,7 +44,8 @@ class Service {
           date: shift.date,
           primary_staff: shift.primarystaff,
           secondary_staff: shift.secondarystaff,
-          fulfilled: Number(shift.fulfilled)
+          fulfilled: Number(shift.fulfilled),
+          updatedAt: shift.updatedat,
         };
       });
   }
@@ -61,7 +62,8 @@ class Service {
       date: shift[0].date,
       primary_staff: shift[0].primarystaff,
       secondary_staff: shift[0].secondarystaff,
-      fulfilled: Number(shift[0].fulfilled)
+      fulfilled: Number(shift[0].fulfilled),
+      updatedAt: shift.updatedat,
     };
   }
 
@@ -76,6 +78,7 @@ class Service {
       primarystaff: data.primary_staff,
       secondarystaff: data.secondary_staff,
       fulfilled: data.fulfilled,
+      updatedat: moment().format('YYYY-MM-DDTHH:mm:ss'), // kinda ISO8601
     };
 
     Object.assign(shift, updatedShiftData);
@@ -91,7 +94,8 @@ class Service {
       date: shift.date,
       primary_staff: shift.primarystaff,
       secondary_staff: shift.secondarystaff,
-      fulfilled: Number(shift.fulfilled)
+      fulfilled: Number(shift.fulfilled),
+      updatedAt: shift.updatedat,
     };
   }
 }
