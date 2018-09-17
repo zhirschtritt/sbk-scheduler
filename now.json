@@ -1,4 +1,12 @@
 {
+  "name": "sbk-schedule",
+  "type": "docker",
+  "features": {
+    "cloud": "v2"
+  },
+  "alias": "schedule.somervillebikekitchen.org",
+  "public": true,
+  "regions": ["iad"],
   "env": {
     "NODE_ENV": "production",
     "IAM_EMAIL": "@iam_email",
