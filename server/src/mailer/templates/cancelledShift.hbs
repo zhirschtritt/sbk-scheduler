@@ -3,8 +3,9 @@
   that was assigned to <strong> {{capitalize member.name}} </strong> 
   has been cancelled.</p>
   {{#if message}}
-  <p>{{capitalize member.name}} says: </p>
-  <p>{{{replaceLineBreaks message}}}</p>
+    <p>Comment from member: </p>
+    <blockquote
+      <p>{{{replaceLineBreaks message}}}</p>
+    </blockquote>
   {{/if}}
-  </br>
 </html>

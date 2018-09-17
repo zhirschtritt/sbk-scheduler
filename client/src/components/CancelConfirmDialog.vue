@@ -40,6 +40,7 @@
             flat
             @click="confirmUpdateShift">Confirm and Send Notification</v-btn>
           <v-btn
+            v-if="$vuetify.breakpoint.smAndUp"
             color="primary"
             flat
             @click="cancelUpdate">Go Back</v-btn>
