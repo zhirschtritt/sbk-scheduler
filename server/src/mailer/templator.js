@@ -11,7 +11,7 @@ Handlebars.registerHelper('capitalize', function(value) {
 });
 
 Handlebars.registerHelper('replaceLineBreaks', function(value) {
-  JSON.parse(value).replace(/\n/g, '<br />' );
+  return JSON.parse(value).replace(/\n/g, '<br />' );
 });
 
 module.exports = Handlebars;
