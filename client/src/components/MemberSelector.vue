@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import { mapState } from 'vuex';
 
 export default {
@@ -83,7 +84,10 @@ export default {
       return false;
     },
     isPastShift() {
-      if (new Date(this.shift.date) < new Date()) {
+      const shiftEndOfDay = moment(this.shift.date).add(24, 'hours');
+      const now = moment();
+
+      if (now.isAfter(shiftEndOfDay)) {
         return true;
       }
       return false;
