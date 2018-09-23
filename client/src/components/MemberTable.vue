@@ -25,7 +25,8 @@
           <v-chip
             label
             outline
-            :color="getShiftColor(shift)"
+            :disabled="shift.isPastShift"
+            :color="shift.isPastShift ? 'grey' : 'primary'"
             :key="shift.id"
             v-for="shift in shiftsForMember(props.item.name)"
           >
@@ -72,10 +73,6 @@ export default {
   },
 
   methods: {
-    getShiftColor(shift) {
-      return shift.isPastShift ? 'grey' : 'primary';
-    },
-
     shiftsForMember(memberName) {
       const query = {
         $or: [
