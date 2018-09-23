@@ -31,7 +31,7 @@
             :shift="props.item"
             :members="members"
             :set-new-staff="setNewStaff"
-            :primary="true"
+            :is-primary="true"
           />
         </td>
         <td :class="{pastShift: props.item.isPastShift}">
@@ -39,7 +39,7 @@
             :shift="props.item"
             :members="members"
             :set-new-staff="setNewStaff"
-            :primary="false"
+            :is-primary="false"
           />
         </td>
       </template>
