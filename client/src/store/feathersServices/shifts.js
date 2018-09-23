@@ -1,4 +1,5 @@
 import feathersVuex from 'feathers-vuex';
+import moment from 'moment';
 import feathersClient from '../feathersClient';
 
 const { service } = feathersVuex(feathersClient, { idField: 'id' });
@@ -13,6 +14,30 @@ const servicePlugin = service(servicePath, {
     fulfilled: 0,
     updatedAt: '',
   },
+  mutations: {
+    setPastAndUpcomingShifts(state) {
+      const shifts = state.keyedById;
+      let foundNext = false;
+
+      Object.keys(shifts).forEach((shiftId) => {
+        const hoursToNextShift = moment(shifts[shiftId].date).diff(moment(), 'hours');
+
+        if (hoursToNextShift <= 0) {
+          shifts[shiftId] = { ...shifts[shiftId], isPastShift: true };
+        }
+
+        if (hoursToNextShift > 0) {
+          if (!foundNext) {
+            shifts[shiftId] = { ...shifts[shiftId], isNextUpcoming: true, isPastShift: false };
+            foundNext = true;
+          } else {
+            shifts[shiftId] = { ...shifts[shiftId], isPastShift: false };
+          }
+        }
+      });
+    },
+  },
+
   actions: {
     updateShift({ commit, state, dispatch }) {
       const { currentId, copy: updatedShift } = state;

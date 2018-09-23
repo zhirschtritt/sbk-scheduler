@@ -74,15 +74,16 @@ export default {
 
     ...mapGetters('terms', { getCurrentTerm: 'current' }),
     ...mapMutations('terms', { setCurrentTerm: 'setCurrent' }),
+    ...mapMutations('shifts', ['setPastAndUpcomingShifts']),
 
     async initialize() {
       await this.findTerms();
       this.setCurrentTerm(1);
+      this.findMembers();
 
       const { start, end } = this.getCurrentTerm();
-
-      this.findShifts({ query: { start, end } });
-      this.findMembers();
+      await this.findShifts({ query: { start, end } });
+      this.setPastAndUpcomingShifts();
     },
   },
 

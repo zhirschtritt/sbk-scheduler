@@ -20,8 +20,13 @@
         slot="items"
         slot-scope="props"
       >
-        <td>{{ props.item.date | formatDateWithWeekday }}</td>
-        <td>
+        <td :class="{pastShift: props.item.isPastShift}">
+          {{ props.item.date | formatDateWithWeekday }}
+          <span v-if="props.item.isNextUpcoming">
+            <v-icon small color="primary">star</v-icon>
+          </span>
+        </td>
+        <td :class="{pastShift: props.item.isPastShift}">
           <MemberSelector
             :shift="props.item"
             :members="members"
@@ -29,7 +34,7 @@
             :primary="true"
           />
         </td>
-        <td>
+        <td :class="{pastShift: props.item.isPastShift}">
           <MemberSelector
             :shift="props.item"
             :members="members"
@@ -40,6 +45,11 @@
       </template>
       <template slot="no-data">
         Loading...
+      </template>
+      <template slot="footer">
+        <td colspan="100%">
+          <v-icon small color="primary">star</v-icon> = Next upcoming shift
+        </td>
       </template>
     </v-data-table>
   </div>
@@ -102,3 +112,9 @@ export default {
   },
 };
 </script>
+
+<style>
+  .pastShift {
+    background-color: #FAFAFA;
+  }
+</style>

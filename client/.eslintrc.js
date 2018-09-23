@@ -12,6 +12,15 @@ module.exports = {
       "plugin:vue/strongly-recommended"
   ],
   "rules": {
-    "no-param-reassign": [2, { "props": false }]
+    "no-param-reassign": [2, { "props": false }],
+    'vue/max-attributes-per-line': [2,
+        {
+          'singleline': 3,
+          'multiline': {
+            'max': 1,
+            'allowFirstLine': true
+          }
+        }
+      ],
   }
 }

@@ -10,7 +10,7 @@ Vue.use(Vuetify, {
   theme: {
     primary: colors.teal.base,
     secondary: colors.purple.base, // eslint-disable-line
-    accent: colors.teal.accent2,
+    accent: colors.teal.lighten4,
     error: colors.red.accent3,
   },
 });

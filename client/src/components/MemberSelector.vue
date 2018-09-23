@@ -1,29 +1,34 @@
 <template>
-  <v-menu :disabled="isPastShift">
-    <v-chip
-      flat
-      outline
-      label
-      :color="fulfilledColor"
-      slot="activator">
-      {{ staffMemberName | capitalize }}
-    </v-chip>
-    <v-list dense>
-      <div v-if="canBeCleared">
-        <v-list-tile
-          @click="setNewStaff('', shift, isPrimary)">
-          <strong>Clear</strong>
-        </v-list-tile>
-        <v-divider/>
-      </div>
-      <v-list-tile
-        v-for="(member, i) in members"
-        :key="i"
-        @click="setNewStaff(member.name, shift, isPrimary)">
-        <v-list-tile-title>{{ member.name | capitalize }}</v-list-tile-title>
-      </v-list-tile>
-    </v-list>
-  </v-menu>
+  <div>
+    <div v-if="shift.isPastShift && !this.shiftSlotFulfilled"/>
+    <div v-else>
+      <v-menu :disabled="isPastShift" >
+        <v-chip
+          flat
+          outline
+          label
+          :color="fulfilledColor"
+          slot="activator">
+          {{ staffMemberName | capitalize }}
+        </v-chip>
+        <v-list dense>
+          <div v-if="canBeCleared">
+            <v-list-tile
+              @click="setNewStaff('', shift, isPrimary)">
+              <strong>Clear</strong>
+            </v-list-tile>
+            <v-divider/>
+          </div>
+          <v-list-tile
+            v-for="(member, i) in members"
+            :key="i"
+            @click="setNewStaff(member.name, shift, isPrimary)">
+            <v-list-tile-title>{{ member.name | capitalize }}</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -68,10 +73,13 @@ export default {
       }
       return this.shift.secondary_staff || 'Add Staff';
     },
-    fulfilledColor() {
+    shiftSlotFulfilled() {
       const staffLevel = this.primary ? 'primary_staff' : 'secondary_staff';
 
-      if (this.shift[staffLevel] && !this.isPastShift) {
+      return !!this.shift[staffLevel];
+    },
+    fulfilledColor() {
+      if (this.shiftSlotFulfilled && !this.isPastShift) {
         return 'primary';
       }
       return 'grey';
