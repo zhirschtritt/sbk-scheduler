@@ -3,10 +3,7 @@
   "type": "docker",
   "alias": "schedule.somervillebikekitchen.org",
   "public": true,
-  "regions": ["iad"],
-  "features": {
-    "cloud": "v2"
-  },
+  "regions": ["sfo"],
   "env": {
     "NODE_ENV": "production",
     "IAM_EMAIL": "@iam_email",
