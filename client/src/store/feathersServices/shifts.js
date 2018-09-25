@@ -20,7 +20,8 @@ const servicePlugin = service(servicePath, {
       let foundNext = false;
 
       Object.keys(shifts).forEach((shiftId) => {
-        const hoursToNextShift = moment(shifts[shiftId].date).diff(moment(), 'hours');
+        const shiftEod = moment(shifts[shiftId].date).add(24, 'hours');
+        const hoursToNextShift = shiftEod.diff(moment(), 'hours');
 
         if (hoursToNextShift <= 0) {
           shifts[shiftId] = { ...shifts[shiftId], isPastShift: true };
