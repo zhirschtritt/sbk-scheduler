@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import ShiftTable from './components/ShiftTable.vue';
 import MemberTable from './components/MemberTable.vue';
 import TermSelector from './components/TermSelector.vue';
@@ -68,22 +68,20 @@ export default {
   },
 
   methods: {
-    ...mapActions('shifts', { findShifts: 'find' }),
     ...mapActions('members', { findMembers: 'find' }),
     ...mapActions('terms', { findTerms: 'find' }),
-
-    ...mapGetters('terms', { getCurrentTerm: 'current' }),
-    ...mapMutations('terms', { setCurrentTerm: 'setCurrent' }),
-    ...mapMutations('shifts', ['setPastAndUpcomingShifts']),
+    ...mapActions(['updateSelectedTerm']),
+    ...mapGetters('terms', { findTermsInStore: 'find' }),
 
     async initialize() {
       await this.findTerms();
-      this.setCurrentTerm(1);
       this.findMembers();
 
-      const { start, end } = this.getCurrentTerm();
-      await this.findShifts({ query: { start, end } });
-      this.setPastAndUpcomingShifts();
+      const { data: [currentTerm] } = this.findTermsInStore()({
+        query: { isCurrent: true },
+      });
+
+      this.updateSelectedTerm(currentTerm);
     },
   },
 

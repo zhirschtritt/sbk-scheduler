@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import formatDate from '../filters/formatDate';
 
 export default {
@@ -43,18 +43,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations('terms', { setCurrentTerm: 'setCurrent' }),
-    ...mapMutations('shifts', { clearAllShifts: 'clearAll' }),
-    ...mapActions('shifts', { findShifts: 'find' }),
-
-    updateSelectedTerm(term) {
-      this.setCurrentTerm(term);
-
-      const { start, end } = this.getCurrentTerm;
-
-      this.clearAllShifts();
-      this.findShifts({ query: { start, end } });
-    },
+    ...mapActions(['updateSelectedTerm']),
   },
 };
 </script>

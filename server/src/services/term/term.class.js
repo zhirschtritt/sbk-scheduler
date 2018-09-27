@@ -17,6 +17,12 @@ class Service {
     };
   }
 
+  isCurrentTerm(term) {
+    const now = moment();
+    
+    return moment(term.start) <= now && now < moment(term.end);
+  }
+
   async find (params) {
     const { termsSheet } = await this.getSheets();
     const todayishString = moment().subtract(this.termLength - 1, 'days').format('YYYY-MM-DD');
@@ -30,7 +36,8 @@ class Service {
         return {
           id: Number(term.id),
           start: term.start,
-          end: term.end
+          end: term.end,
+          isCurrent: this.isCurrentTerm(term)
         };
       });
   }
@@ -45,7 +52,8 @@ class Service {
     return {
       id: Number(term[0].id),
       start: term[0].start,
-      end: term[0].end
+      end: term[0].end,
+      isCurrent: this.isCurrentTerm(term)
     };
   }
 }

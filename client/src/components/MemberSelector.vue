@@ -8,8 +8,9 @@
           outline
           label
           :color="fulfilledColor"
+          class="text-capitalize"
           slot="activator">
-          {{ staffMemberName | capitalize }}
+          {{ staffMemberName }}
         </v-chip>
         <v-list dense>
           <div v-if="this.shiftSlotFulfilled">
@@ -23,7 +24,7 @@
             v-for="(member, i) in members"
             :key="i"
             @click="setNewStaff(member.name, shift, isPrimary)">
-            <v-list-tile-title>{{ member.name | capitalize }}</v-list-tile-title>
+            <v-list-tile-title class="text-capitalize">{{ member.name }}</v-list-tile-title>
           </v-list-tile>
         </v-list>
       </v-menu>

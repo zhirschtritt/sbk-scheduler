@@ -20,7 +20,7 @@
         slot="items"
         slot-scope="props"
       >
-        <td>{{ props.item.name | capitalize }}</td>
+        <td class="text-capitalize">{{ props.item.name }}</td>
         <td>
           <v-chip
             label

@@ -29,6 +29,16 @@ export default new Vuex.Store({
       commit('notifications/setCurrent', 1);
       state.cancelShiftDialog = !state.cancelShiftDialog;
     },
+
+    async updateSelectedTerm({ commit, dispatch }, term) {
+      commit('terms/setCurrent', term);
+
+      const { start, end } = term;
+
+      commit('shifts/clearAll');
+      await dispatch('shifts/find', { query: { start, end } });
+      commit('shifts/setPastAndUpcomingShifts');
+    },
   },
   plugins: [
     ...servicePlugins,
