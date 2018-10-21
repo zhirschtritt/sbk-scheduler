@@ -14,10 +14,17 @@ module.exports = function (app) {
     members
   };
 
-  // Initialize our service with any options it requires
-  app.use('/notifications', createService(options));
+  const notifications = createService(options);
+  
+  notifications.docs = {
+    create: {},
+    definitions: {
+      notifications: require('./notification.schema')
+    }
+  };
 
-  // Get our initialized service so that we can register hooks
+  app.use('/notifications', notifications);
+
   const service = app.service('notifications');
 
   service.hooks(hooks);

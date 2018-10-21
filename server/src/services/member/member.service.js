@@ -26,7 +26,7 @@ module.exports = function (app) {
       ]
     },
     definitions: {
-      member: require('./member.schema')
+      members: require('./member.schema')
     }
   };
   

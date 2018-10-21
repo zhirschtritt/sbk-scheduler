@@ -18,7 +18,8 @@ class Service {
     //   notificationType: String,
     //   message: String,
     //   context: {
-    //     shift: Shift
+    //     shift: Shift,
+    //     member: Member,
     //   }
     // }
 

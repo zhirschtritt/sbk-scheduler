@@ -18,8 +18,6 @@ module.exports = function (app) {
   // app.use('/terms', createService(options)); 
   const terms = createService(options);
   terms.docs = {
-  //overwrite things here.
-  //if we want to add a mongoose style $search hook to find, we can write this:
     find: {
       parameters: [
         {
@@ -31,7 +29,7 @@ module.exports = function (app) {
       ]
     },
     definitions: {
-      term: require('./term.schema')
+      terms: require('./term.schema')
     }
   };
   app.use('/terms', terms);

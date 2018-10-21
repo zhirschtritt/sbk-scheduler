@@ -1,0 +1,155 @@
+{
+  "title": "notification",
+  "type": "object",
+  "properties": {
+    "notificationType": {
+      "type": "string",
+      "title": "The Notificationtype Schema",
+      "default": "",
+      "examples": [
+        "cancelledShift"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "message": {
+      "type": "string",
+      "title": "The Message Schema",
+      "default": "",
+      "examples": [
+        "blah"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "context": {
+      "type": "object",
+      "title": "The Context Schema",
+      "required": [
+        "shift",
+        "member"
+      ],
+      "properties": {
+        "shift": {
+          "type": "object",
+          "title": "The Shift Schema",
+          "required": [
+            "date",
+            "primary_staff",
+            "secondary_staff",
+            "fulfilled",
+            "updatedAt",
+            "id",
+            "isPastShift"
+          ],
+          "properties": {
+            "date": {
+              "type": "string",
+              "title": "The Date Schema",
+              "default": "",
+              "examples": [
+                "2018-10-23"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "primary_staff": {
+              "type": "string",
+              "title": "The Primary_staff Schema",
+              "default": "",
+              "examples": [
+                "quentin"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "secondary_staff": {
+              "type": "string",
+              "title": "The Secondary_staff Schema",
+              "default": "",
+              "examples": [
+                ""
+              ],
+              "pattern": "^(.*)$"
+            },
+            "fulfilled": {
+              "type": "integer",
+              "title": "The Fulfilled Schema",
+              "default": 0,
+              "examples": [
+                1
+              ]
+            },
+            "updatedAt": {
+              "type": "string",
+              "title": "The Updatedat Schema",
+              "default": "",
+              "examples": [
+                "2018-09-16T11:58:20"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "id": {
+              "type": "integer",
+              "title": "The Id Schema",
+              "default": 0,
+              "examples": [
+                25
+              ]
+            },
+            "isPastShift": {
+              "type": "boolean",
+              "title": "The Ispastshift Schema",
+              "default": false,
+              "examples": [
+                false
+              ]
+            }
+          }
+        },
+        "member": {
+          "type": "object",
+          "title": "The Member Schema",
+          "required": [
+            "id",
+            "name",
+            "email",
+            "notifications"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "title": "The Id Schema",
+              "default": 0,
+              "examples": [
+                8
+              ]
+            },
+            "name": {
+              "type": "string",
+              "title": "The Name Schema",
+              "default": "",
+              "examples": [
+                "quentin"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "email": {
+              "type": "string",
+              "title": "The Email Schema",
+              "default": "",
+              "examples": [
+                "zhirschtritt@gmail.com"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "notifications": {
+              "type": "integer",
+              "title": "The Notifications Schema",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

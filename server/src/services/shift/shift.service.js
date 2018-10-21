@@ -47,12 +47,12 @@ module.exports = function (app) {
       ]
     },
     definitions: {
-      shift: require('./shift.schema')
+      shifts: require('./shift.schema')
     }
   };
+
   app.use('/shifts', shifts);
 
-  // Get our initialized service so that we can register hooks
   const service = app.service('shifts');
 
   service.hooks(hooks);
