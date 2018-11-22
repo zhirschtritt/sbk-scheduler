@@ -25,6 +25,9 @@
           <span v-if="props.item.isNextUpcoming">
             <v-icon small color="primary">star</v-icon>
           </span>
+          <span v-if="!props.item.shopOpen">
+            <strong>(Shop Closed)</strong>
+          </span>
         </td>
         <td :class="{pastShift: props.item.isPastShift}">
           <MemberSelector

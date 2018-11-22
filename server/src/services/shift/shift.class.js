@@ -46,6 +46,7 @@ class Service {
           secondary_staff: shift.secondarystaff,
           fulfilled: Number(shift.fulfilled),
           updatedAt: shift.updatedat,
+          shopOpen: Number(shift.shopopen),
         };
       });
   }
@@ -64,6 +65,7 @@ class Service {
       secondary_staff: shift[0].secondarystaff,
       fulfilled: Number(shift[0].fulfilled),
       updatedAt: shift.updatedat,
+      shopOpen: Number(shift.shopopen),
     };
   }
 
