@@ -2,7 +2,7 @@
   <p>Upcoming shift assignment on <strong>{{formatDate shift.date}}</strong> 
   that was assigned to <strong> {{capitalize member.name}} </strong> 
   has been cancelled.</p>
-  {{#if message}}
+  {{ #if {{doubleBang message}} }}
     <p>Comment from member: </p>
     <blockquote
       <p>{{{replaceLineBreaks message}}}</p>
