@@ -25,7 +25,7 @@
       "title": "The Context Schema",
       "required": [
         "shift",
-        "member"
+        "staffMember"
       ],
       "properties": {
         "shift": {
@@ -103,9 +103,9 @@
             }
           }
         },
-        "member": {
+        "staffMember": {
           "type": "object",
-          "title": "The Member Schema",
+          "title": "The StaffMember Schema",
           "required": [
             "id",
             "name",

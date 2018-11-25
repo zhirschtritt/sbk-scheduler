@@ -1,6 +1,6 @@
-// Initializes the `member` service on path `/members`
-const createService = require('./member.class.js');
-const hooks = require('./member.hooks');
+// Initializes the `staffMember` service on path `/staffMembers`
+const createService = require('./staffMember.class.js');
+const hooks = require('./staffMember.hooks');
 
 module.exports = function (app) {
   
@@ -12,9 +12,9 @@ module.exports = function (app) {
     sheets
   };
 
-  const members = createService(options);
+  const staffMembers = createService(options);
   
-  members.docs = {
+  staffMembers.docs = {
     find: {
       parameters: [
         {
@@ -26,14 +26,14 @@ module.exports = function (app) {
       ]
     },
     definitions: {
-      members: require('./member.schema')
+      staffMembers: require('./staffMember.schema')
     }
   };
   
-  app.use('/members', members);
+  app.use('/staffMembers', staffMembers);
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('members');
+  const service = app.service('staffMembers');
 
   service.hooks(hooks);
 };

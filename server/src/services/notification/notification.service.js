@@ -6,12 +6,12 @@ module.exports = function (app) {
   
   const mailer = app.get('mailer');
   const shifts = app.service('shifts');
-  const members = app.service('members');
+  const staffMembers = app.service('staffMembers');
 
   const options = {
     mailer,
     shifts,
-    members
+    staffMembers
   };
 
   const notifications = createService(options);

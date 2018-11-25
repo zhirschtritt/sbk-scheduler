@@ -21,10 +21,10 @@
             <v-divider/>
           </div>
           <v-list-tile
-            v-for="(member, i) in members"
+            v-for="(staffMember, i) in staffMembers"
             :key="i"
-            @click="setNewStaff(member.name, shift, isPrimary)">
-            <v-list-tile-title class="text-capitalize">{{ member.name }}</v-list-tile-title>
+            @click="setNewStaff(staffMember.name, shift, isPrimary)">
+            <v-list-tile-title class="text-capitalize">{{ staffMember.name }}</v-list-tile-title>
           </v-list-tile>
         </v-list>
       </v-menu>
@@ -36,7 +36,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'MemberSelector',
+  name: 'StaffMemberSelector',
   props: {
     isPrimary: {
       type: Boolean,
@@ -47,7 +47,7 @@ export default {
       default: () => {},
       required: true,
     },
-    members: {
+    staffMembers: {
       type: Array,
       default: () => [],
       required: true,

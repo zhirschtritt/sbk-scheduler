@@ -11,7 +11,7 @@ const servicePlugin = service(servicePath, {
     message: '',
     context: {
       shift: {},
-      memeber: {},
+      staffMember: {},
     },
   },
 });

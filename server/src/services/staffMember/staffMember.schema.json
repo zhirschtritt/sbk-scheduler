@@ -1,5 +1,5 @@
 {
-  "title": "member",
+  "title": "staffMember",
   "type": "object",
   "properties": {
     "id": {
@@ -12,7 +12,7 @@
     },
     "name": {
       "type": "string",
-      "title": "Name of member",
+      "title": "Name of staffMember",
       "default": "",
       "examples": [
         "Jane"
@@ -20,7 +20,7 @@
     },
     "email": {
       "type": "string",
-      "title": "email of member",
+      "title": "email of staffMember",
       "default": "",
       "examples": [
         "Jane@foo.com"

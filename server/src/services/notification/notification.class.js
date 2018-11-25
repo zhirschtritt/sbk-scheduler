@@ -3,9 +3,9 @@ const moment = require('moment');
 /* eslint-disable no-unused-vars */
 class Service {
 
-  constructor ({mailer, members, shifts}) {
+  constructor ({mailer, staffMembers, shifts}) {
     this.mailer = mailer;
-    this.members = members;
+    this.staffMembers = staffMembers;
     this.shifts = shifts;
   }
 
@@ -19,19 +19,19 @@ class Service {
     //   message: String,
     //   context: {
     //     shift: Shift,
-    //     member: Member,
+    //     staffMember: StaffMember,
     //   }
     // }
 
     // if a shift has been cleared by the client 
     if (data && data.notificationType === 'cancelledShift') {
-      const { shift, member } = data.context;
+      const { shift, staffMember } = data.context;
       const { message } = data;
 
       return await this.mailer.sendEmail({
         template: {
           name: 'cancelledShift',
-          context: {shift, member, message}
+          context: {shift, staffMember, message}
         },
         recipients: this.mailer.staffEmail,
         subject: `⚠️ Cancelled Upcoming Shift: ${this.formatDate(shift.date)}`
@@ -47,7 +47,7 @@ class Service {
       nextShifts.map(async (shift) => {
         const isStaffAssigned = shift.primary_staff || shift.secondary_staff;
 
-        // if no members assigned to upcoming shifts, draft email to staff
+        // if no staffMembers assigned to upcoming shifts, draft email to staff
         if (!isStaffAssigned) { 
           return await this.mailer.sendEmail({
             template: {
@@ -59,24 +59,24 @@ class Service {
           });
         }
 
-        // else draft emails to all assigned members per shift
-        const allMembers = await this.members.find();
+        // else draft emails to all assigned staffMembers per shift
+        const allStaffMembers = await this.staffMembers.find();
 
-        const assignedMemberEmails = allMembers
-          .filter((member) => {
+        const assignedStaffMemberEmails = allStaffMembers
+          .filter((staffMember) => {
             return [shift.primary_staff, shift.secondary_staff]
               .map((name) => name.toLowerCase())
-              .includes(member.name.toLowerCase());
+              .includes(staffMember.name.toLowerCase());
           })
-          .filter((member) => !!member.notifications)
-          .map((member) => member.email);
+          .filter((staffMember) => !!staffMember.notifications)
+          .map((staffMember) => staffMember.email);
         
         return await this.mailer.sendEmail({
           template: {
             name: 'upcomingShift',
             context: shift,
           },
-          recipients: assignedMemberEmails,
+          recipients: assignedStaffMemberEmails,
           subject: `👋 SBK Reminder: Upcoming Shift ${this.formatDate(shift.date)}`
         });
       })

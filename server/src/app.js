@@ -44,7 +44,7 @@ app.configure(swagger({
   uiIndex: path.join(__dirname, 'docs.html'),
   info: {
     title: 'SBK Scheduler',
-    description: 'Terms, Shifts, Members, Notifcaitons'
+    description: 'Terms, Shifts, StaffMembers, Notifcaitons'
   }
 }));
 

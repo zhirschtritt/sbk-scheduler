@@ -6,15 +6,15 @@
       dense
       flat>
       <v-icon>people</v-icon>
-      <v-toolbar-title>Members</v-toolbar-title>
+      <v-toolbar-title>Staff Members</v-toolbar-title>
       <v-spacer/>
     </v-toolbar>
     <v-data-table
       :headers="headers"
-      :items="members"
+      :items="staffMembers"
       hide-actions
       dense
-      :loading="areMembersLoading"
+      :loading="areStaffMembersLoading"
     >
       <template
         slot="items"
@@ -28,7 +28,7 @@
             :disabled="shift.isPastShift"
             :color="shift.isPastShift ? 'grey' : 'primary'"
             :key="shift.id"
-            v-for="shift in shiftsForMember(props.item.name)"
+            v-for="shift in shiftsForStaffMember(props.item.name)"
           >
             {{ shift.date | formatDateWithWeekday }}
           </v-chip>
@@ -56,41 +56,41 @@ import { mapState, mapGetters } from 'vuex';
 export default {
   data: () => ({
     headers: [
-      { text: 'Member', value: 'name' },
+      { text: 'Staff Member', value: 'name' },
       { text: 'Scheduled Shifts', sortable: false },
       { text: 'Shift Reminders', sortable: false },
     ],
   }),
 
   computed: {
-    ...mapState('members', { areMembersLoading: 'isFindPending' }),
+    ...mapState('staffMembers', { areStaffMembersLoading: 'isFindPending' }),
     ...mapGetters('shifts', { findShiftsInStore: 'find' }),
-    ...mapGetters('members', { findMembersInStore: 'find' }),
+    ...mapGetters('staffMembers', { findStaffMembersInStore: 'find' }),
 
-    members() {
-      return this.findMembersInStore().data;
+    staffMembers() {
+      return this.findStaffMembersInStore().data;
     },
   },
 
   methods: {
-    shiftsForMember(memberName) {
+    shiftsForStaffMember(staffMemberName) {
       const query = {
         $or: [
-          { primary_staff: memberName },
-          { secondary_staff: memberName },
+          { primary_staff: staffMemberName },
+          { secondary_staff: staffMemberName },
         ],
       };
       return this.findShiftsInStore({ query }).data;
     },
 
-    updateNotifications(member) {
-      const newNotificationValue = member.notifications ? 0 : 1;
-      const updatedMember = member.clone();
+    updateNotifications(staffMember) {
+      const newNotificationValue = staffMember.notifications ? 0 : 1;
+      const updatedStaffMember = staffMember.clone();
 
-      updatedMember.notifications = newNotificationValue;
+      updatedStaffMember.notifications = newNotificationValue;
 
-      updatedMember.commit();
-      updatedMember.patch();
+      updatedStaffMember.commit();
+      updatedStaffMember.patch();
     },
   },
 };
