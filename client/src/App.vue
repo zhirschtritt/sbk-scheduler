@@ -32,7 +32,7 @@
           <v-flex
             xs12
             sm6>
-            <MemberTable/>
+            <StaffMemberTable/>
           </v-flex>
           <v-flex
             xs12
@@ -48,7 +48,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ShiftTable from './components/ShiftTable.vue';
-import MemberTable from './components/MemberTable.vue';
+import StaffMemberTable from './components/StaffMemberTable.vue';
 import TermSelector from './components/TermSelector.vue';
 import CancelConfirmDialog from './components/CancelConfirmDialog.vue';
 
@@ -56,7 +56,7 @@ export default {
   name: 'App',
   components: {
     ShiftTable,
-    MemberTable,
+    StaffMemberTable,
     TermSelector,
     CancelConfirmDialog,
   },
@@ -68,14 +68,14 @@ export default {
   },
 
   methods: {
-    ...mapActions('members', { findMembers: 'find' }),
+    ...mapActions('staffMembers', { findStaffMembers: 'find' }),
     ...mapActions('terms', { findTerms: 'find' }),
     ...mapActions(['updateSelectedTerm']),
     ...mapGetters('terms', { findTermsInStore: 'find' }),
 
     async initialize() {
       await this.findTerms();
-      this.findMembers();
+      this.findStaffMembers();
 
       const { data: [currentTerm] } = this.findTermsInStore()({
         query: { isCurrent: true },

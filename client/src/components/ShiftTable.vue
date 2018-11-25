@@ -6,7 +6,7 @@
       dense
       flat>
       <v-icon>today</v-icon>
-      <v-toolbar-title>Volunteer Schedule</v-toolbar-title>
+      <v-toolbar-title>Staff Schedule</v-toolbar-title>
       <v-spacer/>
     </v-toolbar>
     <v-data-table
@@ -30,17 +30,17 @@
           </span>
         </td>
         <td :class="{pastShift: props.item.isPastShift}">
-          <MemberSelector
+          <StaffMemberSelector
             :shift="props.item"
-            :members="members"
+            :staff-members="staffMembers"
             :set-new-staff="setNewStaff"
             :is-primary="true"
           />
         </td>
         <td :class="{pastShift: props.item.isPastShift}">
-          <MemberSelector
+          <StaffMemberSelector
             :shift="props.item"
-            :members="members"
+            :staff-members="staffMembers"
             :set-new-staff="setNewStaff"
             :is-primary="false"
           />
@@ -63,11 +63,11 @@ import moment from 'moment';
 import {
   mapState, mapGetters, mapActions,
 } from 'vuex';
-import MemberSelector from './MemberSelector.vue';
+import StaffMemberSelector from './StaffMemberSelector.vue';
 
 export default {
   components: {
-    MemberSelector,
+    StaffMemberSelector,
   },
 
   data: () => ({
@@ -81,32 +81,32 @@ export default {
   computed: {
     ...mapState('shifts', { areShiftsLoading: 'isFindPending' }),
     ...mapGetters('shifts', { findShiftsInStore: 'find' }),
-    ...mapGetters('members', { findMembersInStore: 'find' }),
+    ...mapGetters('staffMembers', { findStaffMembersInStore: 'find' }),
 
     shifts() {
       return this.findShiftsInStore().data;
     },
-    members() {
-      return this.findMembersInStore().data;
+    staffMembers() {
+      return this.findStaffMembersInStore().data;
     },
   },
 
   methods: {
     ...mapActions(['toggleCancelShiftDialog']),
     ...mapActions('shifts', ['updateShift', 'stageUpdateShift']),
-    ...mapActions('members', { setCurrentMember: 'setCurrentByName' }),
+    ...mapActions('staffMembers', { setCurrentStaffMember: 'setCurrentByName' }),
 
-    setNewStaff(memberName, shift, isPrimary) {
+    setNewStaff(staffMemberName, shift, isPrimary) {
       // set current member for use by confirm workflow
-      this.stageUpdateShift({ memberName, shift, isPrimary });
+      this.stageUpdateShift({ staffMemberName, shift, isPrimary });
 
       const now = moment();
       const lastChange = shift.updatedAt ? moment(shift.updatedAt) : moment();
       const minutesSinceLastUpdate = now.diff(lastChange, 'minutes');
 
       // if clearing primary member, signal confirm dialog, else, clear immediately
-      if (!memberName && isPrimary && minutesSinceLastUpdate > 59) {
-        this.setCurrentMember(shift.primary_staff);
+      if (!staffMemberName && isPrimary && minutesSinceLastUpdate > 59) {
+        this.setCurrentStaffMember(shift.primary_staff);
         this.toggleCancelShiftDialog();
       } else {
         this.updateShift();

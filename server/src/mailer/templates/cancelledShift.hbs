@@ -1,9 +1,9 @@
 <html>
   <p>Upcoming shift assignment on <strong>{{formatDate shift.date}}</strong> 
-  that was assigned to <strong> {{capitalize member.name}} </strong> 
+  that was assigned to <strong> {{capitalize staffMember.name}} </strong> 
   has been cancelled.</p>
   {{ #if {{doubleBang message}} }}
-    <p>Comment from member: </p>
+    <p>Comment from staff member: </p>
     <blockquote
       <p>{{{replaceLineBreaks message}}}</p>
     </blockquote>

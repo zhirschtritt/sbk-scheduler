@@ -9,7 +9,7 @@
         primary-title
         mx-2>
         <h3 class="subheading">Confirm cancelling shift for
-          {{ currentMemberName | capitalize }}
+          {{ currentStaffMemberName | capitalize }}
           on {{ shiftDate | formatDateWithWeekday }}
         </h3>
         <span class="caption font-weight-thin">
@@ -81,7 +81,7 @@ export default {
         notificationType: 'cancelledShift',
         context: {
           shift: this.shift,
-          member: this.getCurrentMember,
+          staffMember: this.getCurrentStaffMember,
         },
       });
 
@@ -94,7 +94,7 @@ export default {
   },
   computed: {
     ...mapState(['cancelShiftDialog']),
-    ...mapGetters('members', { getCurrentMember: 'current' }),
+    ...mapGetters('staffMembers', { getCurrentStaffMember: 'current' }),
     ...mapGetters('shifts', { getCurrentShift: 'current' }),
     ...mapState('notifications', { notificationLoading: 'isCreatePending' }),
 
@@ -106,8 +106,8 @@ export default {
       return this.getCurrentShift ? this.getCurrentShift.date : '';
     },
 
-    currentMemberName() {
-      return this.getCurrentMember ? this.getCurrentMember.name : '';
+    currentStaffMemberName() {
+      return this.getCurrentStaffMember ? this.getCurrentStaffMember.name : '';
     },
 
     dialogWindow: {

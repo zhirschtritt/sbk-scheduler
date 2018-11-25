@@ -58,15 +58,15 @@ const servicePlugin = service(servicePath, {
       commit('rejectCopy', currentId);
     },
 
-    stageUpdateShift({ commit, state }, { memberName, shift, isPrimary }) {
+    stageUpdateShift({ commit, state }, { staffMemberName, shift, isPrimary }) {
       const shiftCopy = Object.assign({}, shift);
 
       commit('setCurrent', shiftCopy);
 
       if (isPrimary) {
-        state.copy.primary_staff = memberName;
+        state.copy.primary_staff = staffMemberName;
       } else {
-        state.copy.secondary_staff = memberName;
+        state.copy.secondary_staff = staffMemberName;
       }
 
       const hasAtLeastOneStaff = !!(state.copy.primary_staff || state.copy.secondary_staff);

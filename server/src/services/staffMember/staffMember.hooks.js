@@ -1,7 +1,7 @@
 const Ajv = require('ajv');
 const ajv = new Ajv({ coerceTypes: true });
 const {validateSchema} = require('feathers-hooks-common');
-const schema = require('./member.schema');
+const schema = require('./staffMember.schema');
 
 module.exports = {
   before: {
