@@ -3,7 +3,6 @@ const createService = require('./term.class.js');
 const hooks = require('./term.hooks');
 
 module.exports = function (app) {
-  const termLength = app.get('termLength');
   const paginate = app.get('paginate');
 
   const sheets = app.get('sheetsClient');
@@ -11,7 +10,6 @@ module.exports = function (app) {
   const options = {
     paginate,
     sheets,
-    termLength
   };
 
   // Initialize our service with any options it requires

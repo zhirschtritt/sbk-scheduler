@@ -47,6 +47,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
 import ShiftTable from './components/ShiftTable.vue';
 import StaffMemberTable from './components/StaffMemberTable.vue';
 import TermSelector from './components/TermSelector.vue';
@@ -77,9 +78,9 @@ export default {
       await this.findTerms();
       this.findStaffMembers();
 
-      const { data: [currentTerm] } = this.findTermsInStore()({
-        query: { isCurrent: true },
-      });
+      const { data: terms } = this.findTermsInStore()();
+
+      const currentTerm = terms.find(term => moment() <= moment(term.end).add(1, 'day'));
 
       this.updateSelectedTerm(currentTerm);
     },

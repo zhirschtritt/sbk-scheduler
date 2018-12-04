@@ -2,9 +2,8 @@
 const moment = require('moment');
 
 class Service {
-  constructor ({ paginate, sheets, termLength }) {
+  constructor ({ paginate, sheets }) {
     this.paginate = paginate;
-    this.termLength = termLength;
     this.sheets = sheets;
   }
 
@@ -17,19 +16,10 @@ class Service {
     };
   }
 
-  isCurrentTerm(term) {
-    const now = moment();
-    
-    return moment(term.start) <= now && now < moment(term.end);
-  }
-
   async find (params) {
     const { termsSheet } = await this.getSheets();
-    const todayishString = moment().subtract(this.termLength, 'days').format('YYYY-MM-DD');
 
-    const allTerms = await termsSheet.getRowsAsync({
-      query: `start >= ${todayishString}`
-    });
+    const allTerms = await termsSheet.getRowsAsync({});
 
     return allTerms
       .map((term) => {
@@ -37,7 +27,6 @@ class Service {
           id: Number(term.id),
           start: term.start,
           end: term.end,
-          isCurrent: this.isCurrentTerm(term)
         };
       });
   }
@@ -53,7 +42,6 @@ class Service {
       id: Number(term[0].id),
       start: term[0].start,
       end: term[0].end,
-      isCurrent: this.isCurrentTerm(term)
     };
   }
 }
