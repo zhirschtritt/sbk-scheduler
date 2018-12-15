@@ -1,6 +1,8 @@
 // Initializes the `notifications` service on path `/notifications`
 const createService = require('./notification.class.js');
 const hooks = require('./notification.hooks');
+const {NotificationHandlerFactory} = require('./Handlers/NotificationHandlerFactory');
+const logger = require('../../logger');
 
 module.exports = function (app) {
   
@@ -11,7 +13,9 @@ module.exports = function (app) {
   const options = {
     mailer,
     shifts,
-    staffMembers
+    staffMembers,
+    NotificationHandlerFactory,
+    logger,
   };
 
   const notifications = createService(options);

@@ -14,13 +14,14 @@
         </h3>
         <span class="caption font-weight-thin">
           By cancelling this shift, an email will be sent to SBK staff to inform them
-          that this shift is now available. You can add a personalized message to include in
-          the email below.
+          that this shift is now available. Please add a message for staff to include in
+          the email.
         </span>
       </v-card-title>
       <v-spacer/>
       <v-form
         ref="form"
+        v-model="form"
         class="mx-4"
       >
         <v-textarea
@@ -28,13 +29,15 @@
           auto-grow
           box
           row-height=18
-          label="Custom message to staff"
+          label="Message to staff"
           persistent
           autofocus
           color="primary"
+          :rules="[rules.required]"
         />
         <v-card-actions>
           <v-btn
+            :disabled="!form"
             :loading="notificationLoading"
             color="primary"
             flat
@@ -59,7 +62,11 @@ import {
 export default {
   name: 'CancelConfirmDialog',
   data: () => ({
+    form: false,
     emailMessage: '',
+    rules: {
+      required: v => !!v || 'This field is required',
+    },
   }),
   methods: {
     ...mapActions(['toggleCancelShiftDialog']),

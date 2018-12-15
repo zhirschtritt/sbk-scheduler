@@ -14,8 +14,4 @@ Handlebars.registerHelper('replaceLineBreaks', function(value) {
   return JSON.parse(value).replace(/\n/g, '<br />' );
 });
 
-Handlebars.registerHelper('doubleBang', function(value) {
-  return !!value;
-});
-
 module.exports = Handlebars;

@@ -6,7 +6,9 @@ const baseUrl = process.env.NODE_ENV === 'production' ?
   'http://localhost:3030';
 
 const sundayNotification = new CronJob('0 0 10 * * SUN', async function() {
-  axios.post(`${baseUrl}/notifications`, {})
+  axios.post(`${baseUrl}/notifications`, {
+    notificationType: 'weeklyShiftUpdate'
+  })
     .then((res) => console.log(res ? res.data : res)) // eslint-disable-line
     .catch((err) => console.log(err)); // eslint-disable-line
 
