@@ -34,15 +34,13 @@ class WeeklyShiftUpdateHandler {
     });
   }
 
-  filterStaffMemberEmails(allStaffMembers, upcomingShift) {
+  findAssignedStaffForShift(allStaffMembers, upcomingShift) {
     return allStaffMembers
       .filter((staffMember) => {
         return [upcomingShift.primary_staff, upcomingShift.secondary_staff]
           .map((name) => name.toLowerCase())
           .includes(staffMember.name.toLowerCase());
-      })
-      .filter((staffMember) => !!staffMember.notifications)
-      .map((staffMember) => staffMember.email);
+      });
   }
 
   async handle() {
@@ -53,19 +51,29 @@ class WeeklyShiftUpdateHandler {
 
     return Promise.all(
       nextShifts.map((shift) => {
+        // if shop is closed, no emails
+        if (!shift.shop_open) {
+          return Promise.resolve('Not sending emails for upcoming shift, shop closed');
+        }
         // if upcoming shifts are empty and shop is open, draft email to staff
         const isStaffAssigned = shift.primary_staff || shift.secondary_staff;
         if (!isStaffAssigned) { 
-          if (shift.shop_open) {
-            return this.sendEmptyShiftEmail(shift);
-          }
-          // don't send email for upcoming empty shift if shop is closed
-          return Promise.resolve();
+          return this.sendEmptyShiftEmail(shift);
         }
 
-        // else draft emails to all assigned staffMembers per shift
-        const assignedStaffMemberEmails = this.filterStaffMemberEmails(allStaffMembers, shift);
-        return this.sendUpcomingShiftEmail(shift, assignedStaffMemberEmails);
+        // if upcoming shifts are staffed, draft emails to all assigned staffMembers 
+        const assignedStaffMembers = this.findAssignedStaffForShift(allStaffMembers, shift);
+        const filteredStaffEmails = assignedStaffMembers
+          .filter((staffMember) => !!staffMember.notifications)
+          .map((staffMember) => staffMember.email);
+
+        if (filteredStaffEmails.length > 0) {
+          return this.sendUpcomingShiftEmail(shift, filteredStaffEmails);
+        } 
+
+        // default, do not send email
+        this.log.debug('Not sending emails for shift', {shift});
+        return Promise.resolve(`Not sending emails for shift: ${JSON.stringify(shift)}`);
       })
     );
   }

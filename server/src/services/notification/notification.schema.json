@@ -41,7 +41,7 @@
             "updatedAt",
             "id",
             "isPastShift",
-            "shopOpen"
+            "shop_open"
           ],
           "properties": {
             "date": {
@@ -104,7 +104,7 @@
                 false
               ]
             },
-            "shopOpen": {
+            "shop_open": {
               "type": "integer",
               "title": "The ShopOpen Schema",
               "default": 0,
