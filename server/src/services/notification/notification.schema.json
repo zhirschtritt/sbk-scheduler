@@ -1,6 +1,9 @@
 {
   "title": "notification",
   "type": "object",
+  "required": [
+    "notificationType"
+  ],
   "properties": {
     "notificationType": {
       "type": "string",
@@ -24,8 +27,7 @@
       "type": "object",
       "title": "The Context Schema",
       "required": [
-        "shift",
-        "staffMember"
+        "shift"
       ],
       "properties": {
         "shift": {
@@ -38,7 +40,8 @@
             "fulfilled",
             "updatedAt",
             "id",
-            "isPastShift"
+            "isPastShift",
+            "shopOpen"
           ],
           "properties": {
             "date": {
@@ -95,10 +98,18 @@
             },
             "isPastShift": {
               "type": "boolean",
-              "title": "The Ispastshift Schema",
+              "title": "The IsPastShift Schema",
               "default": false,
               "examples": [
                 false
+              ]
+            },
+            "shopOpen": {
+              "type": "integer",
+              "title": "The ShopOpen Schema",
+              "default": 0,
+              "examples": [
+                1
               ]
             }
           }
