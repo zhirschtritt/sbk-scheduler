@@ -25,7 +25,7 @@
           <span v-if="props.item.isNextUpcoming">
             <v-icon small color="primary">star</v-icon>
           </span>
-          <span v-if="!props.item.shopOpen">
+          <span v-if="!props.item.shop_open">
             <strong>(Shop Closed)</strong>
           </span>
         </td>

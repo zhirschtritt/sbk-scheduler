@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="(shift.isPastShift && !this.shiftSlotFulfilled) || !shift.shopOpen"/>
+    <div v-if="(shift.isPastShift && !this.shiftSlotFulfilled) || !shift.shop_open"/>
     <div v-else>
       <v-menu :disabled="shift.isPastShift" >
         <v-chip

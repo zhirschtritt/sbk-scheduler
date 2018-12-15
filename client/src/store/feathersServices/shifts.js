@@ -28,7 +28,7 @@ const servicePlugin = service(servicePath, {
         }
 
         if (hoursToNextShift > 0) {
-          if (!foundNext && shifts[shiftId].shopOpen) {
+          if (!foundNext && shifts[shiftId].shop_open) {
             shifts[shiftId] = { ...shifts[shiftId], isNextUpcoming: true, isPastShift: false };
             foundNext = true;
           } else {
