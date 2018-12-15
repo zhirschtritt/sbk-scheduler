@@ -2,7 +2,27 @@
 <html lang="en">
   <head>
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet"> -->
+    <script>
+      (function(a,b,c){var d=function(k){var m,n,l=window.location.search.substring(1),
+      o=l.split("&");for(m=0;m<o.length;m++)if(n=o[m].split("="),n[0]==k)
+      return n[1]||void 0},e=function(){return"_"+Math.random().toString(36).substr(2,9)},
+      f=function(){return localStorage.cid||(localStorage.cid=e()),localStorage.cid},
+      g=function(k){var l=[];for(var m in k)k.hasOwnProperty(m)&&void 0!==k[m]&&
+      l.push(encodeURIComponent(m)+"="+encodeURIComponent(k[m]));return l.join("&")},
+      h=function(){setTimeout(function(){var l={v:"1",aip:c.anonymizeIp?1:void 0,tid:b,
+      cid:f(),t:"pageview",sd:c.colorDepth&&screen.colorDepth?screen.colorDepth+"-bits":void 0,
+      dr:d("ref"),dt:document.title,dl:document.location.origin+
+      document.location.pathname+document.location.search,
+      ul:c.language?(navigator.language||"").toLowerCase():void 0,
+      de:c.characterSet?document.characterSet:void 0,sr:c.screenSize?
+      (window.screen||{}).width+"x"+(window.screen||{}).height:void 0,
+      vp:c.screenSize&&window.visualViewport?(window.visualViewport||{}).width+"x"+
+      (window.visualViewport||{}).height:void 0},k=new XMLHttpRequest;
+      k.open("GET","https://www.google-analytics.com/collect?"+g(l)+"&z="+Math.random(),!0),
+      k.send(null)},10)},j=a.pushState;a.pushState=function(k){
+      return"function"==typeof a.onpushstate&&a.onpushstate({state:k}),h(),j.apply(a,arguments)},h()})
+      (window.history,"UA-131034853-1",{anonymizeIp:!0,colorDepth:!0,characterSet:!0,screenSize:!0,language:!0});
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
