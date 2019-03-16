@@ -1,11 +1,11 @@
 {
   "name": "sbk-schedule",
+  "version": 1,
   "type": "docker",
   "alias": "schedule.somervillebikekitchen.org",
   "public": true,
-  "regions": ["sfo"],
   "scale": {
-    "sfo1": {
+    "sfo": {
       "min": 1,
       "max": 1
     }
@@ -14,7 +14,7 @@
     "NODE_ENV": "production",
     "IAM_EMAIL": "@iam_email",
     "IAM_PRIVATE_KEY_BASE64": "@iam_private_key",
-    "MAILGUN_API":"@mailgun_api_key",
+    "MAILGUN_API": "@mailgun_api_key",
     "PORT": "3030"
   }
 }

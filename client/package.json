@@ -16,7 +16,7 @@
     "moment": "^2.22.2",
     "socket.io-client": "^2.1.1",
     "vue": "^2.5.17",
-    "vuetify": "^1.1.13",
+    "vuetify": "^1.4.3",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
