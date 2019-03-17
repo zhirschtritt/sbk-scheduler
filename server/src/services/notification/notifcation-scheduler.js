@@ -5,20 +5,23 @@ class NotificationCronSchedulerFactory {
   constructor(notificationService, logger) {
     this.notificationService = notificationService;
     this.logger = logger;
-
-    this.notificationJobs = this.notifications.map(n => {
-      return n(this.notificationService, this.logger);
-    });
-  }
-
-  get notifications() {
-    return [sundayNotification];
+    this.notifcationMap = new Map();
+    this.addNotificationsToMap();
   }
 
   start() {
-    this.notificationsJobs.forEach(n => {
-      this.logger.info(`starting notification: ${n.name}`);
-      n.start();
+    this.notifcationMap.forEach((notification, notificaitonName) => {
+      this.logger.info(`Starting notification ${notificaitonName}`);
+      notification.start();
+    });
+  }
+
+  addNotificationsToMap() {
+    [sundayNotification].forEach(n => {
+      this.notifcationMap.set(
+        `${n.name}`,
+        n(this.notificationService, this.logger)
+      );
     });
   }
 }
@@ -45,4 +48,4 @@ async function sendNotification(notificationService, logger) {
   }
 }
 
-module.exports = { NotificationCronSchedulerFactory };
+module.exports = { NotificationCronSchedulerFactory, sendNotification };

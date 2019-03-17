@@ -1,5 +1,5 @@
 class NoopHandler {
-  constructor({log}) {
+  constructor({ log }) {
     this.log = log;
   }
 

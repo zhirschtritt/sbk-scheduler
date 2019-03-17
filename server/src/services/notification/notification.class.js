@@ -1,12 +1,23 @@
 class Service {
-  constructor ({mailer, staffMembers, shifts, NotificationHandlerFactory, logger}) {
-    this.NotificationHandlerFactory = new NotificationHandlerFactory({logger, shifts, staffMembers, mailer});
+  constructor({
+    mailer,
+    staffMembers,
+    shifts,
+    NotificationHandlerFactory,
+    logger
+  }) {
+    this.notificationHandlerFactory = new NotificationHandlerFactory({
+      logger,
+      shifts,
+      staffMembers,
+      mailer
+    });
     this.log = logger;
   }
 
-  async create ({notificationType, message, context}) { 
-    const notificationHandler = this.NotificationHandlerFactory.manufacture({
-      notificationType, 
+  async create({ notificationType, message, context }) {
+    const notificationHandler = this.notificationHandlerFactory.manufacture({
+      notificationType,
       message,
       context
     });
@@ -20,7 +31,7 @@ class Service {
   }
 }
 
-module.exports = function (options) {
+module.exports = function(options) {
   return new Service(options);
 };
 
@@ -33,4 +44,4 @@ module.exports.Service = Service;
 //     shift: Shift,
 //     staffMember: StaffMember,
 //   }
-// }   
+// }
