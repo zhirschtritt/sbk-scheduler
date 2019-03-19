@@ -4,13 +4,15 @@ class Service {
     staffMembers,
     shifts,
     NotificationHandlerFactory,
-    logger
+    logger,
+    smsClient
   }) {
     this.notificationHandlerFactory = new NotificationHandlerFactory({
       logger,
       shifts,
       staffMembers,
-      mailer
+      mailer,
+      smsClient
     });
     this.log = logger;
   }

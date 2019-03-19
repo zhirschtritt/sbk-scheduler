@@ -1,0 +1,1 @@
+{"version":3,"file":"ConfigProvider.js","sourceRoot":"","sources":["../src/ConfigProvider.ts"],"names":[],"mappings":";;AAMA;IAGE;QACE,IAAI,CAAC,YAAY,GAAG;YAClB,UAAU,EAAE,MAAM;YAClB,SAAS,EAAE,iBAAiB;YAC5B,UAAU,EAAE,OAAO;SACpB,CAAC;IACJ,CAAC;IACH,qBAAC;AAAD,CAAC,AAVD,IAUC;AAVY,wCAAc"}

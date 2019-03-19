@@ -1,13 +1,13 @@
 const { WeeklyShiftUpdateHandler } = require('./WeeklyShiftUpdateHandler');
 const { ShiftCancelledHandler } = require('./ShiftCancelledHandler');
-const { NoopHandler } = require('./NoopHandler');
 
 class NotificationHandlerFactory {
-  constructor({ logger, shifts, staffMembers, mailer }) {
+  constructor({ logger, shifts, staffMembers, mailer, smsClient }) {
     this.log = logger;
     this.shiftService = shifts;
     this.staffMemberService = staffMembers;
     this.mailer = mailer;
+    this.smsClient = smsClient;
   }
 
   manufacture({ notificationType, message, context }) {
@@ -17,7 +17,8 @@ class NotificationHandlerFactory {
         log: this.log,
         shiftService: this.shiftService,
         staffMemberService: this.staffMemberService,
-        mailer: this.mailer
+        mailer: this.mailer,
+        smsClient: this.smsClient
       });
     case 'cancelledShift':
       return new ShiftCancelledHandler({

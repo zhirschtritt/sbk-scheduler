@@ -19,6 +19,7 @@ const appHooks = require('./app.hooks');
 
 const sheetsAdapter = require('./sheetsAdapter');
 const mailer = require('./mailer');
+const smsClientFactory = require('./smsClientFactory');
 const {
   NotificationCronSchedulerFactory
 } = require('./services/notification/notifcation-scheduler');
@@ -38,6 +39,7 @@ app.use('/', express.static(app.get('public')));
 
 app.configure(sheetsAdapter);
 app.configure(mailer);
+app.confgiure(smsClientFactory);
 
 app.configure(express.rest());
 app.configure(socketio());

@@ -1,11 +1,12 @@
 const moment = require('moment');
 
 class WeeklyShiftUpdateHandler {
-  constructor({ log, shiftService, staffMemberService, mailer }) {
+  constructor({ log, shiftService, staffMemberService, mailer, smsClient }) {
     this.log = log;
     this.shifts = shiftService;
     this.staffMembers = staffMemberService;
     this.mailer = mailer;
+    this.smsClient = smsClient;
   }
 
   formatDate(date) {
