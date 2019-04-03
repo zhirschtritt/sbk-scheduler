@@ -1,29 +1,56 @@
 {
-  "env": {
-    "es6": true,
-    "node": true,
-    "mocha": true
+  "extends": "google",
+  "rules": {
+    "require-jsdoc": "off",
+    "eofline": false,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "indent": 2,
+    "member-access": [
+      false
+    ],
+    "ordered-imports": [
+      false
+    ],
+    "max-len": [
+      "error",
+      120,
+      4
+    ],
+    "member-ordering": [
+      false
+    ],
+    "curly": 0,
+    "interface-name": [
+      false
+    ],
+    "array-type": [
+      false
+    ],
+    "no-empty-interface": false,
+    "no-empty": 0,
+    "arrow-parens": 0,
+    "object-literal-sort-keys": false,
+    "no-unused-expression": false,
+    "max-classes-per-file": 0,
+    "variable-name": [
+      false
+    ],
+    "one-line": [
+      false
+    ],
+    "one-variable-per-declaration": [
+      false
+    ],
+    "semi": "error",
+    "semi-style": "error"
   },
   "parserOptions": {
     "ecmaVersion": 2017
   },
-  "extends": "eslint:recommended",
-  "rules": {
-    "indent": [
-      "error",
-      2 
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ]
+  "env": {
+    "es6": true
   }
 }

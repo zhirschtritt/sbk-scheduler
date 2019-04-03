@@ -1,26 +1,29 @@
-/* eslint-disable no-unused-vars */
 const moment = require('moment');
 
 class Service {
-  constructor ({ paginate, sheets, termLength }) {
+  constructor({paginate, sheets, termLength}) {
     this.paginate = paginate;
     this.termLength = termLength;
     this.sheets = sheets;
   }
 
-  async getSheets () {
+  async getSheets() {
     const sheets = await this.sheets.getInfoAsync();
-    let shiftsSheet = sheets.worksheets.filter((sheet) => sheet.title === 'Shifts');
+    const shiftsSheet = sheets.worksheets.filter(
+        sheet => sheet.title === 'Shifts',
+    );
     return {
       shiftsSheet: Promise.promisifyAll(shiftsSheet[0]),
-      sheetId: shiftsSheet.id
+      sheetId: shiftsSheet.id,
     };
   }
 
-  async find (params) {
-    const todayishString = moment().subtract(this.termLength - 1, 'days').format('YYYY-MM-DD');
+  async find(params) {
+    const todayishString = moment()
+        .subtract(this.termLength - 1, 'days')
+        .format('YYYY-MM-DD');
 
-    const { start, end } = params.query;
+    const {start, end} = params.query;
 
     let googleSheetsQuery;
 
@@ -30,32 +33,31 @@ class Service {
       googleSheetsQuery = `date >= ${todayishString}`;
     }
 
-    const { shiftsSheet } = await this.getSheets();
+    const {shiftsSheet} = await this.getSheets();
 
-    const allShifts =  await shiftsSheet.getRowsAsync({
+    const allShifts = await shiftsSheet.getRowsAsync({
       query: googleSheetsQuery,
       limit: 90,
     });
-    
-    return allShifts
-      .map((shift) => {
-        return {
-          id: Number(shift.id),
-          date: shift.date,
-          primary_staff: shift.primarystaff,
-          secondary_staff: shift.secondarystaff,
-          fulfilled: Number(shift.fulfilled),
-          updatedAt: shift.updatedat,
-          shop_open: Number(shift.shopopen),
-        };
-      });
+
+    return allShifts.map(shift => {
+      return {
+        id: Number(shift.id),
+        date: shift.date,
+        primary_staff: shift.primarystaff,
+        secondary_staff: shift.secondarystaff,
+        fulfilled: Number(shift.fulfilled),
+        updatedAt: shift.updatedat,
+        shop_open: Number(shift.shopopen),
+      };
+    });
   }
 
-  async get (id, params) {
-    const { shiftsSheet } = await this.getSheets();
+  async get(id, params) {
+    const {shiftsSheet} = await this.getSheets();
 
     const shift = await shiftsSheet.getRowsAsync({
-      query: `id = ${id}`
+      query: `id = ${id}`,
     });
 
     return {
@@ -69,11 +71,11 @@ class Service {
     };
   }
 
-  async patch (id, data, params) {
-    const { shiftsSheet } = await this.getSheets();
+  async patch(id, data, params) {
+    const {shiftsSheet} = await this.getSheets();
 
-    const [ shift ] = await shiftsSheet.getRowsAsync({
-      query: `id = ${id}`
+    const [shift] = await shiftsSheet.getRowsAsync({
+      query: `id = ${id}`,
     });
 
     const updatedShiftData = {
@@ -85,7 +87,7 @@ class Service {
 
     Object.assign(shift, updatedShiftData);
 
-    try { 
+    try {
       shift.save();
     } catch (err) {
       return new Error(err);
@@ -102,7 +104,7 @@ class Service {
   }
 }
 
-module.exports = function (options) {
+module.exports = function(options) {
   return new Service(options);
 };
 

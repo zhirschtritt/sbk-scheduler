@@ -1,10 +1,8 @@
 const mailgun = require('mailgun-js');
 
 module.exports = function(app) {
-  const api_key = app.get('mailgunApiKey');
+  const apiKey = app.get('mailgunApiKey');
   const domain = app.get('mailgunDomain');
 
-  return mailgun({apiKey: api_key, domain: domain});
+  return mailgun({apiKey: apiKey, domain: domain});
 };
-
-

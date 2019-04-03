@@ -2,7 +2,7 @@
   "name": "sbk-schedule",
   "description": "",
   "version": "0.0.0",
-  "homepage": "",
+  "homepage": "https://schedule.somervillebikekitchen.org",
   "main": "src",
   "keywords": [
     "feathers"
@@ -11,22 +11,22 @@
     "name": "zhirschtirtt",
     "email": "zhirschtritt@gmail.com"
   },
-  "contributors": [],
-  "bugs": {},
   "directories": {
     "lib": "src",
     "test": "test/"
   },
   "engines": {
-    "node": "^8.0.0",
+    "node": "^10.9.0",
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "npm run eslint && npm run mocha",
+    "build": "tsc",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "start": "node src/",
-    "start:dev": "nodemon src/",
-    "mocha": "mocha test/ --recursive --exit"
+    "mocha": "mocha test/ --recursive --exit",
+    "start:debug": "NODE_ENV=development nodemon --config nodemon-debug.json",
+    "start:dev": "NODE_ENV=development nodemon",
+    "start": "ts-node -r tsconfig-paths/register src/index.js",
+    "test": "npm run eslint && npm run mocha"
   },
   "dependencies": {
     "@feathersjs/configuration": "^1.0.2",
@@ -51,13 +51,26 @@
     "moment": "^2.22.2",
     "pino": "^5.10.1",
     "serve-favicon": "^2.5.0",
+    "twilio": "^3.29.2",
     "winston": "^3.0.0"
   },
   "devDependencies": {
+    "@types/compression": "0.0.36",
+    "@types/cors": "^2.8.4",
+    "@types/feathersjs__configuration": "^1.0.2",
+    "@types/feathersjs__express": "^1.1.5",
+    "@types/feathersjs__feathers": "^3.1.1",
+    "@types/feathersjs__socketio": "^3.0.4",
+    "@types/helmet": "0.0.43",
+    "@types/serve-favicon": "^2.2.30",
+    "@types/twilio": "0.0.10",
     "eslint": "^5.2.0",
+    "eslint-config-google": "^0.12.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.3",
-    "request": "^2.87.0",
-    "request-promise": "^4.2.2"
+    "prettier": "^1.16.4",
+    "ts-node": "^8.0.3",
+    "tsconfig-paths": "^3.8.0",
+    "typescript": "^3.3.4000"
   }
 }
