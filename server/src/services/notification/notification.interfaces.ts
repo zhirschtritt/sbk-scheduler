@@ -9,7 +9,7 @@ export enum NotificationType {
 
 export interface NotificationContext {
   shift: Shift;
-  staffMember: StaffMember;
+  staffMember?: StaffMember;
   customMessage?: string;
 }
 

@@ -3,24 +3,24 @@ import {NotificationService} from './NotificationService';
 import {Application} from '@feathersjs/express';
 const hooks = require('./notification.hooks');
 import {NotificationHandlerFactory} from './Handlers/NotificationHandlerFactory';
+import {CompositePublisherFactory} from './Publishers/PublisherFactory';
 const logger = require('../../logger');
 
 module.exports = function(app: Application<any>) {
   const mailer = app.get('mailer');
-  const shifts = app.service('shifts');
-  const staffMembers = app.service('staffMembers');
+  const shifts = app.service('shifts') as any;
+  const staffMembers = app.service('staffMembers') as any;
   const smsClient = app.get('smsClient');
+  const staffEmail = app.get('staffEmail');
 
-  const notificationHandlerFactory = new NotificationHandlerFactory(logger, shifts, staffMembers, mailer, smsClient);
-
-  const notifications = new NotificationService(
-    mailer,
-    shifts as any,
-    staffMembers,
-    notificationHandlerFactory,
+  const notificationHandlerFactory = new NotificationHandlerFactory(
     logger,
-    smsClient,
+    shifts,
+    staffMembers,
+    new CompositePublisherFactory(mailer, smsClient, staffEmail),
   );
+
+  const notifications = new NotificationService(staffMembers, shifts, notificationHandlerFactory, logger);
 
   const swaggerDocs = {
     create: {},

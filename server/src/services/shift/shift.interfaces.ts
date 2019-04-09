@@ -5,5 +5,5 @@ export interface Shift {
   secondary_staff: string;
   fulfilled: number;
   updatedAt: string;
-  shop_open: string;
+  shop_open: number;
 }

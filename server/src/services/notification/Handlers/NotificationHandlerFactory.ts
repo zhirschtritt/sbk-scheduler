@@ -1,55 +1,32 @@
 import {WeeklyShiftUpdateHandler} from './WeeklyShiftUpdateHandler';
 import {CancelledShiftHandler} from './CancelledShiftHandler';
-import {TwilioClient} from '../../../twilioSMSClient/TwilioClient';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
 import {NotificationType, NotificationContext} from '../notification.interfaces';
-
-export interface NotificationHandlerFactory {
-  new (
-    logger: MinimalLogger,
-    shifts: any,
-    staffMembers: any,
-    mailer: any,
-    smsClient: TwilioClient,
-  ): NotificationHandlerFactory;
-
-  manufacture(notificationType: NotificationType): NotificationHandler;
-}
+import {CompositePublisherFactory} from '../Publishers/PublisherFactory';
+import {IShiftService} from '../../shift/ShiftService';
+import {IStaffMemberService} from '../../staffMember/StaffMemberService';
 
 export interface NotificationHandler {
   handle(context: NotificationContext): Promise<void>;
 }
 
 export class NotificationHandlerFactory {
-  private readonly log: MinimalLogger;
-  private readonly smsClient: TwilioClient;
-  private readonly shiftService: any;
-  private readonly staffMemberService: any;
-  private readonly mailer: any;
+  constructor(
+    private readonly logger: MinimalLogger,
+    private readonly shiftService: IShiftService,
+    private readonly staffMemberService: IStaffMemberService,
+    private readonly publisherFactory: CompositePublisherFactory,
+  ) {}
 
-  constructor(logger: MinimalLogger, shifts: any, staffMembers: any, mailer: any, smsClient: TwilioClient) {
-    this.log = logger;
-    this.shiftService = shifts;
-    this.staffMemberService = staffMembers;
-    this.mailer = mailer;
-    this.smsClient = smsClient;
-  }
-
-  manufacture(notificationType: NotificationType): NotificationHandler {
+  async manufacture(notificationType: NotificationType): Promise<NotificationHandler> {
     switch (notificationType) {
       case NotificationType.weeklyShiftUpdate:
-        return new WeeklyShiftUpdateHandler(
-          this.log,
-          this.shiftService,
-          this.staffMemberService,
-          this.mailer,
-          this.smsClient,
-        );
+        const staff = await this.staffMemberService.find();
+        const staffPublishers = this.publisherFactory.manufacture(staff);
+        return new WeeklyShiftUpdateHandler(this.logger, this.shiftService, staffPublishers, staff);
       case NotificationType.cancelledShift:
-        return new CancelledShiftHandler(this.log, this.mailer);
-      default:
-        this.log.error(`Unknown notificationType ${notificationType}`);
-        throw new Error(`Unknown notificationType ${notificationType}`);
+        const publishers = this.publisherFactory.manufacture([]);
+        return new CancelledShiftHandler(this.logger, publishers);
     }
   }
 }

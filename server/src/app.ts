@@ -15,15 +15,14 @@ const services = require('./services');
 const channels = require('./channels');
 const appHooks = require('./app.hooks');
 const sheetsAdapter = require('./sheetsAdapter');
-const mailer = require('./mailer');
 
 import {smsClientFactory} from './twilioSMSClient/smsClientFactory';
 import {NotificationCronSchedulerFactory} from './services/notification/notifcation-scheduler';
+import {mailgunClientFactory} from './mailer/mailgunClient';
 
 const app = express(feathers());
 
 app.configure(configuration());
-app.configure(smsClientFactory(logger));
 app.use(helmet());
 app.use(cors());
 app.use(compress());
@@ -32,7 +31,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 app.use('/', express.static(app.get('public')));
 app.configure(sheetsAdapter);
-app.configure(mailer);
+app.configure(mailgunClientFactory);
+app.configure(smsClientFactory(logger));
 app.configure(express.rest());
 app.configure(socketio());
 app.configure(

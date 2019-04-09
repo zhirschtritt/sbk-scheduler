@@ -1,11 +1,9 @@
 import {StaffMember} from './staffMember.interfaces';
-import {Service} from '@feathersjs/feathers';
+import {BaseService} from '../interfaces';
 
-export type StaffMemberSerice = Pick<Service<StaffMember>, 'find' | 'get' | 'patch'> & {
-  findByName(name: string): Promise<StaffMember>;
-};
+export type IStaffMemberService = BaseService<StaffMember> & {findByName(name: string): Promise<StaffMember>};
 
-export class StaffMemberService implements StaffMemberSerice {
+export class StaffMemberService implements IStaffMemberService {
   constructor(private readonly sheets: any) {}
 
   private async getSheets() {
@@ -21,7 +19,7 @@ export class StaffMemberService implements StaffMemberSerice {
     const {staffMemberSheet} = await this.getSheets();
     const allStaffMembers = await staffMemberSheet.getRowsAsync();
 
-    return allStaffMembers.map((staffMember: StaffMember) => staffMemberStoredToEntity(staffMember));
+    return allStaffMembers.map((staffMember: StaffMember) => staffMemberEntityToModel(staffMember));
   }
 
   async get(id: string) {
@@ -30,7 +28,7 @@ export class StaffMemberService implements StaffMemberSerice {
       query: `id = ${id}`,
     });
 
-    return staffMemberStoredToEntity(staffMember);
+    return staffMemberEntityToModel(staffMember);
   }
 
   async findByName(name: string) {
@@ -40,7 +38,7 @@ export class StaffMemberService implements StaffMemberSerice {
     });
 
     if (staffMember) {
-      return staffMemberStoredToEntity(staffMember);
+      return staffMemberEntityToModel(staffMember);
     } else {
       throw new Error(`Could not find matching staff member with name: ${name}`);
     }
@@ -64,7 +62,7 @@ export class StaffMemberService implements StaffMemberSerice {
       throw new Error(err);
     }
 
-    return staffMemberStoredToEntity(staffMember);
+    return staffMemberEntityToModel(staffMember);
   }
 }
 
@@ -72,13 +70,13 @@ export function isStaffMember(maybeStaffMember: unknown): maybeStaffMember is St
   return (
     maybeStaffMember !== null &&
     maybeStaffMember !== undefined &&
-    ['id', 'name', 'email', 'notifications', 'textNotifications', 'phoneNumber'].reduce((valid, field) => {
+    ['id', 'name', 'email', 'notifications', 'textNotifications', 'phoneNumber'].reduce((valid: boolean, field) => {
       return (maybeStaffMember as any)[field] !== null && (maybeStaffMember as any)[field] !== undefined;
     }, false)
   );
 }
 
-export function staffMemberStoredToEntity(storedStaffMember: unknown): StaffMember {
+export function staffMemberEntityToModel(storedStaffMember: unknown): StaffMember {
   if (!isStaffMember(storedStaffMember)) {
     throw new Error('Unknown staff member type');
   }

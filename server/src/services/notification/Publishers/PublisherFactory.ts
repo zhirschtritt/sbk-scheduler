@@ -3,24 +3,40 @@ import {TwilioClient} from '../../../twilioSMSClient/TwilioClient';
 import {StaffMember} from '../../staffMember/staffMember.interfaces';
 import {EmailPublsiher} from './emailPublisher';
 import {SmsPublisher} from './smsPublisher';
-import {Application} from '@feathersjs/express';
-import * as app from './../../../app';
+import {MailgunClient} from '../../../mailer/mailgunClient';
+
+export function getAdminPublisher(publishers: Map<number, Publisher[]>): Publisher {
+  return publishers.get(0)![0];
+}
 
 export class CompositePublisherFactory {
   private readonly publisherFactory: PublisherFactory;
-  constructor(emailClient: any, smsClient: TwilioClient) {
+  private readonly staffAdmin: StaffMember;
+
+  constructor(emailClient: MailgunClient, smsClient: TwilioClient, staffEmail: string) {
     this.publisherFactory = new PublisherFactory(emailClient, smsClient);
+    this.staffAdmin = {
+      id: 0,
+      name: 'admin',
+      notifications: 1,
+      textNotifications: 0,
+      email: staffEmail,
+    } as StaffMember;
   }
 
-  manufacture(reciepients: StaffMember[]): Publisher[] {
-    return reciepients.reduce((publishers: Publisher[], reciepient: StaffMember) => {
-      return publishers.concat(this.publisherFactory.manufacture(reciepient));
-    }, []);
+  manufacture(reciepients: StaffMember[]): Map<number, Publisher[]> {
+    const staffPubs = reciepients.reduce((publisherMap: Map<number, Publisher[]>, reciepient: StaffMember) => {
+      return publisherMap.set(reciepient.id, this.publisherFactory.manufacture(reciepient));
+    }, new Map());
+
+    staffPubs.set(this.staffAdmin.id, this.publisherFactory.manufacture(this.staffAdmin));
+
+    return staffPubs;
   }
 }
 
 export class PublisherFactory {
-  constructor(private readonly emailClient: any, private readonly smsClient: TwilioClient) {}
+  constructor(private readonly emailClient: MailgunClient, private readonly smsClient: TwilioClient) {}
 
   manufacture(reciepient: StaffMember): Publisher[] {
     let publishers = [];
@@ -34,20 +50,4 @@ export class PublisherFactory {
 
     return publishers;
   }
-}
-
-export async function getAllStaffPublishers(
-  allStaffMembers: StaffMember[],
-  app: Application<any>,
-): Promise<Publisher[]> {
-  const publisherFactory = new CompositePublisherFactory(app.get('mailer'), app.get('smsClient'));
-
-  const staffAdmin = {
-    name: 'admin',
-    notifications: 1,
-    textNotifications: 0,
-    email: app.get('staffEmail'),
-  } as StaffMember;
-
-  return publisherFactory.manufacture([...allStaffMembers, staffAdmin]);
 }

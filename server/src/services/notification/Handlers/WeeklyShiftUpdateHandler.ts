@@ -1,103 +1,98 @@
 import moment from 'moment';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
-import {TwilioClient} from '../../../twilioSMSClient/TwilioClient';
 import {Shift} from '../../shift/shift.interfaces';
 import {StaffMember} from '../../staffMember/staffMember.interfaces';
 import {NotificationHandler} from './NotificationHandlerFactory';
 import {NotificationContext} from '../notification.interfaces';
+import {Publisher, NotificationViewModel} from '../Publishers';
+import {IShiftService} from '../../shift/ShiftService';
+import {formatEmail, TemplateName} from '../../../mailer/templator';
+import {getAdminPublisher} from '../Publishers/PublisherFactory';
 
 export class WeeklyShiftUpdateHandler implements NotificationHandler {
   constructor(
     private readonly log: MinimalLogger,
-    private readonly shiftService: any,
-    private readonly staffMemberService: any,
-    private readonly mailer: any,
-    private readonly smsClient: TwilioClient,
+    private readonly shiftService: IShiftService,
+    private readonly publishers: Map<number, Publisher[]>,
+    private readonly staff: StaffMember[],
   ) {}
 
-  formatDate(date: string) {
-    return moment(date).format('dddd, MMM D, YYYY');
-  }
-
-  sendEmptyShiftEmail(shift: Shift) {
+  private async sendEmptyShiftEmail(shift: Shift) {
     this.log.info('Sending empty shift warning email', JSON.stringify(shift, null, 2));
-    return this.mailer.sendEmail({
-      template: {
-        name: 'emptyShift',
-        context: shift,
-      },
-      recipients: this.mailer.staffEmail,
-      subject: `⚠️ SBK Reminder: Unassigned Upcoming Shift ${this.formatDate(shift.date)}`,
-    });
+    const adminPublisher = getAdminPublisher(this.publishers);
+    const vm: NotificationViewModel = {
+      emailHtml: formatEmail(TemplateName.emptyShift, {shift}),
+      subjectText: `⚠️ SBK Reminder: Unassigned Upcoming Shift ${formatDate(shift.date)}`,
+      smsText: '',
+    };
+
+    return await adminPublisher.publish(vm);
   }
 
-  sendUpcomingShiftEmail(shift: Shift, assignedStaffMemberEmails: string[]) {
-    this.log.info({shift, assignedStaffMemberEmails}, 'Sending shift reminder email');
-    return this.mailer.sendEmail({
-      template: {
-        name: 'upcomingShift',
-        context: shift,
-      },
-      recipients: assignedStaffMemberEmails,
-      subject: `👋 SBK Reminder: Upcoming Shift ${this.formatDate(shift.date)}`,
-    });
+  private async sendUpcomingShiftEmail(shift: Shift, assignedStaffMembers: StaffMember[]) {
+    this.log.info({shift, assignedStaffMembers}, 'Sending shift reminder email');
+
+    const publishers = getPublishersForStaffMembers(assignedStaffMembers, this.publishers);
+    const vm: NotificationViewModel = {
+      emailHtml: formatEmail(TemplateName.upcomingShift, {shift}),
+      subjectText: `👋 SBK Reminder: Upcoming Shift ${formatDate(shift.date)}`,
+      smsText: `👋 SBK Reminder: You have an upcoming SBK shift this week: ${shift.date}`,
+    };
+
+    return await Promise.all(publishers.map(p => p.publish(vm)));
   }
 
-  findAssignedStaffForShift(allStaffMembers: StaffMember[], upcomingShift: Shift): StaffMember[] {
-    const assignedStaffMembers = allStaffMembers.filter(staffMember => {
-      return [upcomingShift.primary_staff, upcomingShift.secondary_staff]
-        .map(name => name.toLowerCase())
-        .includes(staffMember.name.toLowerCase());
-    });
-    this.log.info({assignedStaffMembers}, 'Found assigned staff members for shifts');
-    return assignedStaffMembers;
+  private async handleNextShift(shift: Shift): Promise<void | void[]> {
+    // if shop is closed, no emails
+    if (!shift.shop_open) {
+      this.log.info({shift}, 'Not sending emails for upcoming shift, shop closed');
+      return Promise.resolve();
+    }
+
+    try {
+      // if upcoming shift is empty and shop is open, draft email to staff
+      const isStaffAssigned = shift.primary_staff || shift.secondary_staff;
+      if (!isStaffAssigned) {
+        return this.sendEmptyShiftEmail(shift);
+      }
+
+      // if upcoming shift is staffed, draft emails to all assigned staffMembers
+      const assignedStaffMembers = findAssignedStaffForShift(shift, this.staff);
+      return this.sendUpcomingShiftEmail(shift, assignedStaffMembers);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   async handle(context: NotificationContext) {
-    const today = moment().format('YYYY-MM-DD');
-    const endOfWeek = moment()
-      .add(7, 'days')
-      .format('YYYY-MM-DD');
-    const nextShifts: Shift[] = await this.shiftService.find({
-      query: {start: today, end: endOfWeek},
-    });
-    const allStaffMembers = await this.staffMemberService.find();
-
-    await Promise.all(
-      nextShifts.map(async shift => {
-        // if shop is closed, no emails
-        if (!shift.shop_open) {
-          return Promise.resolve('Not sending emails for upcoming shift, shop closed');
-        }
-        // if upcoming shifts are empty and shop is open, draft email to staff
-        const isStaffAssigned = shift.primary_staff || shift.secondary_staff;
-        if (!isStaffAssigned) {
-          return await this.sendEmptyShiftEmail(shift);
-        }
-
-        // if upcoming shifts are staffed, draft emails to all assigned staffMembers
-        const assignedStaffMembers = this.findAssignedStaffForShift(allStaffMembers, shift);
-
-        const staffEmails = [];
-        const staffPhoneNumbers = [];
-
-        for (const staffMember of assignedStaffMembers) {
-          if (staffMember.email && staffMember.notifications) {
-            staffEmails.push(staffMember.email);
-          }
-
-          if (staffMember.phoneNumber && staffMember.textNotifications) {
-            staffPhoneNumbers.push(staffMember.phoneNumber);
-          }
-        }
-
-        return (
-          await this.sendUpcomingShiftEmail(shift, filteredStaffEmails),
-          // default, do not send email
-          this.log.debug('Not sending emails for shift', {shift})
-        );
-        return Promise.resolve(`Not sending emails for shift: ${JSON.stringify(shift)}`);
-      }),
-    );
+    const nextShifts = await getShiftsForWeek(this.shiftService);
+    await Promise.all(nextShifts.map(shift => this.handleNextShift(shift)));
   }
+}
+
+function getPublishersForStaffMembers(assignedStaffMembers: StaffMember[], publishers: Map<number, Publisher[]>) {
+  return assignedStaffMembers.reduce((pubs: Publisher[], staff) => {
+    return pubs.concat(publishers.get(staff.id) || []);
+  }, []);
+}
+
+async function getShiftsForWeek(shiftService: IShiftService): Promise<Shift[]> {
+  const today = new Date();
+  const endOfWeek = moment()
+    .add(7, 'days')
+    .toDate();
+  return await shiftService.findByDateRange(today, endOfWeek);
+}
+
+function findAssignedStaffForShift(upcomingShift: Shift, staff: StaffMember[]): StaffMember[] {
+  const assignedStaffMembers = staff.filter(staffMember => {
+    return [upcomingShift.primary_staff, upcomingShift.secondary_staff]
+      .map(name => name.toLowerCase())
+      .includes(staffMember.name.toLowerCase());
+  });
+  return assignedStaffMembers;
+}
+
+function formatDate(date: string) {
+  return moment(date).format('dddd, MMM D, YYYY');
 }
