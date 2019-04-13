@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-toolbar
-      dark
-      color="primary"
-      dense
-      flat>
+    <v-toolbar dark color="primary" dense flat>
       <v-icon>people</v-icon>
       <v-toolbar-title>Staff Members</v-toolbar-title>
       <v-spacer/>
@@ -16,10 +12,7 @@
       dense
       :loading="areStaffMembersLoading"
     >
-      <template
-        slot="items"
-        slot-scope="props"
-      >
+      <template slot="items" slot-scope="props">
         <td class="text-capitalize">{{ props.item.name }}</td>
         <td>
           <v-chip
@@ -29,9 +22,7 @@
             :color="shift.isPastShift ? 'grey' : 'primary'"
             :key="shift.id"
             v-for="shift in shiftsForStaffMember(props.item.name)"
-          >
-            {{ shift.date | formatDateWithWeekday }}
-          </v-chip>
+          >{{ shift.date | formatDateWithWeekday }}</v-chip>
         </td>
         <td>
           <v-switch
@@ -42,10 +33,17 @@
             @change="updateNotifications(props.item)"
           />
         </td>
+        <td>
+          <v-switch
+            :value="props.item.textNotifications"
+            :value-comparator="function(val) { return(!!val)}"
+            color="primary"
+            light
+            @change="updateTextNotifications(props.item)"
+          />
+        </td>
       </template>
-      <template slot="no-data">
-        Loading...
-      </template>
+      <template slot="no-data">Loading...</template>
     </v-data-table>
   </div>
 </template>
@@ -58,7 +56,8 @@ export default {
     headers: [
       { text: 'Staff Member', value: 'name' },
       { text: 'Scheduled Shifts', sortable: false },
-      { text: 'Shift Reminders', sortable: false },
+      { text: 'Email Reminders', sortable: false },
+      { text: 'Text Reminders', sortable: false },
     ],
   }),
 
@@ -88,6 +87,15 @@ export default {
       const updatedStaffMember = staffMember.clone();
 
       updatedStaffMember.notifications = newNotificationValue;
+
+      updatedStaffMember.commit();
+      updatedStaffMember.patch();
+    },
+    updateTextNotifications(staffMember) {
+      const newNotificationValue = staffMember.textNotifications ? 0 : 1;
+      const updatedStaffMember = staffMember.clone();
+
+      updatedStaffMember.textNotifications = newNotificationValue;
 
       updatedStaffMember.commit();
       updatedStaffMember.patch();

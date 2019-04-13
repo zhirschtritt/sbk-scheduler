@@ -59,6 +59,7 @@ export class StaffMemberService implements IStaffMemberService {
 
     const newStaffer = {
       notifications: data.notifications,
+      textnotifications: data.textNotifications,
     };
 
     Object.assign(staffMember, newStaffer);
