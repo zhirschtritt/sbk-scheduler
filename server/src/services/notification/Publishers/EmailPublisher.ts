@@ -1,5 +1,5 @@
 import {Publisher, NotificationViewModel} from './interfaces';
-import {MailgunClient} from '../../../mailer/mailgunClient';
+import {MailgunClient} from '../../../mailer/MailgunClient';
 import logger from '../../../logger';
 
 export class EmailPublsiher implements Publisher {

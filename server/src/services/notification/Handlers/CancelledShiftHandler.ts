@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {NotificationHandler} from './NotificationHandlerFactory';
 import {Publisher} from '../Publishers';
-import {getAdminPublisher} from '../Publishers/PublisherFactory';
+import {getAdminPublisher} from '../Publishers';
 import {formatEmail, TemplateName} from '../../../mailer/templator';
 import {NotificationContext} from '../notification.interfaces';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';

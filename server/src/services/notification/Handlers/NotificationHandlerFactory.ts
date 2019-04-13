@@ -1,7 +1,7 @@
 import {WeeklyShiftUpdateHandler} from './WeeklyShiftUpdateHandler';
 import {CancelledShiftHandler} from './CancelledShiftHandler';
 import {NotificationType, NotificationContext} from '../notification.interfaces';
-import {CompositePublisherFactory} from '../Publishers/PublisherFactory';
+import {CompositePublisherFactory} from '../Publishers';
 import {IShiftService} from '../../shift/ShiftService';
 import {IStaffMemberService} from '../../staffMember/staffMember.interfaces';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';

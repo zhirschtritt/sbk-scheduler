@@ -17,7 +17,7 @@ import sheetsAdapter from './sheetsAdapter';
 
 import {services} from './services';
 import {smsClientFactory} from './twilioSMSClient/smsClientFactory';
-import {mailgunClientFactory} from './mailer/mailgunClient';
+import {mailgunClientFactory} from './mailer/MailgunClient';
 
 const app = express(feathers());
 

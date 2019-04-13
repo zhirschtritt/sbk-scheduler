@@ -3,7 +3,7 @@ import {NotificationService} from './NotificationService';
 import {Application} from '@feathersjs/express';
 const hooks = require('./notification.hooks');
 import {NotificationHandlerFactory} from './Handlers/NotificationHandlerFactory';
-import {CompositePublisherFactory} from './Publishers/PublisherFactory';
+import {CompositePublisherFactory} from './Publishers';
 const logger = require('../../logger');
 
 export default function(app: Application<any>) {
@@ -20,12 +20,7 @@ export default function(app: Application<any>) {
     new CompositePublisherFactory(mailer, smsClient, staffEmail),
   );
 
-  const notifications = new NotificationService(
-    staffMembers,
-    shifts,
-    notificationHandlerFactory,
-    logger,
-  );
+  const notifications = new NotificationService(staffMembers, shifts, notificationHandlerFactory, logger);
 
   (notifications as any).docs = {
     create: {},

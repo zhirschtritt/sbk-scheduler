@@ -6,7 +6,7 @@ import {NotificationContext} from '../notification.interfaces';
 import {Publisher, NotificationViewModel} from '../Publishers';
 import {IShiftService} from '../../shift/ShiftService';
 import {formatEmail, TemplateName} from '../../../mailer/templator';
-import {getAdminPublisher} from '../Publishers/PublisherFactory';
+import {getAdminPublisher} from '../Publishers';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
 
 export class WeeklyShiftUpdateHandler implements NotificationHandler {
