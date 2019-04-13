@@ -7,11 +7,7 @@ export interface TwilioConfig {
 export class ConfigProvider {
   readonly twilioConfig: TwilioConfig;
 
-  constructor() {
-    this.twilioConfig = {
-      accountSid: 'test',
-      authToken: 'test_auth_token',
-      fromNumber: '12346',
-    };
+  constructor(accountSid: string, authToken: string, fromNumber: string) {
+    this.twilioConfig = {accountSid, authToken, fromNumber};
   }
 }

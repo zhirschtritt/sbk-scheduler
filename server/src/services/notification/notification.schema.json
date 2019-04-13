@@ -1,35 +1,27 @@
 {
   "title": "notification",
   "type": "object",
-  "required": [
-    "notificationType"
-  ],
+  "required": ["notificationType"],
   "properties": {
     "notificationType": {
       "type": "string",
       "title": "The Notificationtype Schema",
       "default": "",
-      "examples": [
-        "cancelledShift"
-      ],
-      "pattern": "^(.*)$"
-    },
-    "message": {
-      "type": "string",
-      "title": "The Message Schema",
-      "default": "",
-      "examples": [
-        "blah"
-      ],
+      "examples": ["cancelledShift"],
       "pattern": "^(.*)$"
     },
     "context": {
       "type": "object",
       "title": "The Context Schema",
-      "required": [
-        "shift"
-      ],
+      "required": ["shift"],
       "properties": {
+        "customMessage": {
+          "type": "string",
+          "title": "The Message Schema",
+          "default": "",
+          "examples": ["blah"],
+          "pattern": "^(.*)$"
+        },
         "shift": {
           "type": "object",
           "title": "The Shift Schema",
@@ -48,115 +40,86 @@
               "type": "string",
               "title": "The Date Schema",
               "default": "",
-              "examples": [
-                "2018-10-23"
-              ],
+              "examples": ["2018-10-23"],
               "pattern": "^(.*)$"
             },
             "primary_staff": {
               "type": "string",
               "title": "The Primary_staff Schema",
               "default": "",
-              "examples": [
-                "quentin"
-              ],
+              "examples": ["quentin"],
               "pattern": "^(.*)$"
             },
             "secondary_staff": {
               "type": "string",
               "title": "The Secondary_staff Schema",
               "default": "",
-              "examples": [
-                ""
-              ],
+              "examples": [""],
               "pattern": "^(.*)$"
             },
             "fulfilled": {
               "type": "integer",
               "title": "The Fulfilled Schema",
               "default": 0,
-              "examples": [
-                1
-              ]
+              "examples": [1]
             },
             "updatedAt": {
               "type": "string",
               "title": "The Updatedat Schema",
               "default": "",
-              "examples": [
-                "2018-09-16T11:58:20"
-              ],
+              "examples": ["2018-09-16T11:58:20"],
               "pattern": "^(.*)$"
             },
             "id": {
               "type": "integer",
               "title": "The Id Schema",
               "default": 0,
-              "examples": [
-                25
-              ]
+              "examples": [25]
             },
             "isPastShift": {
               "type": "boolean",
               "title": "The IsPastShift Schema",
               "default": false,
-              "examples": [
-                false
-              ]
+              "examples": [false]
             },
             "shop_open": {
               "type": "integer",
               "title": "The ShopOpen Schema",
               "default": 0,
-              "examples": [
-                1
-              ]
+              "examples": [1]
             }
           }
         },
         "staffMember": {
           "type": "object",
           "title": "The StaffMember Schema",
-          "required": [
-            "id",
-            "name",
-            "email",
-            "notifications"
-          ],
+          "required": ["id", "name", "email", "notifications"],
           "properties": {
             "id": {
               "type": "integer",
               "title": "The Id Schema",
               "default": 0,
-              "examples": [
-                8
-              ]
+              "examples": [8]
             },
             "name": {
               "type": "string",
               "title": "The Name Schema",
               "default": "",
-              "examples": [
-                "quentin"
-              ],
+              "examples": ["quentin"],
               "pattern": "^(.*)$"
             },
             "email": {
               "type": "string",
               "title": "The Email Schema",
               "default": "",
-              "examples": [
-                "zhirschtritt@gmail.com"
-              ],
+              "examples": ["zhirschtritt@gmail.com"],
               "pattern": "^(.*)$"
             },
             "notifications": {
               "type": "integer",
               "title": "The Notifications Schema",
               "default": 0,
-              "examples": [
-                0
-              ]
+              "examples": [0]
             }
           }
         }

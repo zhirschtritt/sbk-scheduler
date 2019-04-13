@@ -1,54 +1,16 @@
 {
-  "extends": "google",
-  "rules": {
-    "require-jsdoc": "off",
-    "eofline": false,
-    "quotemark": [
-      true,
-      "single"
-    ],
-    "indent": 2,
-    "member-access": [
-      false
-    ],
-    "ordered-imports": [
-      false
-    ],
-    "max-len": [
-      "error",
-      120,
-      4
-    ],
-    "member-ordering": [
-      false
-    ],
-    "curly": 0,
-    "interface-name": [
-      false
-    ],
-    "array-type": [
-      false
-    ],
-    "no-empty-interface": false,
-    "no-empty": 0,
-    "arrow-parens": 0,
-    "object-literal-sort-keys": false,
-    "no-unused-expression": false,
-    "max-classes-per-file": 0,
-    "variable-name": [
-      false
-    ],
-    "one-line": [
-      false
-    ],
-    "one-variable-per-declaration": [
-      false
-    ],
-    "semi": "error",
-    "semi-style": "error"
-  },
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "google",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
   "parserOptions": {
     "ecmaVersion": 2017
+  },
+  "rules": {
+    "require-jsdoc": "off"
   },
   "env": {
     "es6": true

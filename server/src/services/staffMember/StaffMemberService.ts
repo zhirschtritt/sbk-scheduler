@@ -1,14 +1,17 @@
-import {StaffMember} from './staffMember.interfaces';
-import {BaseService} from '../interfaces';
-
-export type IStaffMemberService = BaseService<StaffMember> & {findByName(name: string): Promise<StaffMember>};
-
+import {
+  StaffMember,
+  StaffMemberEntity,
+  IStaffMemberService,
+} from './staffMember.interfaces';
+import logger from '../../logger';
 export class StaffMemberService implements IStaffMemberService {
   constructor(private readonly sheets: any) {}
 
   private async getSheets() {
     const sheets = await this.sheets.getInfoAsync();
-    const staffMemberSheet = sheets.worksheets.filter((sheet: any) => sheet.title === 'Staff');
+    const staffMemberSheet = sheets.worksheets.filter(
+      (sheet: any) => sheet.title === 'Staff',
+    );
     return {
       staffMemberSheet: (Promise as any).promisifyAll(staffMemberSheet[0]),
       sheetId: staffMemberSheet.id,
@@ -19,7 +22,9 @@ export class StaffMemberService implements IStaffMemberService {
     const {staffMemberSheet} = await this.getSheets();
     const allStaffMembers = await staffMemberSheet.getRowsAsync();
 
-    return allStaffMembers.map((staffMember: StaffMember) => staffMemberEntityToModel(staffMember));
+    return allStaffMembers.map((staffMember: StaffMember) =>
+      staffMemberEntityToModel(staffMember),
+    );
   }
 
   async get(id: string) {
@@ -40,7 +45,9 @@ export class StaffMemberService implements IStaffMemberService {
     if (staffMember) {
       return staffMemberEntityToModel(staffMember);
     } else {
-      throw new Error(`Could not find matching staff member with name: ${name}`);
+      throw new Error(
+        `Could not find matching staff member with name: ${name}`,
+      );
     }
   }
 
@@ -59,6 +66,7 @@ export class StaffMemberService implements IStaffMemberService {
     try {
       await staffMember.save();
     } catch (err) {
+      logger.error('error updating staffMember');
       throw new Error(err);
     }
 
@@ -66,30 +74,45 @@ export class StaffMemberService implements IStaffMemberService {
   }
 }
 
-export function isStaffMember(maybeStaffMember: unknown): maybeStaffMember is StaffMember {
+export function isStaffMemberEntity(
+  maybeStaffMember: unknown,
+): maybeStaffMember is StaffMemberEntity {
   return (
     maybeStaffMember !== null &&
     maybeStaffMember !== undefined &&
-    ['id', 'name', 'email', 'notifications', 'textNotifications', 'phoneNumber'].reduce((valid: boolean, field) => {
-      return (maybeStaffMember as any)[field] !== null && (maybeStaffMember as any)[field] !== undefined;
-    }, false)
+    [
+      'id',
+      'name',
+      'email',
+      'notifications',
+      'textnotifications',
+      'phonenumber',
+    ].every(field => {
+      return (
+        (maybeStaffMember as any)[field] !== null &&
+        (maybeStaffMember as any)[field] !== undefined
+      );
+    })
   );
 }
 
-export function staffMemberEntityToModel(storedStaffMember: unknown): StaffMember {
-  if (!isStaffMember(storedStaffMember)) {
+export function staffMemberEntityToModel(
+  staffMemberEntity: unknown,
+): StaffMember {
+  if (!isStaffMemberEntity(staffMemberEntity)) {
+    logger.error('Unknown staff member type', {staffMemberEntity});
     throw new Error('Unknown staff member type');
   }
   return {
-    id: +storedStaffMember.id,
-    name: storedStaffMember.name,
-    email: storedStaffMember.email,
-    notifications: +storedStaffMember.notifications,
-    textNotifications: +storedStaffMember.textNotifications,
-    phoneNumber: storedStaffMember.phoneNumber,
+    id: +staffMemberEntity.id,
+    name: staffMemberEntity.name,
+    email: staffMemberEntity.email,
+    notifications: +staffMemberEntity.notifications,
+    textNotifications: +staffMemberEntity.textnotifications,
+    phoneNumber: `+1${staffMemberEntity.phonenumber}`,
   };
 }
 
-module.exports = function(options: any) {
+export default function(options: any) {
   return new StaffMemberService(options);
-};
+}

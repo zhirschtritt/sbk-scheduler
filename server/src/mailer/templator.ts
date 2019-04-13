@@ -13,7 +13,13 @@ Handlebars.registerHelper('capitalize', function(value: string) {
 });
 
 Handlebars.registerHelper('replaceLineBreaks', function(value: string) {
-  return JSON.parse(value).replace(/\n/g, '<br />');
+  let sanitizedValue;
+  try {
+    sanitizedValue = JSON.parse(value);
+  } catch (err) {
+    sanitizedValue = value;
+  }
+  return sanitizedValue.replace(/\n/g, '<br />');
 });
 
 export enum TemplateName {
@@ -22,7 +28,7 @@ export enum TemplateName {
   upcomingShift = 'upcomingShift',
 }
 
-export function templateFactory(templateName: TemplateName) {
+export function getTemplateByName(templateName: TemplateName) {
   switch (templateName) {
     case TemplateName.cancelledShift:
       return templates(TemplateName.cancelledShift);
@@ -35,9 +41,13 @@ export function templateFactory(templateName: TemplateName) {
   }
 }
 
-export function formatEmail(templateName: TemplateName, context: NotificationContext) {
-  const template = templateFactory(templateName);
-  const compiledTemplate = Handlebars.compile(template);
+export function formatEmail(
+  templateName: TemplateName,
+  context: NotificationContext,
+) {
+  const template = getTemplateByName(templateName);
+  const handlebars = Handlebars.compile(template);
 
-  return compiledTemplate(context);
+  const compiledTemplate = handlebars(context);
+  return compiledTemplate;
 }

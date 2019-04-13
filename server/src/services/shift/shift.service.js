@@ -1,8 +1,8 @@
 // Initializes the `shift` service on path `/shifts`
-const createService = require('./ShiftService.js');
-const hooks = require('./shift.hooks');
+import createService from './ShiftService';
+import hooks from './shift.hooks';
 
-module.exports = function(app) {
+export default function(app) {
   const termLength = app.get('termLength');
   const paginate = app.get('paginate');
   const sheets = app.get('sheetsClient');
@@ -55,4 +55,4 @@ module.exports = function(app) {
   const service = app.service('shifts');
 
   service.hooks(hooks);
-};
+}

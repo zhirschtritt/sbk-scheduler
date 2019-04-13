@@ -11,11 +11,11 @@ import compress from 'compression';
 
 const swagger = require('feathers-swagger');
 const logger = require('./logger');
-const services = require('./services');
 const channels = require('./channels');
 const appHooks = require('./app.hooks');
-const sheetsAdapter = require('./sheetsAdapter');
+import sheetsAdapter from './sheetsAdapter';
 
+import {services} from './services';
 import {smsClientFactory} from './twilioSMSClient/smsClientFactory';
 import {NotificationCronSchedulerFactory} from './services/notification/notifcation-scheduler';
 import {mailgunClientFactory} from './mailer/mailgunClient';
@@ -51,7 +51,10 @@ app.use(express.notFound());
 app.use(express.errorHandler({logger}));
 app.hooks(appHooks);
 
-const scheduledTasks = new NotificationCronSchedulerFactory(app.service('notifications'), logger);
+const scheduledTasks = new NotificationCronSchedulerFactory(
+  app.service('notifications'),
+  logger,
+);
 scheduledTasks.start();
 
 module.exports = app;

@@ -6,7 +6,10 @@ import {MinimalLogger} from './Interfaces';
 export class TwilioClient {
   private readonly client: twilio.Twilio;
 
-  constructor(private readonly config: TwilioConfig, private readonly logger: MinimalLogger) {
+  constructor(
+    private readonly config: TwilioConfig,
+    private readonly logger: any,
+  ) {
     this.client = twilio(config.accountSid, config.authToken);
   }
 
@@ -21,14 +24,16 @@ export class TwilioClient {
       this.logger.info({res: response}, 'Sent twilio sms message');
 
       if (response.errorCode) {
-        this.logger.error({res: response}, 'Twilio returned an error from message sent');
+        this.logger.error(
+          {res: response},
+          'Twilio returned an error from message sent',
+        );
         throw new Error('Error sending sms message');
       }
 
       return response;
     } catch (error) {
-      this.logger.error({error, body, to, config: this.config}, 'Error sending sms message');
-      throw new Error('Error sending sms message');
+      throw new Error(error.message);
     }
   }
 }

@@ -8,15 +8,21 @@ import {NotificationContext} from '../notification.interfaces';
 
 export class CancelledShiftHandler implements NotificationHandler {
   private readonly adminPublisher: Publisher;
-  constructor(private readonly log: MinimalLogger, publishers: Map<number, Publisher[]>) {
+  constructor(
+    private readonly log: MinimalLogger,
+    publishers: Map<number, Publisher[]>,
+  ) {
     this.adminPublisher = getAdminPublisher(publishers);
   }
 
   async handle(context: Required<NotificationContext>) {
+    const emailHtml = formatEmail(TemplateName.cancelledShift, context);
     const vm = {
-      emailHtml: formatEmail(TemplateName.cancelledShift, context),
-      subjectText: `⚠️ Cancelled Upcoming Shift: ${formatDate(context.shift.date)}`,
-      smsText: '',
+      emailHtml,
+      subjectText: `⚠️ Cancelled Upcoming Shift: ${formatDate(
+        context.shift.date,
+      )}`,
+      smsText: "cancelled upcoming shift message, this shouldn't ever get sent",
     };
 
     return await this.adminPublisher.publish(vm);

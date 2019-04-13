@@ -1,34 +1,30 @@
 // Application hooks that run for every service
-const log = require('./hooks/log');
+import log from './hooks/log';
 
-module.exports = {
-  before: {
-    all: [ log() ],
-    find: [],
-    get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
-  },
-
-  after: {
-    all: [ log() ],
-    find: [],
-    get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
-  },
-
-  error: {
-    all: [ log() ],
-    find: [],
-    get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
-  }
+export const before = {
+  all: [log()],
+  find: [],
+  get: [],
+  create: [],
+  update: [],
+  patch: [],
+  remove: [],
+};
+export const after = {
+  all: [log()],
+  find: [],
+  get: [],
+  create: [],
+  update: [],
+  patch: [],
+  remove: [],
+};
+export const error = {
+  all: [log()],
+  find: [],
+  get: [],
+  create: [],
+  update: [],
+  patch: [],
+  remove: [],
 };

@@ -8,7 +8,7 @@ const servicePath = 'notifications';
 const servicePlugin = service(servicePath, {
   instanceDefaults: {
     notificationType: '',
-    message: '',
+    customMessage: '',
     context: {
       shift: {},
       staffMember: {},

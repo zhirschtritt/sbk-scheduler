@@ -1,11 +1,14 @@
 // Initializes the `staffMember` service on path `/staffMembers`
-const createService = require('./StaffMemberService.js');
+import createService, {StaffMemberService} from './StaffMemberService';
+import {Application} from '@feathersjs/express';
 const hooks = require('./staffMember.hooks');
 
-module.exports = function(app) {
+export default function(app: Application<any>) {
   const sheets = app.get('sheetsClient');
 
-  const staffMembers = createService(sheets);
+  const staffMembers = createService(sheets) as StaffMemberService & {
+    docs: any;
+  };
 
   staffMembers.docs = {
     find: {
@@ -29,4 +32,4 @@ module.exports = function(app) {
   const service = app.service('staffMembers');
 
   service.hooks(hooks);
-};
+}

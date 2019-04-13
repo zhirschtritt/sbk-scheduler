@@ -6,7 +6,7 @@ import {NotificationHandlerFactory} from './Handlers/NotificationHandlerFactory'
 import {CompositePublisherFactory} from './Publishers/PublisherFactory';
 const logger = require('../../logger');
 
-module.exports = function(app: Application<any>) {
+export default function(app: Application<any>) {
   const mailer = app.get('mailer');
   const shifts = app.service('shifts') as any;
   const staffMembers = app.service('staffMembers') as any;
@@ -20,18 +20,23 @@ module.exports = function(app: Application<any>) {
     new CompositePublisherFactory(mailer, smsClient, staffEmail),
   );
 
-  const notifications = new NotificationService(staffMembers, shifts, notificationHandlerFactory, logger);
+  const notifications = new NotificationService(
+    staffMembers,
+    shifts,
+    notificationHandlerFactory,
+    logger,
+  );
 
-  const swaggerDocs = {
+  (notifications as any).docs = {
     create: {},
     definitions: {
       notifications: require('./notification.schema'),
     },
   };
 
-  app.use('/notifications', {...notifications, docs: swaggerDocs} as any);
+  app.use('/notifications', notifications);
 
   const service = app.service('notifications');
 
   service.hooks(hooks);
-};
+}

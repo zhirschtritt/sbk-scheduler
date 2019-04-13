@@ -1,8 +1,8 @@
 // Initializes the `term` service on path `/terms`
-const createService = require('./term.class.js');
-const hooks = require('./term.hooks');
+import createService from './term.class.js';
+import hooks from './term.hooks';
 
-module.exports = function(app) {
+export default function(app) {
   const paginate = app.get('paginate');
 
   const sheets = app.get('sheetsClient');
@@ -36,4 +36,4 @@ module.exports = function(app) {
   const service = app.service('terms');
 
   service.hooks(hooks);
-};
+}

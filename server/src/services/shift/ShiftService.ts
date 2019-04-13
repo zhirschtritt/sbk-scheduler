@@ -1,8 +1,11 @@
 import {BaseService} from '../interfaces';
 import {Shift} from './shift.interfaces';
 import moment from 'moment';
+import logger from '../../logger';
 
-export type IShiftService = BaseService<Shift> & {findByDateRange(from: Date, to: Date): Promise<Shift[]>};
+export type IShiftService = BaseService<Shift> & {
+  findByDateRange(from: Date, to: Date): Promise<Shift[]>;
+};
 
 class ShiftService implements IShiftService {
   private readonly termLength: any;
@@ -14,7 +17,9 @@ class ShiftService implements IShiftService {
 
   async getSheets() {
     const sheets = await this.sheets.getInfoAsync();
-    const shiftsSheet = sheets.worksheets.filter((sheet: any) => sheet.title === 'Shifts');
+    const shiftsSheet = sheets.worksheets.filter(
+      (sheet: any) => sheet.title === 'Shifts',
+    );
     return {
       shiftsSheet: (Promise as any).promisifyAll(shiftsSheet[0]),
       sheetId: shiftsSheet.id,
@@ -76,6 +81,7 @@ class ShiftService implements IShiftService {
     try {
       shift.save();
     } catch (err) {
+      logger.error('error updating shift');
       throw new Error(err);
     }
 
