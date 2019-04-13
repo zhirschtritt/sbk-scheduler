@@ -1,29 +1,19 @@
 {
-  "env": {
-    "es6": true,
-    "node": true,
-    "mocha": true
-  },
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "google",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
   "parserOptions": {
     "ecmaVersion": 2017
   },
-  "extends": "eslint:recommended",
   "rules": {
-    "indent": [
-      "error",
-      2 
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ]
+    "require-jsdoc": "off",
+    "max-len": ["error", {"code": 120}]
+  },
+  "env": {
+    "es6": true
   }
 }

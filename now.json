@@ -15,6 +15,8 @@
     "IAM_EMAIL": "@iam_email",
     "IAM_PRIVATE_KEY_BASE64": "@iam_private_key",
     "MAILGUN_API": "@mailgun_api_key",
-    "PORT": "3030"
+    "PORT": "3030",
+    "TWILIO_SID": "@twilio_sid",
+    "TWILIO_AUTH_TOKEN": "@twlio_auth_token"
   }
 }

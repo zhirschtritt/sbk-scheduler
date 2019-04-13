@@ -1,14 +1,9 @@
 <template>
-  <v-dialog
-    v-model="dialogWindow"
-    lazy
-    max-width="450px"
-  >
+  <v-dialog v-model="dialogWindow" lazy max-width="450px">
     <v-card>
-      <v-card-title
-        primary-title
-        mx-2>
-        <h3 class="subheading">Confirm cancelling shift for
+      <v-card-title primary-title mx-2>
+        <h3 class="subheading">
+          Confirm cancelling shift for
           {{ currentStaffMemberName | capitalize }}
           on {{ shiftDate | formatDateWithWeekday }}
         </h3>
@@ -19,16 +14,12 @@
         </span>
       </v-card-title>
       <v-spacer/>
-      <v-form
-        ref="form"
-        v-model="form"
-        class="mx-4"
-      >
+      <v-form ref="form" v-model="form" class="mx-4">
         <v-textarea
           v-model="emailMessage"
           auto-grow
           box
-          row-height=18
+          row-height="18"
           label="Message to staff"
           persistent
           autofocus
@@ -41,23 +32,22 @@
             :loading="notificationLoading"
             color="primary"
             flat
-            @click="confirmUpdateShift">Confirm and Send Notification</v-btn>
+            @click="confirmUpdateShift"
+          >Confirm and Send Notification</v-btn>
           <v-btn
             v-if="$vuetify.breakpoint.smAndUp"
             color="primary"
             flat
-            @click="cancelUpdate">Go Back</v-btn>
+            @click="cancelUpdate"
+          >Go Back</v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
-
   </v-dialog>
 </template>
 
 <script>
-import {
-  mapState, mapGetters, mapActions,
-} from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'CancelConfirmDialog',
@@ -70,10 +60,7 @@ export default {
   }),
   methods: {
     ...mapActions(['toggleCancelShiftDialog']),
-    ...mapActions('shifts', [
-      'updateShift',
-      'rejectUpdateShift',
-    ]),
+    ...mapActions('shifts', ['updateShift', 'rejectUpdateShift']),
 
     cancelUpdate() {
       this.toggleCancelShiftDialog();
@@ -84,9 +71,9 @@ export default {
       const { Notification } = this.$FeathersVuex;
 
       const notification = new Notification({
-        message: JSON.stringify(this.emailMessage),
         notificationType: 'cancelledShift',
         context: {
+          customMessage: JSON.stringify(this.emailMessage),
           shift: this.shift,
           staffMember: this.getCurrentStaffMember,
         },

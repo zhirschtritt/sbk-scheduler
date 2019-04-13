@@ -1,8 +1,8 @@
 // Initializes the `term` service on path `/terms`
-const createService = require('./term.class.js');
-const hooks = require('./term.hooks');
+import createService from './term.class.js';
+import hooks from './term.hooks';
 
-module.exports = function (app) {
+export default function(app) {
   const paginate = app.get('paginate');
 
   const sheets = app.get('sheetsClient');
@@ -13,7 +13,7 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  // app.use('/terms', createService(options)); 
+  // app.use('/terms', createService(options));
   const terms = createService(options);
   terms.docs = {
     find: {
@@ -22,13 +22,13 @@ module.exports = function (app) {
           description: 'Property to query results',
           in: 'query',
           name: '$search',
-          type: 'string'
-        }
-      ]
+          type: 'string',
+        },
+      ],
     },
     definitions: {
-      terms: require('./term.schema')
-    }
+      terms: require('./term.schema'),
+    },
   };
   app.use('/terms', terms);
 
@@ -36,4 +36,4 @@ module.exports = function (app) {
   const service = app.service('terms');
 
   service.hooks(hooks);
-};
+}

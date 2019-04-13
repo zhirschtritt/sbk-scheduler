@@ -1,23 +1,14 @@
 // A hook that logs service method before, after and error
+import {debug, error} from '../logger';
 
-const logger = require('../logger');
-const util = require('util');
-
-// To see more detailed messages, uncomment the following line:
-// logger.level = 'debug';
-
-module.exports = function () {
+export default function() {
   return context => {
     // This debugs the service call and a stringified version of the hook context
     // You can customize the message (and logger) to your needs
-    logger.debug(`${context.type} logger.service('${context.path}').${context.method}()`);
-    
-    if(typeof context.toJSON === 'function' && logger.level === 'debug') {
-      logger.debug('Hook Context', util.inspect(context, {colors: false}));
-    }
-    
-    if(context.error) {
-      logger.error(context.error.stack);
+    debug(`${context.type} logger.service('${context.path}').${context.method}()`);
+
+    if (context.error) {
+      error(context.error.stack);
     }
   };
-};
+}
