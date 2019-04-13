@@ -17,9 +17,7 @@ class ShiftService implements IShiftService {
 
   async getSheets() {
     const sheets = await this.sheets.getInfoAsync();
-    const shiftsSheet = sheets.worksheets.filter(
-      (sheet: any) => sheet.title === 'Shifts',
-    );
+    const shiftsSheet = sheets.worksheets.filter((sheet: any) => sheet.title === 'Shifts');
     return {
       shiftsSheet: (Promise as any).promisifyAll(shiftsSheet[0]),
       sheetId: shiftsSheet.id,
@@ -37,7 +35,12 @@ class ShiftService implements IShiftService {
     return allShifts.map((shift: any) => shiftEntityToModel(shift));
   }
 
-  async find() {
+  async find(params: any) {
+    const {start, end} = params.query;
+    if (start && end) {
+      return await this.findByDateRange(start, end);
+    }
+
     const {shiftsSheet} = await this.getSheets();
 
     const todayishString = moment()
