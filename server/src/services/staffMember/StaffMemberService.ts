@@ -78,7 +78,7 @@ export function isStaffMemberEntity(maybeStaffMember: unknown): maybeStaffMember
 
 export function staffMemberEntityToModel(staffMemberEntity: unknown): StaffMember {
   if (!isStaffMemberEntity(staffMemberEntity)) {
-    logger.error('Unknown staff member type', {staffMemberEntity});
+    logger.error({staffMemberEntity}, 'Unknown staff member type');
     throw new Error('Unknown staff member type');
   }
   return {
@@ -87,7 +87,7 @@ export function staffMemberEntityToModel(staffMemberEntity: unknown): StaffMembe
     email: staffMemberEntity.email,
     notifications: +staffMemberEntity.notifications,
     textNotifications: +staffMemberEntity.textnotifications,
-    phoneNumber: `+1${staffMemberEntity.phonenumber}`,
+    phoneNumber: staffMemberEntity.phonenumber ? `+1${staffMemberEntity.phonenumber}` : '',
   };
 }
 

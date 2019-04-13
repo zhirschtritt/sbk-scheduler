@@ -1,11 +1,9 @@
-const {createLogger, format, transports} = require('winston');
+import pino from 'pino';
 
-// Configure the Winston logger. For the complete documentation seee https://github.com/winstonjs/winston
-const logger = createLogger({
-  // To see more detailed errors, change this to 'debug'
+const logger = pino({
   level: 'debug',
-  format: format.combine(format.splat(), format.simple()),
-  transports: [new transports.Console()],
+  prettyPrint: true,
 });
 
+export default logger;
 module.exports = logger;

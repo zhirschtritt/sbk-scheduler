@@ -1,0 +1,14 @@
+{
+  "name": "notification-scheduler",
+  "version": "1.0.0",
+  "description": "google app scripts for reminders",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zhirschtritt@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@types/google-apps-script": "0.0.44"
+  }
+}

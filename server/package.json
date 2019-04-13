@@ -49,10 +49,10 @@
     "lodash": "^4.17.10",
     "mailgun-js": "^0.20.0",
     "moment": "^2.22.2",
-    "pino": "^5.10.1",
+    "pino": "^5.12.2",
+    "pino-pretty": "^2.6.0",
     "serve-favicon": "^2.5.0",
-    "twilio": "^3.29.2",
-    "winston": "^3.0.0"
+    "twilio": "^3.29.2"
   },
   "devDependencies": {
     "@types/compression": "0.0.36",
@@ -63,6 +63,7 @@
     "@types/feathersjs__socketio": "^3.0.4",
     "@types/helmet": "0.0.43",
     "@types/mailgun-js": "^0.16.3",
+    "@types/pino": "^5.8.6",
     "@types/serve-favicon": "^2.2.30",
     "@types/twilio": "0.0.10",
     "@typescript-eslint/eslint-plugin": "^1.6.0",

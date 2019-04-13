@@ -17,7 +17,6 @@ import sheetsAdapter from './sheetsAdapter';
 
 import {services} from './services';
 import {smsClientFactory} from './twilioSMSClient/smsClientFactory';
-import {NotificationCronSchedulerFactory} from './services/notification/notifcation-scheduler';
 import {mailgunClientFactory} from './mailer/mailgunClient';
 
 const app = express(feathers());
@@ -50,11 +49,5 @@ app.configure(channels);
 app.use(express.notFound());
 app.use(express.errorHandler({logger}));
 app.hooks(appHooks);
-
-const scheduledTasks = new NotificationCronSchedulerFactory(
-  app.service('notifications'),
-  logger,
-);
-scheduledTasks.start();
 
 module.exports = app;

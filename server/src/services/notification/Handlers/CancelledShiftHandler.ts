@@ -1,17 +1,14 @@
 import moment from 'moment';
-import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
 import {NotificationHandler} from './NotificationHandlerFactory';
 import {Publisher} from '../Publishers';
 import {getAdminPublisher} from '../Publishers/PublisherFactory';
 import {formatEmail, TemplateName} from '../../../mailer/templator';
 import {NotificationContext} from '../notification.interfaces';
+import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
 
 export class CancelledShiftHandler implements NotificationHandler {
   private readonly adminPublisher: Publisher;
-  constructor(
-    private readonly log: MinimalLogger,
-    publishers: Map<number, Publisher[]>,
-  ) {
+  constructor(private readonly log: MinimalLogger, publishers: Map<number, Publisher[]>) {
     this.adminPublisher = getAdminPublisher(publishers);
   }
 
@@ -19,9 +16,7 @@ export class CancelledShiftHandler implements NotificationHandler {
     const emailHtml = formatEmail(TemplateName.cancelledShift, context);
     const vm = {
       emailHtml,
-      subjectText: `⚠️ Cancelled Upcoming Shift: ${formatDate(
-        context.shift.date,
-      )}`,
+      subjectText: `⚠️ Cancelled Upcoming Shift: ${formatDate(context.shift.date)}`,
       smsText: "cancelled upcoming shift message, this shouldn't ever get sent",
     };
 
