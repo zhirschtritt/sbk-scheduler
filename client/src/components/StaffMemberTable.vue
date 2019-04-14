@@ -31,6 +31,7 @@
               :value-comparator="function(val) { return(!!val)}"
               color="primary"
               light
+              debounce="20"
               @change="updateNotifications(props.item)"
             >
               <template v-slot:prepend>
@@ -46,6 +47,7 @@
               :value-comparator="function(val) { return(!!val)}"
               color="#5C6BC0"
               light
+              debounce="20"
               @change="updateTextNotifications(props.item)"
             >
               <template v-slot:prepend>
@@ -96,23 +98,31 @@ export default {
       return this.findShiftsInStore({ query }).data;
     },
 
-    updateNotifications(staffMember) {
+    async updateNotifications(staffMember) {
       const newNotificationValue = staffMember.notifications ? 0 : 1;
       const updatedStaffMember = staffMember.clone();
 
       updatedStaffMember.notifications = newNotificationValue;
 
+      /**
+       * the order is important here, eager commit to local store and await remote patch
+       * so there isn't a weird gui glitchy behavior
+       */
       updatedStaffMember.commit();
-      updatedStaffMember.patch();
+      await updatedStaffMember.patch();
     },
-    updateTextNotifications(staffMember) {
+    async updateTextNotifications(staffMember) {
       const newNotificationValue = staffMember.textNotifications ? 0 : 1;
       const updatedStaffMember = staffMember.clone();
 
       updatedStaffMember.textNotifications = newNotificationValue;
 
+      /**
+       * the order is important here, eager commit to local store and await remote patch
+       * so there isn't a weird gui glitchy behavior
+       */
       updatedStaffMember.commit();
-      updatedStaffMember.patch();
+      await updatedStaffMember.patch();
     },
   },
 };

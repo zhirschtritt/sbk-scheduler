@@ -87,7 +87,7 @@ export function staffMemberEntityToModel(staffMemberEntity: unknown): StaffMembe
     email: staffMemberEntity.email,
     notifications: +staffMemberEntity.notifications,
     textNotifications: +staffMemberEntity.textnotifications,
-    phoneNumber: staffMemberEntity.phonenumber ? `+1${staffMemberEntity.phonenumber}` : '',
+    phoneNumber: staffMemberEntity.phonenumber,
   };
 }
 

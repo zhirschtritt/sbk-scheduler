@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 module.exports = {
   host: 'localhost',
   port: process.env.PORT,
@@ -16,5 +17,5 @@ module.exports = {
   staffEmail: 'staff@somervillebikekitchen.org',
   twilioSid: process.env.TWILIO_SID,
   twilioAuthToken: process.env.TWLIO_AUTH_TOKEN,
-  twilioFromNumber: '+6172296927',
+  twilioFromNumber: process.env.TWILIO_FROM_NUMBER,
 };

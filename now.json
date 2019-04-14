@@ -17,6 +17,7 @@
     "MAILGUN_API": "@mailgun_api_key",
     "PORT": "3030",
     "TWILIO_SID": "@twilio_sid",
-    "TWILIO_AUTH_TOKEN": "@twlio_auth_token"
+    "TWILIO_AUTH_TOKEN": "@twlio_auth_token",
+    "TWILIO_FROM_NUMBER": "@twlio_from_number"
   }
 }
