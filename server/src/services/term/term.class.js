@@ -6,9 +6,7 @@ class Service {
 
   async getSheets() {
     const sheets = await this.sheets.getInfoAsync();
-    const termsSheet = sheets.worksheets.filter(
-      sheet => sheet.title === 'Terms',
-    );
+    const termsSheet = sheets.worksheets.filter(sheet => sheet.title === 'Terms');
     return {
       termsSheet: Promise.promisifyAll(termsSheet[0]),
       sheetId: termsSheet.id,

@@ -15,8 +15,8 @@
     "feathers-vuex": "^1.4.8",
     "moment": "^2.22.2",
     "socket.io-client": "^2.1.1",
-    "vue": "^2.5.17",
-    "vuetify": "^1.4.3",
+    "vue": "^2.5.18",
+    "vuetify": "^1.5.11",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -26,6 +26,6 @@
     "eslint": "^5.4.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.6.10"
   }
 }

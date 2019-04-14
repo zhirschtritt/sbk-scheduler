@@ -25,22 +25,37 @@
           >{{ shift.date | formatDateWithWeekday }}</v-chip>
         </td>
         <td>
-          <v-switch
-            :value="props.item.notifications"
-            :value-comparator="function(val) { return(!!val)}"
-            color="primary"
-            light
-            @change="updateNotifications(props.item)"
-          />
-        </td>
-        <td>
-          <v-switch
-            :value="props.item.textNotifications"
-            :value-comparator="function(val) { return(!!val)}"
-            color="primary"
-            light
-            @change="updateTextNotifications(props.item)"
-          />
+          <v-layout align-center justify-center column class="pt-3">
+            <v-switch
+              :value="props.item.notifications"
+              :value-comparator="function(val) { return(!!val)}"
+              color="primary"
+              light
+              @change="updateNotifications(props.item)"
+            >
+              <template v-slot:prepend>
+                <v-tooltip left>
+                  <v-icon slot="activator">fa-envelope-o</v-icon>
+                  <span>Email Notifications</span>
+                </v-tooltip>
+              </template>
+            </v-switch>
+            <v-switch
+              v-if="props.item.phoneNumber"
+              :value="props.item.textNotifications"
+              :value-comparator="function(val) { return(!!val)}"
+              color="#5C6BC0"
+              light
+              @change="updateTextNotifications(props.item)"
+            >
+              <template v-slot:prepend>
+                <v-tooltip left>
+                  <v-icon slot="activator">fa-commenting-o</v-icon>
+                  <span>Text Notifications</span>
+                </v-tooltip>
+              </template>
+            </v-switch>
+          </v-layout>
         </td>
       </template>
       <template slot="no-data">Loading...</template>
@@ -54,10 +69,9 @@ import { mapState, mapGetters } from 'vuex';
 export default {
   data: () => ({
     headers: [
-      { text: 'Staff Member', value: 'name' },
+      { text: 'Staff Member', value: 'name', width: '10' },
       { text: 'Scheduled Shifts', sortable: false },
-      { text: 'Email Reminders', sortable: false },
-      { text: 'Text Reminders', sortable: false },
+      { text: 'Reminders', sortable: false, width: '10' },
     ],
   }),
 
