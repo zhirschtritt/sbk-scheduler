@@ -19,6 +19,6 @@ module.exports = {
   mailgunDomain: 'sandboxa9c7bc9dadac4c7facd4f1c2b5cfb148.mailgun.org',
   staffEmail: 'zhirschtritt@gmail.com',
   twilioSid: process.env.TWILIO_SID,
-  twilioAuthToken: process.env.TWLIO_AUTH_TOKEN,
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
   twilioFromNumber: '15005550006',
 };

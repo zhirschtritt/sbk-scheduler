@@ -16,6 +16,6 @@ module.exports = {
   mailgunDomain: 'notifications.somervillebikekitchen.org',
   staffEmail: 'staff@somervillebikekitchen.org',
   twilioSid: process.env.TWILIO_SID,
-  twilioAuthToken: process.env.TWLIO_AUTH_TOKEN,
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
   twilioFromNumber: process.env.TWILIO_FROM_NUMBER,
 };
