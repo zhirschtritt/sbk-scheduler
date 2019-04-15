@@ -1,26 +1,19 @@
 <template>
   <div>
-    <v-toolbar
-      dark
-      color="primary"
-      dense
-      flat>
+    <v-toolbar dark color="primary" dense flat>
       <v-icon>today</v-icon>
       <v-toolbar-title>Staff Schedule</v-toolbar-title>
       <v-spacer/>
     </v-toolbar>
-    <v-data-table
-      :headers="headers"
-      :items="shifts"
-      hide-actions
-      dense
-      :loading="areShiftsLoading"
-    >
-      <template
-        slot="items"
-        slot-scope="props"
-      >
-        <td :class="{pastShift: props.item.isPastShift}">
+    <v-data-table :headers="headers" :items="shifts" hide-actions dense :loading="areShiftsLoading">
+      <template slot="no-data">Loading...</template>
+      <template slot="footer">
+        <td colspan="100%">
+          <v-icon small color="primary">star</v-icon>= Next upcoming shift
+        </td>
+      </template>
+      <template slot="items" slot-scope="props">
+        <td class="pr-1" :class="{pastShift: props.item.isPastShift}">
           {{ props.item.date | formatDateWithWeekday }}
           <span v-if="props.item.isNextUpcoming">
             <v-icon small color="primary">star</v-icon>
@@ -29,7 +22,7 @@
             <strong>(Shop Closed)</strong>
           </span>
         </td>
-        <td :class="{pastShift: props.item.isPastShift}">
+        <td class="px-1" :class="{pastShift: props.item.isPastShift}">
           <StaffMemberSelector
             :shift="props.item"
             :staff-members="staffMembers"
@@ -37,7 +30,7 @@
             :is-primary="true"
           />
         </td>
-        <td :class="{pastShift: props.item.isPastShift}">
+        <td class="px-1" :class="{pastShift: props.item.isPastShift}">
           <StaffMemberSelector
             :shift="props.item"
             :staff-members="staffMembers"
@@ -46,23 +39,13 @@
           />
         </td>
       </template>
-      <template slot="no-data">
-        Loading...
-      </template>
-      <template slot="footer">
-        <td colspan="100%">
-          <v-icon small color="primary">star</v-icon> = Next upcoming shift
-        </td>
-      </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
 import moment from 'moment';
-import {
-  mapState, mapGetters, mapActions,
-} from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import StaffMemberSelector from './StaffMemberSelector.vue';
 
 export default {
@@ -94,7 +77,9 @@ export default {
   methods: {
     ...mapActions(['toggleCancelShiftDialog']),
     ...mapActions('shifts', ['updateShift', 'stageUpdateShift']),
-    ...mapActions('staffMembers', { setCurrentStaffMember: 'setCurrentByName' }),
+    ...mapActions('staffMembers', {
+      setCurrentStaffMember: 'setCurrentByName',
+    }),
 
     setNewStaff(staffMemberName, shift, isPrimary) {
       // set current member for use by confirm workflow
@@ -117,7 +102,7 @@ export default {
 </script>
 
 <style>
-  .pastShift {
-    background-color: #FAFAFA;
-  }
+.pastShift {
+  background-color: #fafafa;
+}
 </style>

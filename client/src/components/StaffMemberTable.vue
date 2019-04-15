@@ -12,9 +12,10 @@
       dense
       :loading="areStaffMembersLoading"
     >
+      <template slot="no-data">Loading...</template>
       <template slot="items" slot-scope="props">
-        <td class="text-capitalize">{{ props.item.name }}</td>
-        <td>
+        <td class="text-capitalize pr-1">{{ props.item.name }}</td>
+        <td class="px-1">
           <v-chip
             label
             outline
@@ -24,7 +25,7 @@
             v-for="shift in shiftsForStaffMember(props.item.name)"
           >{{ shift.date | formatDateWithWeekday }}</v-chip>
         </td>
-        <td>
+        <td class="pl-1">
           <v-layout align-center justify-center column class="pt-3">
             <v-switch
               :value="props.item.notifications"
@@ -60,7 +61,6 @@
           </v-layout>
         </td>
       </template>
-      <template slot="no-data">Loading...</template>
     </v-data-table>
   </div>
 </template>
@@ -71,9 +71,9 @@ import { mapState, mapGetters } from 'vuex';
 export default {
   data: () => ({
     headers: [
-      { text: 'Staff Member', value: 'name', width: '10' },
+      { text: 'Staff Member', value: 'name', class: 'px-0' },
       { text: 'Scheduled Shifts', sortable: false },
-      { text: 'Reminders', sortable: false, width: '10' },
+      { text: 'Reminders', sortable: false },
     ],
   }),
 
