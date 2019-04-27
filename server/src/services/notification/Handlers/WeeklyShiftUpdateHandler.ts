@@ -39,7 +39,8 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
     const vm: NotificationViewModel = {
       emailHtml: formatEmail(TemplateName.upcomingShift, {shift}),
       subjectText: `👋 SBK Reminder: Upcoming Shift ${formatDate(shift.date)}`,
-      smsText: `👋 SBK Reminder: You have an upcoming SBK shift this week: ${shift.date}`,
+      smsText: `👋 SBK Reminder, you have an upcoming SBK shift this week: ${formatDate(shift.date)}\n
+      Staff: ${assignedStaffMembers.map(s => `${s.name.charAt(0).toUpperCase()}${s.name.slice(1)}`).join(', ')}`,
     };
 
     return await Promise.all(publishers.map(p => p.publish(vm)));
