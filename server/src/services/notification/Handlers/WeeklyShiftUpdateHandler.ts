@@ -4,10 +4,10 @@ import {StaffMember} from '../../staffMember/staffMember.interfaces';
 import {NotificationHandler} from './NotificationHandlerFactory';
 import {NotificationContext} from '../notification.interfaces';
 import {Publisher, NotificationViewModel} from '../Publishers';
-import {IShiftService} from '../../shift/ShiftService';
 import {formatEmail, TemplateName} from '../../../mailer/templator';
 import {getAdminPublisher} from '../Publishers';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
+import {IShiftService} from '../../shift/ShiftService';
 
 export class WeeklyShiftUpdateHandler implements NotificationHandler {
   private readonly adminPublisher: Publisher;
@@ -39,8 +39,8 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
     const vm: NotificationViewModel = {
       emailHtml: formatEmail(TemplateName.upcomingShift, {shift}),
       subjectText: `👋 SBK Reminder: Upcoming Shift ${formatDate(shift.date)}`,
-      smsText: `👋 SBK Reminder, you have an upcoming SBK shift this week: ${formatDate(shift.date)}\n
-      Staff: ${assignedStaffMembers.map(s => `${s.name.charAt(0).toUpperCase()}${s.name.slice(1)}`).join(', ')}`,
+      smsText: `👋 SBK Reminder, you have an upcoming SBK shift this week: ${formatDate(shift.date)}
+      Staff: ${assignedStaffMembers.map(s => capitalize(s.name)).join(', ')}`,
     };
 
     return await Promise.all(publishers.map(p => p.publish(vm)));
@@ -65,7 +65,7 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
       return this.sendUpcomingShiftEmail(shift, assignedStaffMembers);
     } catch (err) {
       this.log.error({err}, 'could not send upcoming shift notificaiton');
-      throw new Error(err);
+      throw err;
     }
   }
 
@@ -98,6 +98,10 @@ function findAssignedStaffForShift(upcomingShift: Shift, staff: StaffMember[]): 
   return assignedStaffMembers;
 }
 
-function formatDate(date: string) {
+function formatDate(date: string | Date) {
   return moment(date).format('dddd, MMM D, YYYY');
+}
+
+function capitalize(value: string) {
+  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 }

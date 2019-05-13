@@ -4,7 +4,7 @@ import {Application} from '@feathersjs/express';
 const hooks = require('./notification.hooks');
 import {NotificationHandlerFactory} from './Handlers/NotificationHandlerFactory';
 import {CompositePublisherFactory} from './Publishers';
-const logger = require('../../logger');
+import {logger} from '../../logger';
 
 export default function(app: Application<any>) {
   const mailer = app.get('mailer');

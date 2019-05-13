@@ -1,22 +1,16 @@
 // Initializes the `shift` service on path `/shifts`
-import createService from './ShiftService';
+import {ShiftService} from './ShiftService';
 import hooks from './shift.hooks';
+import {ShiftRepository} from './ShiftRepository';
+import {Application} from '@feathersjs/express';
 
-export default function(app) {
-  const termLength = app.get('termLength');
-  const paginate = app.get('paginate');
+export default function(app: Application<any>) {
   const sheets = app.get('sheetsClient');
+  const repository = new ShiftRepository(sheets);
 
-  const options = {
-    paginate,
-    termLength,
-    sheets,
-  };
+  const shifts = new ShiftService(repository);
 
-  // Initialize our service with any options it requires
-  const shifts = createService(options);
-
-  shifts.docs = {
+  (shifts as any).docs = {
     find: {
       parameters: [
         {

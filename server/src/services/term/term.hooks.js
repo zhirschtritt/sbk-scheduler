@@ -1,13 +1,14 @@
 import Ajv from 'ajv';
 const ajv = new Ajv({coerceTypes: true});
 import {validateSchema} from 'feathers-hooks-common';
-import schema from './term.schema';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// const schema = require('./term.schema');
 
 export const before = {
   all: [],
   find: [],
   get: [],
-  create: [validateSchema(schema, ajv)],
+  // create: [validateSchema(schema, ajv)],
   update: [],
   patch: [],
   remove: [],

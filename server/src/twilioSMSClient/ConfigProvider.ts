@@ -1,4 +1,4 @@
-import logger from '../logger';
+import {logger} from '../logger';
 import {EPROTONOSUPPORT} from 'constants';
 
 export interface TwilioConfig {
