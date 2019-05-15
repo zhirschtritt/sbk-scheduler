@@ -1,14 +1,14 @@
 // A hook that logs service method before, after and error
-import {debug, error} from '../logger';
+import {logger} from '../logger';
 
 export default function() {
-  return context => {
+  return (context: any) => {
     // This debugs the service call and a stringified version of the hook context
     // You can customize the message (and logger) to your needs
-    debug(`${context.type} logger.service('${context.path}').${context.method}()`);
+    logger.debug(`${context.type} logger.service('${context.path}').${context.method}()`);
 
     if (context.error) {
-      error(context.error.stack);
+      logger.error(context.error.stack);
     }
   };
 }

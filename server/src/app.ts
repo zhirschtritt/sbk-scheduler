@@ -7,7 +7,7 @@ import cors from 'cors';
 import favicon from 'serve-favicon';
 import compress from 'compression';
 import {logger} from './logger';
-import {GoogleSheetsClientFactory} from './GoogleSheetsClientFactory';
+import {GoogleSheetsClientFactory, GoogleSpreadSheetClient} from './GoogleSheetsClientFactory';
 import socketio from '@feathersjs/socketio';
 import swagger from 'feathers-swagger';
 import {mailgunClientFactory} from './mailer/MailgunClient';
@@ -23,7 +23,8 @@ export class FeathersApplication {
   constructor() {
     this.app = express(feathers());
   }
-  async boot() {
+
+  private async boot() {
     this.app.configure(configuration());
     this.app.use(helmet());
     this.app.use(cors());
@@ -58,13 +59,19 @@ export class FeathersApplication {
     this.app.configure(services);
     this.app.configure(channels);
     this.app.use(express.notFound());
-    this.app.use(express.errorHandler({logger}));
+    this.app.use(
+      express.errorHandler({
+        html: false,
+        logger,
+      }),
+    );
     this.app.hooks(appHooks);
   }
 
-  start() {
-    const port = this.app.get('port');
+  async start() {
+    await this.boot();
 
+    const port = this.app.get('port');
     const server = this.app.listen(port);
 
     server.on('listening', () => {

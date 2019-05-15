@@ -10,13 +10,15 @@ export type IShiftService = BaseService<Shift> & {
 export class ShiftService implements IShiftService {
   constructor(private readonly repository: ShiftRepository) {}
 
-  async find(params: any) {
-    const {start, end} = params.query;
-    if (start && end) {
-      return await this.findByDateRange(start, end);
-    }
+  async find(params: {query: {start: Date; end: Date}}) {
+    const start = params.query.start || new Date();
+    const end =
+      params.query.end ||
+      moment()
+        .add(90, 'days')
+        .toDate();
 
-    throw new Error('Must pass start, end date params');
+    return await this.findByDateRange(start, end);
   }
 
   async get(id: string) {
