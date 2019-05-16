@@ -5,7 +5,7 @@
     "declaration": false,
     "baseUrl": ".",
     "paths": {"*": ["types/*"]},
-    "target": "es6",
+    "target": "es2017",
     "module": "commonjs",
     "allowJs": true,
     "checkJs": false,
