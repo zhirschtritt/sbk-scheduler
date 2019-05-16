@@ -26,8 +26,8 @@ export class TwilioClient {
       }
 
       return response;
-    } catch (error) {
-      throw new Error(error.message);
+    } catch (err) {
+      throw err;
     }
   }
 }

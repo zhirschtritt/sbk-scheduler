@@ -1,4 +1,4 @@
-import term from './term/term.service.js';
+import term from './term/term.service';
 import staffMember from './staffMember/staffMember.service';
 import shift from './shift/shift.service';
 import notification from './notification/NotificationServiceFactory';

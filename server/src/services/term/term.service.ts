@@ -1,21 +1,16 @@
 // Initializes the `term` service on path `/terms`
-import createService from './term.class.js';
-import hooks from './term.hooks';
+const hooks = require('./term.hooks');
+import {TermsRepository} from './TermsRepository';
+import {TermsService} from './term.class';
+import {Application} from '@feathersjs/express';
 
-export default function(app) {
-  const paginate = app.get('paginate');
-
+export default function(app: Application<any>) {
   const sheets = app.get('sheetsClient');
+  const termsRepo = new TermsRepository(sheets);
 
-  const options = {
-    paginate,
-    sheets,
-  };
+  const terms = new TermsService(termsRepo);
 
-  // Initialize our service with any options it requires
-  // app.use('/terms', createService(options));
-  const terms = createService(options);
-  terms.docs = {
+  (terms as any).docs = {
     find: {
       parameters: [
         {

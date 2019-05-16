@@ -24,20 +24,15 @@ export interface CancelledShiftNotification {
 
 export type Notification = WeeklyNotification | CancelledShiftNotification;
 
-export function isNotification(
-  maybeNotification: unknown,
-): maybeNotification is Notification {
+export function isNotification(maybeNotification: unknown): maybeNotification is Notification {
   return (
     maybeNotification !== undefined &&
     maybeNotification !== null &&
-    (!!isWeeklyNotification(maybeNotification) ||
-      !!isCancelledShiftNotification(maybeNotification))
+    (!!isWeeklyNotification(maybeNotification) || !!isCancelledShiftNotification(maybeNotification))
   );
 }
 
-export function isWeeklyNotification(
-  maybeWeeklyNotification: unknown,
-): maybeWeeklyNotification is Notification {
+export function isWeeklyNotification(maybeWeeklyNotification: unknown): maybeWeeklyNotification is Notification {
   return (
     maybeWeeklyNotification !== undefined &&
     maybeWeeklyNotification !== null &&
@@ -51,15 +46,12 @@ export function isCancelledShiftNotification(
   return (
     maybeCancelledShiftNotification !== undefined &&
     maybeCancelledShiftNotification !== null &&
-    (maybeCancelledShiftNotification as any).notificationType ===
-      'cancelledShift' &&
+    (maybeCancelledShiftNotification as any).notificationType === 'cancelledShift' &&
     !!isNotificationContext((maybeCancelledShiftNotification as any).context)
   );
 }
 
-export function isNotificationContext(
-  maybeNotificationCtx: unknown,
-): maybeNotificationCtx is NotificationContext {
+export function isNotificationContext(maybeNotificationCtx: unknown): maybeNotificationCtx is NotificationContext {
   return (
     maybeNotificationCtx &&
     !!(maybeNotificationCtx as any).shift &&

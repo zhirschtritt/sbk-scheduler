@@ -21,9 +21,9 @@ export class NotificationService {
 
     try {
       return await notificationHandler.handle((notification as any).context);
-    } catch (error) {
-      this.logger.error({error}, 'Error processing notification');
-      return new Error(error);
+    } catch (err) {
+      this.logger.error({err}, 'Error processing notification');
+      throw err;
     }
   }
 }

@@ -1,6 +1,6 @@
 import {TwilioClient} from '../../../twilioSMSClient/TwilioClient';
 import {Publisher, NotificationViewModel} from './interfaces';
-import logger from '../../../logger';
+import {logger} from '../../../logger';
 
 export class SmsPublisher implements Publisher {
   constructor(private readonly twilioClient: TwilioClient, private readonly recipientPhoneNumber: string) {}
@@ -11,7 +11,7 @@ export class SmsPublisher implements Publisher {
       await this.twilioClient.sendSms(viewModel.smsText, this.recipientPhoneNumber);
     } catch (err) {
       logger.error({err}, 'Error sending sms message');
-      throw new Error(err);
+      throw err;
     }
   }
 }

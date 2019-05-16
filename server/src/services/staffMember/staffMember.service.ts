@@ -1,12 +1,14 @@
 // Initializes the `staffMember` service on path `/staffMembers`
 import createService, {StaffMemberService} from './StaffMemberService';
 import {Application} from '@feathersjs/express';
+import {StaffMemberRepository} from './StaffMemberRepository';
 const hooks = require('./staffMember.hooks');
 
 export default function(app: Application<any>) {
   const sheets = app.get('sheetsClient');
+  const staffMemberRepo = new StaffMemberRepository(sheets);
 
-  const staffMembers = createService(sheets) as StaffMemberService & {
+  const staffMembers = createService(staffMemberRepo) as StaffMemberService & {
     docs: any;
   };
 

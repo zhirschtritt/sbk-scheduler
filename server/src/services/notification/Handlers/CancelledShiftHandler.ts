@@ -24,6 +24,6 @@ export class CancelledShiftHandler implements NotificationHandler {
   }
 }
 
-function formatDate(date: string) {
+function formatDate(date: string | Date) {
   return moment(date).format('dddd, MMM D, YYYY');
 }

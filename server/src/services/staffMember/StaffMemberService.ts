@@ -1,38 +1,23 @@
 import {StaffMember, StaffMemberEntity, IStaffMemberService} from './staffMember.interfaces';
-import logger from '../../logger';
+import {logger} from '../../logger';
+import {StaffMemberRepository} from './StaffMemberRepository';
 export class StaffMemberService implements IStaffMemberService {
-  constructor(private readonly sheets: any) {}
-
-  private async getSheets() {
-    const sheets = await this.sheets.getInfoAsync();
-    const staffMemberSheet = sheets.worksheets.filter((sheet: any) => sheet.title === 'Staff');
-    return {
-      staffMemberSheet: (Promise as any).promisifyAll(staffMemberSheet[0]),
-      sheetId: staffMemberSheet.id,
-    };
-  }
+  constructor(private readonly repository: StaffMemberRepository) {}
 
   async find() {
-    const {staffMemberSheet} = await this.getSheets();
-    const allStaffMembers = await staffMemberSheet.getRowsAsync();
+    const allStaffMembers = await this.repository.findAll();
 
-    return allStaffMembers.map((staffMember: StaffMember) => staffMemberEntityToModel(staffMember));
+    return allStaffMembers.map((staffMember: StaffMemberEntity) => staffMemberEntityToModel(staffMember));
   }
 
   async get(id: string) {
-    const {staffMemberSheet} = await this.getSheets();
-    const [staffMember] = await staffMemberSheet.getRowsAsync({
-      query: `id = ${id}`,
-    });
+    const staffMember = await this.repository.findOneById(id);
 
     return staffMemberEntityToModel(staffMember);
   }
 
   async findByName(name: string) {
-    const {staffMemberSheet} = await this.getSheets();
-    const [staffMember]: StaffMember[] = await staffMemberSheet.getRowsAsync({
-      query: `name = ${name.toLowerCase()}`,
-    });
+    const staffMember = await this.repository.findOneByName(name);
 
     if (staffMember) {
       return staffMemberEntityToModel(staffMember);
@@ -42,10 +27,7 @@ export class StaffMemberService implements IStaffMemberService {
   }
 
   async patch(id: string, data: Partial<StaffMember>) {
-    const {staffMemberSheet} = await this.getSheets();
-    const [staffMember] = await staffMemberSheet.getRowsAsync({
-      query: `id = ${id}`,
-    });
+    const staffMember = await this.repository.findOneById(id);
 
     // TODO: use entity <-> model mapping here
     const newStaffer: Pick<StaffMemberEntity, 'notifications' | 'textnotifications'> = {
@@ -59,7 +41,7 @@ export class StaffMemberService implements IStaffMemberService {
       await staffMember.save();
     } catch (err) {
       logger.error('error updating staffMember');
-      throw new Error(err);
+      throw err;
     }
 
     return staffMemberEntityToModel(staffMember);
@@ -91,6 +73,6 @@ export function staffMemberEntityToModel(staffMemberEntity: unknown): StaffMembe
   };
 }
 
-export default function(options: any) {
-  return new StaffMemberService(options);
+export default function(repository: StaffMemberRepository) {
+  return new StaffMemberService(repository);
 }
