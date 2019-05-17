@@ -58,7 +58,7 @@ export class ShiftService implements IShiftService {
 export function shiftEntityToModel(shift: any): Shift {
   return {
     id: +shift.id,
-    date: new Date(shift.date),
+    date: shift.date,
     primary_staff: shift.primarystaff,
     secondary_staff: shift.secondarystaff,
     fulfilled: +shift.fulfilled,
