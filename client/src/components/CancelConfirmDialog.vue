@@ -61,6 +61,7 @@ export default {
   methods: {
     ...mapActions(['toggleCancelShiftDialog']),
     ...mapActions('shifts', ['updateShift', 'rejectUpdateShift']),
+    ...mapActions('notifications', { createNotification: 'create' }),
 
     cancelUpdate() {
       this.toggleCancelShiftDialog();
@@ -68,18 +69,19 @@ export default {
     },
 
     async confirmUpdateShift() {
-      const { Notification } = this.$FeathersVuex;
-
-      const notification = new Notification({
-        notificationType: 'cancelledShift',
-        context: {
-          customMessage: JSON.stringify(this.emailMessage),
-          shift: this.shift,
-          staffMember: this.getCurrentStaffMember,
-        },
-      });
-
-      await notification.save();
+      try {
+        await this.createNotification({
+          notificationType: 'cancelledShift',
+          context: {
+            customMessage: JSON.stringify(this.emailMessage),
+            shift: this.shift,
+            staffMember: this.getCurrentStaffMember,
+          },
+        });
+      } catch (err) {
+        console.error('Could not create new notification');
+        throw err;
+      }
 
       this.emailMessage = '';
       this.toggleCancelShiftDialog();
