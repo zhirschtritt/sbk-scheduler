@@ -7,6 +7,11 @@ db.json
 .env.local
 .env.*.local
 .env
+docker-env.dev
+docker-env.prod
+
+#ssl certs
+acme.json
 
 # Log files
 npm-debug.log*

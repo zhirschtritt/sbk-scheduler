@@ -1,0 +1,8 @@
+IAM_EMAIL=some-google-apps-iam-acct
+IAM_PRIVATE_KEY_BASE64=som-google-apps-iam-key-base64-encoded
+MAILGUN_API=some-mailgun-key
+NODE_ENV=development/production
+TWILIO_SID=twilio_sid
+TWILIO_AUTH_TOKEN=twilio_auth_token
+TWILIO_FROM_NUMBER=number-starting-with-1...
+PORT=3030

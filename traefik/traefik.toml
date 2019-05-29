@@ -1,0 +1,46 @@
+debug = true
+logLevel = "DEBUG"
+
+defaultEntryPoints = ["https","http"]
+
+[entryPoints]
+  [entryPoints.dashboard]
+  address = ":8080"
+    [entryPoints.dashboard.auth]
+      [entryPoints.dashboard.auth.basic]
+      users = ["admin:$apr1$7Gv83Lpb$Ek/oRGY8J1bA6cp6ITgqI0"]
+  [entryPoints.http]
+  address = ":80"
+   [entryPoints.http.redirect]
+   entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+		
+[api]
+dashboard = true
+entryPoint = "dashboard"
+      
+[retry]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "schedule.somervillebikekitchen.org"
+watch = true
+exposedByDefault = false
+
+[acme]
+email = "admin@somervillebikekitchen.org"
+storage = "acme.json"
+entryPoint = "https"
+acmeLogging = true
+#caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+onHostRule = true
+[[acme.domains]]
+main = "schedule.somervillebikekitchen.org"
+
+[acme.httpChallenge]
+entryPoint = "http"
+
+#[acme.tlsChallenge]
+#entryPoint = "http"
