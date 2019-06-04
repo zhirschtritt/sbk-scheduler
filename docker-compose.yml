@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:1.7.11
+    restart: always
+    ports:
+      - 81:80
+      - 444:443
+    expose:
+     - "444"
+    networks:
+      - proxy
+    labels: 
+     -  "traefik.enable=true"    
+     -  "traefik.port=8080"
+     -  "traefik.docker.network=proxy"
+     -  "traefik.backend=traefik-dashboard"
+     -  "traefik.frontend.auth.basic=admin:$$apr1$$lHDfomvH$$42CgD8.GE3fLVkX0fSNS01"
+     -  "traefik.frontend.rule=Path:/_traefik"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.toml:/traefik.toml
+      - ./traefik/acme.json:/acme.json
+    container_name: traefik
+
+  sbk-sched:
+    image: sbk-sched
+    restart: unless-stopped
+    networks:
+      - proxy
+      - default
+    ports: 
+     - 3030:3030
+    expose: 
+      - "3030"
+    env_file: 
+      - ./docker-env.prod
+    labels:
+      - "traefik.backend=sbk-sched"
+      - "traefik.docker.network=proxy"
+      - "traefik.enable=true"
+      - "traefik.port=3030"
+      - "traefik.frontend.rule=Host:schedule.somervillebikekitchen.org"
+
+networks:
+  proxy:
+    external: true
