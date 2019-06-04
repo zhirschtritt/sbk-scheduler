@@ -4,22 +4,25 @@ logLevel = "DEBUG"
 defaultEntryPoints = ["https","http"]
 
 [entryPoints]
-  [entryPoints.dashboard]
-  address = ":8080"
-    [entryPoints.dashboard.auth]
-      [entryPoints.dashboard.auth.basic]
-      users = ["admin:$apr1$7Gv83Lpb$Ek/oRGY8J1bA6cp6ITgqI0"]
   [entryPoints.http]
   address = ":80"
-   [entryPoints.http.redirect]
-   entryPoint = "https"
+		[entryPoints.http.redirect]
+  	 entryPoint = "https"
+  [entryPoints.traefik-dashboard]
+	 address = ":8080"
   [entryPoints.https]
   address = ":443"
     [entryPoints.https.tls]
 		
 [api]
+entryPoint = "traefik-dashboard"
 dashboard = true
-entryPoint = "dashboard"
+debug = false
+  [api.statistics]
+  recentErrors = 10
+
+[ping]
+entryPoint = "traefik-dashboard"
       
 [retry]
 
