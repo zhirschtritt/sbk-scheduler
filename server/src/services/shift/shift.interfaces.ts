@@ -1,5 +1,5 @@
 export interface Shift {
-  id: number;
+  id: string;
   date: Date;
   primary_staff: string;
   secondary_staff: string;

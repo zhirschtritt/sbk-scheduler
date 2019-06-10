@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express from '@feathersjs/express';
 import feathers from '@feathersjs/feathers';
 import configuration from '@feathersjs/configuration';
@@ -7,7 +8,7 @@ import cors from 'cors';
 import favicon from 'serve-favicon';
 import compress from 'compression';
 import {logger} from './logger';
-import {GoogleSheetsClientFactory, GoogleSpreadSheetClient} from './GoogleSheetsClientFactory';
+import {GoogleSheetsClientFactory} from './GoogleSheetsClientFactory';
 import socketio from '@feathersjs/socketio';
 import swagger from 'feathers-swagger';
 import {mailgunClientFactory} from './mailer/MailgunClient';

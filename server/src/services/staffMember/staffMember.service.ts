@@ -1,6 +1,6 @@
 // Initializes the `staffMember` service on path `/staffMembers`
 import createService, {StaffMemberService} from './StaffMemberService';
-import {Application} from '@feathersjs/express';
+import {Application} from '@feathersjs/feathers';
 import {StaffMemberRepository} from './StaffMemberRepository';
 const hooks = require('./staffMember.hooks');
 

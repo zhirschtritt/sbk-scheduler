@@ -1,4 +1,5 @@
 import {TermsRepository} from './TermsRepository';
+import moment = require('moment');
 
 export class TermsService {
   constructor(private readonly repository: TermsRepository) {}
@@ -8,9 +9,9 @@ export class TermsService {
 
     return allTerms.map(term => {
       return {
-        id: Number(term.id),
-        start: term.start,
-        end: term.end,
+        id: term.id,
+        start: new Date(term.start),
+        end: new Date(term.end),
       };
     });
   }
@@ -19,9 +20,9 @@ export class TermsService {
     const term = await this.repository.findOneById(id);
 
     return {
-      id: Number(term.id),
-      start: term.start,
-      end: term.end,
+      id: term.id,
+      start: new Date(term.start),
+      end: new Date(term.end),
     };
   }
 }

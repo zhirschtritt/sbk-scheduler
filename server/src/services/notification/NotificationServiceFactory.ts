@@ -1,6 +1,6 @@
 // Initializes the `notifications` service on path `/notifications`
 import {NotificationService} from './NotificationService';
-import {Application} from '@feathersjs/express';
+import {Application} from '@feathersjs/feathers';
 const hooks = require('./notification.hooks');
 import {NotificationHandlerFactory} from './Handlers/NotificationHandlerFactory';
 import {CompositePublisherFactory} from './Publishers';

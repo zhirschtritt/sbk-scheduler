@@ -2,9 +2,9 @@
 const hooks = require('./term.hooks');
 import {TermsRepository} from './TermsRepository';
 import {TermsService} from './term.class';
-import {Application} from '@feathersjs/express';
+import {Application} from '@feathersjs/feathers';
 
-export default function(app: Application<any>) {
+export default function(app: Application) {
   const sheets = app.get('sheetsClient');
   const termsRepo = new TermsRepository(sheets);
 

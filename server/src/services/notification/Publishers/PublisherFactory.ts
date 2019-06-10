@@ -5,8 +5,8 @@ import {EmailPublsiher} from './EmailPublisher';
 import {SmsPublisher} from './SmsPublisher';
 import {MailgunClient} from '../../../mailer/MailgunClient';
 
-export function getAdminPublisher(publishers: Map<number, Publisher[]>): Publisher {
-  return publishers.get(0)![0];
+export function getAdminPublisher(publishers: Map<string, Publisher[]>): Publisher {
+  return publishers.get('ADMIN')![0];
 }
 
 export class CompositePublisherFactory {
@@ -16,7 +16,7 @@ export class CompositePublisherFactory {
   constructor(emailClient: MailgunClient, smsClient: TwilioClient, staffEmail: string) {
     this.publisherFactory = new PublisherFactory(emailClient, smsClient);
     this.staffAdmin = {
-      id: 0,
+      id: 'ADMIN',
       name: 'admin',
       notifications: 1,
       textNotifications: 0,
@@ -24,8 +24,8 @@ export class CompositePublisherFactory {
     } as StaffMember;
   }
 
-  manufacture(reciepients: StaffMember[]): Map<number, Publisher[]> {
-    const staffPubs = reciepients.reduce((publisherMap: Map<number, Publisher[]>, reciepient: StaffMember) => {
+  manufacture(reciepients: StaffMember[]): Map<string, Publisher[]> {
+    const staffPubs = reciepients.reduce((publisherMap: Map<string, Publisher[]>, reciepient: StaffMember) => {
       return publisherMap.set(reciepient.id, this.publisherFactory.manufacture(reciepient));
     }, new Map());
 

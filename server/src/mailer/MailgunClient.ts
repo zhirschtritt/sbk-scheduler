@@ -1,5 +1,5 @@
 import mailgun from 'mailgun-js';
-import {Application} from '@feathersjs/express';
+import {Application} from '@feathersjs/feathers';
 
 export function mailgunClientFactory(app: Application<any>) {
   const apiKey = app.get('mailgunApiKey');

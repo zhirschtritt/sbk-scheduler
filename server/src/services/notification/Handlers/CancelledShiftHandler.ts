@@ -8,7 +8,7 @@ import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
 
 export class CancelledShiftHandler implements NotificationHandler {
   private readonly adminPublisher: Publisher;
-  constructor(private readonly log: MinimalLogger, publishers: Map<number, Publisher[]>) {
+  constructor(private readonly log: MinimalLogger, publishers: Map<string, Publisher[]>) {
     this.adminPublisher = getAdminPublisher(publishers);
   }
 

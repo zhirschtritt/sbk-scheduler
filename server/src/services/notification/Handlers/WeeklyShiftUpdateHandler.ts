@@ -14,7 +14,7 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
   constructor(
     private readonly log: MinimalLogger,
     private readonly shiftService: IShiftService,
-    private readonly publishers: Map<number, Publisher[]>,
+    private readonly publishers: Map<string, Publisher[]>,
     private readonly staff: StaffMember[],
   ) {
     this.adminPublisher = getAdminPublisher(this.publishers);
@@ -75,7 +75,7 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
   }
 }
 
-function getPublishersForStaffMembers(assignedStaffMembers: StaffMember[], publishers: Map<number, Publisher[]>) {
+function getPublishersForStaffMembers(assignedStaffMembers: StaffMember[], publishers: Map<string, Publisher[]>) {
   return assignedStaffMembers.reduce((pubs: Publisher[], staff) => {
     return pubs.concat(publishers.get(staff.id) || []);
   }, []);

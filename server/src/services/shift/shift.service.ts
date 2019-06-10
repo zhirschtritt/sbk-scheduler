@@ -2,7 +2,7 @@
 import {ShiftService} from './ShiftService';
 import hooks from './shift.hooks';
 import {ShiftRepository} from './ShiftRepository';
-import {Application} from '@feathersjs/express';
+import {Application} from '@feathersjs/feathers';
 
 export default function(app: Application<any>) {
   const sheets = app.get('sheetsClient');

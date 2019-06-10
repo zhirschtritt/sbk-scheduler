@@ -71,7 +71,7 @@ import { mapState, mapGetters } from 'vuex';
 export default {
   data: () => ({
     headers: [
-      { text: 'Staff Member', value: 'name', class: 'px-0' },
+      { text: 'Staff Member', value: 'name', class: 'pr-0' },
       { text: 'Scheduled Shifts', sortable: false },
       { text: 'Reminders', sortable: false },
     ],

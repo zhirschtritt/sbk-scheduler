@@ -64,7 +64,7 @@ export function staffMemberEntityToModel(staffMemberEntity: unknown): StaffMembe
     throw new Error('Unknown staff member type');
   }
   return {
-    id: +staffMemberEntity.id,
+    id: staffMemberEntity.id,
     name: staffMemberEntity.name,
     email: staffMemberEntity.email,
     notifications: +staffMemberEntity.notifications,

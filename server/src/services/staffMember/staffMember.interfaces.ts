@@ -1,7 +1,7 @@
 import {BaseService} from '../interfaces';
 
 export interface StaffMember {
-  id: number;
+  id: string;
   name: string;
   email: string;
   phoneNumber: string;
