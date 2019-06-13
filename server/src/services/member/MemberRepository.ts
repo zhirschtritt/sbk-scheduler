@@ -1,6 +1,6 @@
 import {GoogleSheetsBaseRepository} from '../../GoogleSheetsBaseRepo';
 import {GoogleSpreadSheetClient} from '../../GoogleSheetsClientFactory';
-import {MemberEntity} from './member.interfaces';
+import {MemberEntity} from './Member.interfaces';
 
 export class MemberRepository extends GoogleSheetsBaseRepository<MemberEntity> {
   constructor(spreadSheetClient: GoogleSpreadSheetClient) {

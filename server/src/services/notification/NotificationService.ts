@@ -1,4 +1,4 @@
-import {NotificationHandlerFactory} from './Handlers/NotificationHandlerFactory';
+import {NotificationHandlerFactory} from './Handlers';
 import {isNotification} from './notification.interfaces';
 import {IShiftService} from '../shift/ShiftService';
 import {IStaffMemberService} from '../staffMember/staffMember.interfaces';

@@ -6,7 +6,7 @@ import {SmsPublisher} from './SmsPublisher';
 import {MailgunClient} from '../../../mailer/MailgunClient';
 
 export function getAdminPublisher(publishers: Map<string, Publisher[]>): Publisher {
-  return publishers.get('ADMIN')![0];
+  return publishers.get('_ADMIN_')![0];
 }
 
 export class CompositePublisherFactory {
@@ -16,7 +16,7 @@ export class CompositePublisherFactory {
   constructor(emailClient: MailgunClient, smsClient: TwilioClient, staffEmail: string) {
     this.publisherFactory = new PublisherFactory(emailClient, smsClient);
     this.staffAdmin = {
-      id: 'ADMIN',
+      id: '_ADMIN_',
       name: 'admin',
       notifications: 1,
       textNotifications: 0,
