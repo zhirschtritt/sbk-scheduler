@@ -1,4 +1,5 @@
 import * as FeathersError from '@feathersjs/errors';
+import moment from 'moment';
 import {LoggerFactory, MinimalLogger} from '../../logger';
 import {MemberRepository} from './MemberRepository';
 import {Member, MemberEntity} from './Member.interfaces';
@@ -45,11 +46,13 @@ export class MemberService implements IMemberService {
     const entityToPatch: [keyof MemberEntity, any][] = [
       ['emailnotifications', patchData.emailNotifications],
       ['smsnotifications', patchData.smsNotifications],
-      ['currenttermstart', patchData.term && patchData.term.start && new Date(patchData.term.start).toISOString()],
-      ['currenttermend', patchData.term && patchData.term.end && new Date(patchData.term.end).toISOString()],
+      ['currenttermstart', patchData.term && patchData.term.start && moment(patchData.term.start).format('YYYY-MM-DD')],
+      ['currenttermend', patchData.term && patchData.term.end && moment(patchData.term.end).format('YYYY-MM-DD')],
     ];
 
     entityToPatch.filter(patch => patch[1] !== undefined).forEach(patch => applyPatch(patch[0], patch[1]));
+
+    // TODO: validate patchedMemberData and throw on error(s)
 
     try {
       await member.save();
