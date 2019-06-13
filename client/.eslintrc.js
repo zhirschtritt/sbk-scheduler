@@ -7,7 +7,7 @@ module.exports = {
   parserOptions: {
     parser: "babel-eslint"
   },
-  extends: ["plugin:vue/recommended"],
+  extends: ["plugin:vue/strongly-recommended"],
   rules: {
     semi: ["error", "always"],
     quotes: ["error", "single"],

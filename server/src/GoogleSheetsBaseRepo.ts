@@ -50,9 +50,11 @@ export class GoogleSheetsBaseRepository<T> {
   }
 
   async findOneById(id: string): Promise<SheetRow<T>> {
+    const query = `id = ${id}`;
     try {
-      const res = await this.sheetClient.getRowsAsync({query: `id = ${id}`});
+      const res = await this.sheetClient.getRowsAsync({query});
       if (!res.length) {
+        logger.error({query, res}, 'No rows matching id query');
         throw new Error('No rows matching id');
       }
       return res[0];

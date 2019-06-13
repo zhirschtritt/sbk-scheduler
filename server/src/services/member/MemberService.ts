@@ -25,41 +25,42 @@ export class MemberService implements IMemberService {
   }
 
   async patch(id: string, patchData: Partial<Member>) {
-    let storedMember: SheetRow<MemberEntity>;
+    let member: SheetRow<MemberEntity>;
     try {
-      storedMember = await this.repository.findOneById(id);
+      member = await this.repository.findOneById(id);
     } catch (err) {
       throw new FeathersError.GeneralError(err);
     }
 
     const applyPatch = (field: keyof MemberEntity, maybeData: any) => {
-      if (maybeData !== undefined && maybeData !== null) {
+      if (maybeData !== undefined) {
         let data = maybeData;
         if (typeof maybeData === 'boolean') {
           data = maybeData ? '1' : '0';
         }
-        storedMember[field] = data;
+        member[field] = data;
       }
     };
 
     const entityToPatch: [keyof MemberEntity, any][] = [
       ['emailnotifications', patchData.emailNotifications],
       ['smsnotifications', patchData.smsNotifications],
-      ['currenttermstart', patchData.term && patchData.term.start.toISOString()],
-      ['currenttermend', patchData.term && patchData.term.end.toISOString()],
+      ['currenttermstart', patchData.term && patchData.term.start && new Date(patchData.term.start).toISOString()],
+      ['currenttermend', patchData.term && patchData.term.end && new Date(patchData.term.end).toISOString()],
     ];
 
-    entityToPatch.forEach(patch => applyPatch(patch[0], patch[1]));
+    entityToPatch.filter(patch => patch[1] !== undefined).forEach(patch => applyPatch(patch[0], patch[1]));
 
     try {
-      await storedMember.save();
-      this.logger.debug({id, patchData}, 'Member saved');
+      await member.save();
+      const storedMember = this.plainToClass(member);
+
+      this.logger.debug({storedMember, patchData}, 'Member saved');
+      return storedMember;
     } catch (err) {
-      this.logger.error({id, patchData, member: storedMember}, 'Failure saving member');
+      this.logger.error({id, patchData, member: member}, 'Failure saving member');
       throw new FeathersError.Unprocessable('Failure saving member');
     }
-
-    return this.plainToClass(storedMember);
   }
 
   private plainToClass(memberData: MemberEntity): Member {
@@ -67,8 +68,8 @@ export class MemberService implements IMemberService {
     member.name = memberData.name;
     member.id = memberData.id;
     member.email = memberData.email;
-    member.emailNotifications = !!memberData.emailnotifications;
-    member.smsNotifications = !!memberData.smsnotifications;
+    member.emailNotifications = !!+memberData.emailnotifications;
+    member.smsNotifications = !!+memberData.smsnotifications;
     member.phoneNumber = memberData.phonenumber;
     member.term = {
       start: new Date(memberData.currenttermstart),
