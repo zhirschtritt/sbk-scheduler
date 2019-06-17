@@ -4,9 +4,9 @@ import moment from 'moment';
 import {validate} from 'class-validator';
 import {LoggerFactory, MinimalLogger} from '../../logger';
 import {MemberRepository} from './MemberRepository';
-import {Member, MemberEntity} from './Member.interfaces';
 import {BaseService} from '../interfaces';
 import {SheetRow} from '../../GoogleSheetsBaseRepo';
+import {Member, MemberEntity} from './Member.interfaces';
 
 export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'>;
 

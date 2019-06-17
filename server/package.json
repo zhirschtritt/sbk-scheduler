@@ -57,7 +57,8 @@
     "pino-pretty": "^2.6.0",
     "reflect-metadata": "^0.1.13",
     "serve-favicon": "^2.5.0",
-    "twilio": "^3.29.2"
+    "twilio": "^3.29.2",
+    "typescript": "^3.5.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.26",
@@ -83,7 +84,6 @@
     "nodemon": "^1.18.3",
     "prettier": "^1.16.4",
     "ts-node": "^8.0.3",
-    "tsconfig-paths": "^3.8.0",
-    "typescript": "^3.5.1"
+    "tsconfig-paths": "^3.8.0"
   }
 }
