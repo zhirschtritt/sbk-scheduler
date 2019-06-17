@@ -14,15 +14,29 @@ const requireModule = require.context(
   // Whether to look in subfolders
   false,
   // Only include .js files (prevents duplicate imports)
-  /.js$/,
+  /.js$/
 );
-const servicePlugins = requireModule.keys().map(modulePath => requireModule(modulePath).default);
+const servicePlugins = requireModule
+  .keys()
+  .map(modulePath => requireModule(modulePath).default);
 
 export default new Vuex.Store({
   state: {
     cancelShiftDialog: false,
+    snackbarVisable: false,
+    snackbarText: '',
+    snackbarColor: 'success' // 'error' | 'info' |
   },
-  mutations: {},
+  mutations: {
+    showSnackbar(state, { text, color }) {
+      state.snackbarVisable = true;
+      state.snackbarText = text || '👍';
+      state.snackbarColor = color || 'info';
+    },
+    hideSnackbar(state) {
+      state.snackbarVisable = false;
+    }
+  },
   actions: {
     toggleCancelShiftDialog({ state, commit }) {
       commit('notifications/addItem', { id: 1 });
@@ -38,9 +52,7 @@ export default new Vuex.Store({
       commit('shifts/clearAll');
       await dispatch('shifts/find', { query: { start, end } });
       commit('shifts/setPastAndUpcomingShifts');
-    },
+    }
   },
-  plugins: [
-    ...servicePlugins,
-  ],
+  plugins: [...servicePlugins]
 });
