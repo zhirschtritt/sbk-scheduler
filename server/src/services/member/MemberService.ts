@@ -6,7 +6,7 @@ import {LoggerFactory, MinimalLogger} from '../../logger';
 import {MemberRepository} from './MemberRepository';
 import {BaseService} from '../interfaces';
 import {SheetRow} from '../../GoogleSheetsBaseRepo';
-import {Member, MemberEntity} from './Member.interfaces';
+import {Member, MemberEntity} from './interfaces';
 
 export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'>;
 
