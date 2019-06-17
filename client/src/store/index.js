@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import feathersVuex from 'feathers-vuex';
 import feathersClient from './feathersClient';
+import snackBar from './snackBar.module';
 
 const { FeathersVuex } = feathersVuex(feathersClient, { idField: 'id' });
 
@@ -23,19 +24,6 @@ const servicePlugins = requireModule
 export default new Vuex.Store({
   state: {
     cancelShiftDialog: false,
-    snackbarVisable: false,
-    snackbarText: '',
-    snackbarColor: 'success' // 'error' | 'info' |
-  },
-  mutations: {
-    showSnackbar(state, { text, color }) {
-      state.snackbarVisable = true;
-      state.snackbarText = text || '👍';
-      state.snackbarColor = color || 'info';
-    },
-    hideSnackbar(state) {
-      state.snackbarVisable = false;
-    }
   },
   actions: {
     toggleCancelShiftDialog({ state, commit }) {
@@ -54,5 +42,6 @@ export default new Vuex.Store({
       commit('shifts/setPastAndUpcomingShifts');
     }
   },
-  plugins: [...servicePlugins]
+  plugins: [...servicePlugins],
+  modules: {snackBar}
 });

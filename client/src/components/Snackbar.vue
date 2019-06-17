@@ -1,25 +1,26 @@
 <template>
-  <v-snackbar v-model="snackbar" :color="snackbarColor" align-center bottom>
-    {{ snackbarText }}
-    <v-icon @click="hideSnackbar" right color="white">close</v-icon>
+  <v-snackbar v-model="snackbar" :color="color" align-center bottom>
+    {{ text }}
+    <v-icon @click="hide" right color="white">close</v-icon>
   </v-snackbar>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions, mapGetters, mapMutations, mapState } = createNamespacedHelpers('snackBar');
 export default {
   methods: {
-    ...mapMutations(['hideSnackbar'])
+    ...mapMutations(['hide'])
   },
   computed: {
-    ...mapState(['snackbarText', 'snackbarColor', 'snackbarVisable']),
+    ...mapState(['text', 'color', 'visable']),
 
     snackbar: {
       set() {
-        this.hideSnackbar;
+        this.hide();
       },
       get() {
-        return this.snackbarVisable;
+        return this.visable;
       }
     }
   }

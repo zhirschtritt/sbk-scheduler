@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
+import { createNamespacedHelpers } from 'vuex'
 
 export default {
   name: 'CancelConfirmDialog',
@@ -59,7 +60,7 @@ export default {
     }
   }),
   methods: {
-    ...mapMutations(['showSnackbar']),
+    ...mapMutations('snackBar', {showSnackbar: 'show'}),
     ...mapActions(['toggleCancelShiftDialog']),
     ...mapActions('shifts', ['updateShift', 'rejectUpdateShift']),
     ...mapActions('notifications', { postNotification: 'create' }),

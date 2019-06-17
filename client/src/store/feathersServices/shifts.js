@@ -40,16 +40,15 @@ const servicePlugin = service(servicePath, {
   },
 
   actions: {
-    updateShift({ commit, state, dispatch }) {
+    async updateShift({ commit, state, dispatch }) {
       const { currentId, copy: updatedShift } = state;
 
-      dispatch('patch', [currentId, updatedShift, {}])
-        .then(() => {
-          commit('commitCopy', currentId);
-        })
-        .catch(() => {
-          commit('rejectCopy', currentId);
-        });
+      try {
+        await dispatch('patch', [currentId, updatedShift, {}]);
+        commit('commitCopy', currentId);
+      } catch(err) {
+        commit('rejectCopy', currentId);
+      }
     },
 
     rejectUpdateShift({ commit, state }) {
