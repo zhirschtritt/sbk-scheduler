@@ -1,12 +1,15 @@
 import * as FeathersError from '@feathersjs/errors';
+import * as _ from 'lodash';
 import moment from 'moment';
+import {validate} from 'class-validator';
 import {LoggerFactory, MinimalLogger} from '../../logger';
 import {MemberRepository} from './MemberRepository';
 import {Member, MemberEntity} from './Member.interfaces';
 import {BaseService} from '../interfaces';
 import {SheetRow} from '../../GoogleSheetsBaseRepo';
+import {raw} from 'body-parser';
 
-export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch'>;
+export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'>;
 
 export class MemberService implements IMemberService {
   private readonly logger: MinimalLogger;
@@ -15,10 +18,20 @@ export class MemberService implements IMemberService {
     this.logger = loggerFactory('MemberService');
   }
 
+  async get(id: string) {
+    try {
+      const rawMember = await this.repository.findOneById(id);
+      return this.entityToClass(rawMember);
+    } catch (err) {
+      this.logger.error({id}, 'Error retreiving member by id');
+      throw new FeathersError.Unprocessable('Error retreiving member by id');
+    }
+  }
+
   async find() {
     try {
       const rawMembers = await this.repository.findAll();
-      return rawMembers.map(raw => this.plainToClass(raw));
+      return rawMembers.map(raw => this.entityToClass(raw));
     } catch (err) {
       this.logger.error({err}, 'Error fetching member data');
       throw new FeathersError.GeneralError(err);
@@ -26,47 +39,31 @@ export class MemberService implements IMemberService {
   }
 
   async patch(id: string, patchData: Partial<Member>) {
-    let member: SheetRow<MemberEntity>;
+    let storedMember: SheetRow<MemberEntity>;
     try {
-      member = await this.repository.findOneById(id);
+      storedMember = await this.repository.findOneById(id);
     } catch (err) {
       throw new FeathersError.GeneralError(err);
     }
 
-    const applyPatch = (field: keyof MemberEntity, maybeData: any) => {
-      if (maybeData !== undefined) {
-        let data = maybeData;
-        if (typeof maybeData === 'boolean') {
-          data = maybeData ? '1' : '0';
-        }
-        member[field] = data;
-      }
-    };
+    const updatedMember = _.merge(this.entityToClass(storedMember), patchData);
 
-    const entityToPatch: [keyof MemberEntity, any][] = [
-      ['emailnotifications', patchData.emailNotifications],
-      ['smsnotifications', patchData.smsNotifications],
-      ['currenttermstart', patchData.term && patchData.term.start && moment(patchData.term.start).format('YYYY-MM-DD')],
-      ['currenttermend', patchData.term && patchData.term.end && moment(patchData.term.end).format('YYYY-MM-DD')],
-    ];
+    await this.logValidateMember(updatedMember);
 
-    entityToPatch.filter(patch => patch[1] !== undefined).forEach(patch => applyPatch(patch[0], patch[1]));
-
-    // TODO: validate patchedMemberData and throw on error(s)
+    Object.assign(storedMember, this.classToEntity(updatedMember));
 
     try {
-      await member.save();
-      const storedMember = this.plainToClass(member);
+      await storedMember.save();
 
-      this.logger.debug({storedMember, patchData}, 'Member saved');
-      return storedMember;
+      this.logger.debug({updatedMember, patchData}, 'Member saved');
+      return updatedMember;
     } catch (err) {
-      this.logger.error({id, patchData, member: member}, 'Failure saving member');
+      this.logger.error({id, patchData, member: storedMember}, 'Failure saving member');
       throw new FeathersError.Unprocessable('Failure saving member');
     }
   }
 
-  private plainToClass(memberData: MemberEntity): Member {
+  private entityToClass(memberData: MemberEntity): Member {
     const member = new Member();
     member.name = memberData.name;
     member.id = memberData.id;
@@ -74,10 +71,33 @@ export class MemberService implements IMemberService {
     member.emailNotifications = !!+memberData.emailnotifications;
     member.smsNotifications = !!+memberData.smsnotifications;
     member.phoneNumber = memberData.phonenumber;
+    member.memberSince = new Date(memberData.membersince);
     member.term = {
       start: new Date(memberData.currenttermstart),
       end: new Date(memberData.currenttermend),
     };
     return member;
+  }
+
+  private classToEntity(member: Member): MemberEntity {
+    return {
+      id: member.id,
+      name: member.name,
+      email: member.email,
+      emailnotifications: member.emailNotifications ? 1 : 0,
+      smsnotifications: member.smsNotifications ? 1 : 0,
+      phonenumber: member.phoneNumber,
+      membersince: moment(member.memberSince).format('YYYY-MM-DD'),
+      currenttermstart: moment(member.term.start).format('YYYY-MM-DD'),
+      currenttermend: moment(member.term.end).format('YYYY-MM-DD'),
+    };
+  }
+
+  private async logValidateMember(member: Member): Promise<void> {
+    const errs = await validate(member, {validationError: {target: false}});
+    if (errs.length) {
+      this.logger.error({errs}, 'Member data is not valid');
+      throw new FeathersError.Unprocessable('Member data is not valid');
+    }
   }
 }

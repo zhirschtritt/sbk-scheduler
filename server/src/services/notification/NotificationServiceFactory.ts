@@ -20,7 +20,7 @@ export default function(app: Application<any>) {
     new CompositePublisherFactory(mailer, smsClient, staffEmail),
   );
 
-  const notifications = new NotificationService(staffMembers, shifts, notificationHandlerFactory, logger);
+  const notifications = new NotificationService(notificationHandlerFactory, logger);
 
   (notifications as any).docs = {
     create: {},

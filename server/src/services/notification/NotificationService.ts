@@ -1,13 +1,9 @@
 import {NotificationHandlerFactory} from './Handlers';
 import {isNotification} from './notification.interfaces';
-import {IShiftService} from '../shift/ShiftService';
-import {IStaffMemberService} from '../staffMember/staffMember.interfaces';
 import {MinimalLogger} from '../../twilioSMSClient/Interfaces';
 
 export class NotificationService {
   constructor(
-    staffMembers: IStaffMemberService,
-    shiftsService: IShiftService,
     private readonly notificationHandlerFactory: NotificationHandlerFactory,
     private readonly logger: MinimalLogger,
   ) {}
@@ -20,7 +16,9 @@ export class NotificationService {
     const notificationHandler = await this.notificationHandlerFactory.manufacture(notification.notificationType);
 
     try {
-      return await notificationHandler.handle((notification as any).context);
+      await notificationHandler.handle((notification as any).context);
+      // feathers plugin requires a unique id be returned to update local store
+      return {id: +new Date()};
     } catch (err) {
       this.logger.error({err}, 'Error processing notification');
       throw err;

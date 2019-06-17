@@ -4,8 +4,8 @@ export interface MemberEntity {
   id: string;
   name: string;
   email: string;
-  emailnotifications: string;
-  smsnotifications: string;
+  emailnotifications: 1 | 0;
+  smsnotifications: 1 | 0;
   phonenumber: string;
   currenttermstart: string;
   currenttermend: string;
@@ -38,6 +38,9 @@ export class Member {
 
   @IsBoolean()
   smsNotifications!: boolean;
+
+  @IsDate()
+  memberSince!: Date;
 
   @ValidateNested()
   term!: MemberTerm;
