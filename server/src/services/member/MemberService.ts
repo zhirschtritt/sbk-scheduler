@@ -7,7 +7,6 @@ import {MemberRepository} from './MemberRepository';
 import {Member, MemberEntity} from './Member.interfaces';
 import {BaseService} from '../interfaces';
 import {SheetRow} from '../../GoogleSheetsBaseRepo';
-import {raw} from 'body-parser';
 
 export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'>;
 
