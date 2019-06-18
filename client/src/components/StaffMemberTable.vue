@@ -66,15 +66,15 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 
 export default {
   data: () => ({
     headers: [
       { text: 'Staff Member', value: 'name', class: 'pr-0' },
       { text: 'Scheduled Shifts', sortable: false },
-      { text: 'Reminders', sortable: false },
-    ],
+      { text: 'Reminders', sortable: false }
+    ]
   }),
 
   computed: {
@@ -84,16 +84,18 @@ export default {
 
     staffMembers() {
       return this.findStaffMembersInStore().data;
-    },
+    }
   },
 
   methods: {
+    ...mapMutations('snackBar', { showSnackbar: 'show' }),
+
     shiftsForStaffMember(staffMemberName) {
       const query = {
         $or: [
           { primary_staff: staffMemberName },
-          { secondary_staff: staffMemberName },
-        ],
+          { secondary_staff: staffMemberName }
+        ]
       };
       return this.findShiftsInStore({ query }).data;
     },
@@ -109,7 +111,19 @@ export default {
        * so there isn't a weird gui glitchy behavior
        */
       updatedStaffMember.commit();
-      await updatedStaffMember.patch();
+      try {
+        await updatedStaffMember.patch();
+        this.showSnackbar({
+          text: 'Notification preferences updated',
+          color: 'success'
+        });
+      } catch (err) {
+        this.showSnackbar({
+          text: 'Error updating notification preferences',
+          color: 'error'
+        });
+        throw err;
+      }
     },
     async updateTextNotifications(staffMember) {
       const newNotificationValue = staffMember.textNotifications ? 0 : 1;
@@ -122,8 +136,20 @@ export default {
        * so there isn't a weird gui glitchy behavior
        */
       updatedStaffMember.commit();
-      await updatedStaffMember.patch();
-    },
-  },
+      try {
+        await updatedStaffMember.patch();
+        this.showSnackbar({
+          text: 'Notification preferences updated',
+          color: 'success'
+        });
+      } catch (err) {
+        this.showSnackbar({
+          text: 'Error updating notification preferences',
+          color: 'error'
+        });
+        throw err;
+      }
+    }
+  }
 };
 </script>
