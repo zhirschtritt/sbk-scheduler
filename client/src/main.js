@@ -9,10 +9,10 @@ import filters from './filters';
 Vue.use(Vuetify, {
   theme: {
     primary: colors.teal.base,
-    secondary: colors.purple.base, // eslint-disable-line
+    secondary: '#5C6BC0', // eslint-disable-line
     accent: colors.teal.lighten4,
-    error: colors.red.accent3,
-  },
+    error: colors.red.accent3
+  }
 });
 
 Vue.use(filters);
@@ -21,5 +21,5 @@ Vue.config.productionTip = false;
 
 new Vue({
   store,
-  render: h => h(App),
+  render: h => h(App)
 }).$mount('#app');

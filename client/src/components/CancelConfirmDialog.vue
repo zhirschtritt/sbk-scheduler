@@ -80,7 +80,7 @@ export default {
             staffMember: this.getCurrentStaffMember
           }
         });
-        this.showSnackbar({ text: 'Notification sent', color: 'success' });
+        this.showSnackbar({ text: 'Notification sent', color: 'primary' });
       } catch (err) {
         this.showSnackbar({
           text: 'Error creating notification',

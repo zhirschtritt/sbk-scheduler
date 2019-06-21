@@ -46,7 +46,7 @@
               v-if="props.item.phoneNumber"
               :value="props.item.textNotifications"
               :value-comparator="function(val) { return(!!val)}"
-              color="#5C6BC0"
+              color="secondary"
               light
               debounce="20"
               @change="updateTextNotifications(props.item)"
@@ -115,12 +115,12 @@ export default {
         await updatedStaffMember.patch();
         this.showSnackbar({
           text: 'Notification preferences updated',
-          color: 'success'
+          color: 'primary'
         });
       } catch (err) {
         this.showSnackbar({
           text: 'Error updating notification preferences',
-          color: 'error'
+          color: 'secondary'
         });
         throw err;
       }
@@ -140,12 +140,12 @@ export default {
         await updatedStaffMember.patch();
         this.showSnackbar({
           text: 'Notification preferences updated',
-          color: 'success'
+          color: 'primary'
         });
       } catch (err) {
         this.showSnackbar({
           text: 'Error updating notification preferences',
-          color: 'error'
+          color: 'secondary'
         });
         throw err;
       }

@@ -99,7 +99,7 @@ export default {
           this.updateShift();
           this.showSnackbar({
             text: 'Shift updated',
-            color: 'success'
+            color: 'primary'
           });
         } catch (err) {
           this.showSnackbar({ text: 'Error updating shift', color: 'error' });

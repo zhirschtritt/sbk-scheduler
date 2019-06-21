@@ -3,7 +3,7 @@ export default {
   state: {
     visable: false,
     text: '',
-    color: 'success' // 'error' | 'info' |
+    color: 'primary' // 'error' | 'info' |
   },
   mutations: {
     show(state, { text, color }) {
@@ -14,5 +14,5 @@ export default {
     hide(state) {
       state.visable = false;
     }
-  },
+  }
 };
