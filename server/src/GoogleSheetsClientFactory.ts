@@ -28,7 +28,7 @@ export class GoogleSheetsClientFactory {
 
     try {
       const configuredClient = await (client as any).getInfoAsync();
-      logger.info('Got authorized google sheets client 👌');
+      logger.trace('Got authorized google sheets client');
       return configuredClient;
     } catch (err) {
       logger.error({err}, 'Error connecting to google sheets API');

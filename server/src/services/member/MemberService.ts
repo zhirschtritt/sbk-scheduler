@@ -1,14 +1,16 @@
 import * as FeathersError from '@feathersjs/errors';
-import * as _ from 'lodash';
+import merge from 'deepmerge';
 import moment from 'moment';
 import {validate} from 'class-validator';
 import {LoggerFactory, MinimalLogger} from '../../logger';
 import {MemberRepository} from './MemberRepository';
 import {BaseService} from '../interfaces';
 import {SheetRow} from '../../GoogleSheetsBaseRepo';
-import {Member, MemberEntity} from './interfaces';
+import {Member, MemberEntity} from './Memeber.model';
 
-export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'>;
+export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'> & {
+  renew: (id: string) => Promise<void>;
+};
 
 export class MemberService implements IMemberService {
   private readonly logger: MinimalLogger;
@@ -37,29 +39,49 @@ export class MemberService implements IMemberService {
     }
   }
 
-  async patch(id: string, patchData: Partial<Member>) {
-    let storedMember: SheetRow<MemberEntity>;
+  async renew(id: string) {
+    const storedMember = await this.repository.findOneById(id);
+    const member = this.entityToClass(storedMember);
+
+    const newStart = moment(member.term.end).add(1, 'day');
+    const newEnd = newStart.add(1, 'year');
+    member.term.start = newStart.toDate();
+    member.term.end = newEnd.toDate();
+
+    const updatedMemberEntity = await this.applyPatch(storedMember, member);
+
     try {
-      storedMember = await this.repository.findOneById(id);
+      await updatedMemberEntity.save();
+      this.logger.debug({member, newStart, newEnd}, 'Updated yearly membership');
     } catch (err) {
+      this.logger.error({member, newStart, newEnd}, 'Error updating yearly membership');
       throw new FeathersError.GeneralError(err);
     }
+  }
 
-    const updatedMember = _.merge(this.entityToClass(storedMember), patchData);
-
-    await this.logValidateMember(updatedMember);
-
-    Object.assign(storedMember, this.classToEntity(updatedMember));
+  async patch(id: string, patchData: Partial<Member>) {
+    const storedMember = await this.repository.findOneById(id);
+    const updatedMemberEntity = await this.applyPatch(storedMember, patchData);
+    const updatedMember = this.entityToClass(updatedMemberEntity);
 
     try {
-      await storedMember.save();
+      await updatedMemberEntity.save();
 
-      this.logger.debug({updatedMember, patchData}, 'Member saved');
+      this.logger.debug({member: id, patchData}, 'Member saved');
       return updatedMember;
     } catch (err) {
-      this.logger.error({id, patchData, member: storedMember}, 'Failure saving member');
+      this.logger.error({id, patchData, member: updatedMember}, 'Failure saving member');
       throw new FeathersError.Unprocessable('Failure saving member');
     }
+  }
+
+  private async applyPatch(
+    storedMember: SheetRow<MemberEntity>,
+    patchData: Partial<Member>,
+  ): Promise<SheetRow<MemberEntity>> {
+    const updatedMember = merge(this.entityToClass(storedMember), patchData);
+    await this.logValidateMember(updatedMember);
+    return Object.assign(storedMember, this.classToEntity(updatedMember));
   }
 
   private entityToClass(memberData: MemberEntity): Member {

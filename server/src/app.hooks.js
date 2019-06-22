@@ -11,7 +11,7 @@ export const before = {
   remove: [],
 };
 export const after = {
-  all: [log()],
+  all: [],
   find: [],
   get: [],
   create: [],
