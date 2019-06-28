@@ -5,6 +5,7 @@ import 'vuetify/dist/vuetify.min.css';
 import App from './App.vue';
 import store from './store';
 import filters from './filters';
+import { router } from './router';
 
 Vue.use(Vuetify, {
   theme: {
@@ -20,6 +21,7 @@ Vue.use(filters);
 Vue.config.productionTip = false;
 
 new Vue({
+  router,
   store,
   render: h => h(App)
 }).$mount('#app');

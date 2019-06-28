@@ -17,13 +17,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import formatDate from "../filters/formatDate";
+import { mapGetters, mapActions } from 'vuex';
+import formatDate from '../filters/formatDate';
 
 export default {
   computed: {
-    ...mapGetters("terms", { findTermsInStore: "find" }),
-    ...mapGetters("terms", { getCurrentTerm: "current" }),
+    ...mapGetters('terms', { findTermsInStore: 'find' }),
+    ...mapGetters('terms', { getCurrentTerm: 'current' }),
 
     terms() {
       const terms = this.findTermsInStore().data;
@@ -37,7 +37,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["updateSelectedTerm"])
+    ...mapActions(['updateSelectedTerm'])
   }
 };
 </script>

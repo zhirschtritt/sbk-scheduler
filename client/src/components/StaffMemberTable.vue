@@ -27,37 +27,22 @@
         </td>
         <td class="pl-1">
           <v-layout align-center justify-center column class="pt-3">
-            <v-switch
-              :value="props.item.notifications"
-              :value-comparator="function(val) { return(!!val)}"
+            <LabeledSwitch
+              :switchPredicate="true"
+              :switchValue="props.item.notifications"
+              :switchAction="() => updateNotifications(props.item)"
+              switchLabel="Email Notifications"
               color="primary"
-              light
-              debounce="20"
-              @change="updateNotifications(props.item)"
-            >
-              <template v-slot:prepend>
-                <v-tooltip left>
-                  <v-icon slot="activator">fa-envelope-o</v-icon>
-                  <span>Email Notifications</span>
-                </v-tooltip>
-              </template>
-            </v-switch>
-            <v-switch
-              v-if="props.item.phoneNumber"
-              :value="props.item.textNotifications"
-              :value-comparator="function(val) { return(!!val)}"
+              icon="fa-envelope-o"
+            />
+            <LabeledSwitch
+              :switchPredicate="!!props.item.phoneNumber"
+              :switchValue="props.item.textNotifications"
+              :switchAction="() => updateTextNotifications(props.item)"
+              switchLabel="Text Notifications"
               color="secondary"
-              light
-              debounce="20"
-              @change="updateTextNotifications(props.item)"
-            >
-              <template v-slot:prepend>
-                <v-tooltip left>
-                  <v-icon slot="activator">fa-commenting-o</v-icon>
-                  <span>Text Notifications</span>
-                </v-tooltip>
-              </template>
-            </v-switch>
+              icon="fa-commenting-o"
+            />
           </v-layout>
         </td>
       </template>
@@ -67,8 +52,12 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
+import LabeledSwitch from './LabeledSwitch.vue';
 
 export default {
+  components: {
+    LabeledSwitch
+  },
   data: () => ({
     headers: [
       { text: 'Staff Member', value: 'name', class: 'pr-0' },
