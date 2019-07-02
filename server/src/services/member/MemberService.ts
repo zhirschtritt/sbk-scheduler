@@ -9,7 +9,7 @@ import {SheetRow} from '../../GoogleSheetsBaseRepo';
 import {Member, MemberEntity} from './Memeber.model';
 
 export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'> & {
-  renew: (id: string) => Promise<void>;
+  renew: (id: string) => Promise<Member>;
 };
 
 export class MemberService implements IMemberService {
@@ -17,6 +17,11 @@ export class MemberService implements IMemberService {
 
   constructor(private readonly repository: MemberRepository, loggerFactory: LoggerFactory) {
     this.logger = loggerFactory('MemberService');
+  }
+
+  async create(data: any) {
+    this.logger.error('Create not implemented');
+    return;
   }
 
   async get(id: string) {
@@ -43,20 +48,45 @@ export class MemberService implements IMemberService {
     const storedMember = await this.repository.findOneById(id);
     const member = this.entityToClass(storedMember);
 
-    const newStart = moment(member.term.end).add(1, 'day');
-    const newEnd = newStart.add(1, 'year');
-    member.term.start = newStart.toDate();
-    member.term.end = newEnd.toDate();
+    const errors = this.isAbleToRenew(member);
+    if (errors.length) {
+      errors.forEach(err => {
+        this.logger.error(err);
+      });
+      throw new FeathersError.Unprocessable('Unable to renew member', errors);
+    }
+
+    // if the members current term end is in the future,
+    // set the new start date to current term end, else new start is today
+    const newStart = member.term.end >= new Date() ? member.term.end : new Date();
+    const newEnd = moment(newStart)
+      .add(1, 'year')
+      .toDate();
+
+    member.term.end = newEnd;
 
     const updatedMemberEntity = await this.applyPatch(storedMember, member);
 
     try {
       await updatedMemberEntity.save();
-      this.logger.debug({member, newStart, newEnd}, 'Updated yearly membership');
+      this.logger.debug({member, newEnd}, 'Updated yearly membership');
+      return member;
     } catch (err) {
-      this.logger.error({member, newStart, newEnd}, 'Error updating yearly membership');
+      this.logger.error({member, newEnd}, 'Error updating yearly membership');
       throw new FeathersError.GeneralError(err);
     }
+  }
+
+  private isAbleToRenew(member: Member): string[] {
+    const errors: string[] = [];
+    const currentTermEnd = moment.utc(member.term.end);
+    const sixMonthsFromNow = moment.utc().add(6, 'months');
+    const endLessThenSixMonths = currentTermEnd.isSameOrBefore(sixMonthsFromNow, 'days');
+
+    if (!endLessThenSixMonths) {
+      errors.push('Cannot renew term, current term end is greater than 6 months from now');
+    }
+    return errors;
   }
 
   async patch(id: string, patchData: Partial<Member>) {
@@ -94,7 +124,6 @@ export class MemberService implements IMemberService {
     member.phoneNumber = memberData.phonenumber;
     member.memberSince = new Date(memberData.membersince);
     member.term = {
-      start: new Date(memberData.currenttermstart),
       end: new Date(memberData.currenttermend),
     };
     return member;
@@ -109,7 +138,6 @@ export class MemberService implements IMemberService {
       smsnotifications: member.smsNotifications ? 1 : 0,
       phonenumber: member.phoneNumber,
       membersince: moment(member.memberSince).format('YYYY-MM-DD'),
-      currenttermstart: moment(member.term.start).format('YYYY-MM-DD'),
       currenttermend: moment(member.term.end).format('YYYY-MM-DD'),
     };
   }

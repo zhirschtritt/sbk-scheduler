@@ -14,14 +14,11 @@ const {
   mapState
 } = createNamespacedHelpers('snackBar');
 export default {
-  data: () => ({
-    timeout: 2000
-  }),
   methods: {
     ...mapMutations(['hide'])
   },
   computed: {
-    ...mapState(['text', 'color', 'visable']),
+    ...mapState(['text', 'color', 'visable', 'timeout']),
 
     snackbar: {
       set() {

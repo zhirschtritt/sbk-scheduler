@@ -1,30 +1,35 @@
 <template>
   <v-data-table :headers="headers" :items="members" hide-actions dense :loading="areMembersLoading">
     <template slot="no-data">Loading...</template>
-    <template slot="items" slot-scope="props">
-      <td class="text-capitalize pr-1">{{ props.item.name }}</td>
-      <td>{{ props.item.memberSince | formatDate }}</td>
-      <td>{{ props.item.term.start | formatDate }} - {{ props.item.term.end | formatDate }}</td>
+    <template slot="items" slot-scope="{item: member}">
+      <td class="text-capitalize pr-1">{{ member.name }}</td>
+      <td>{{ member.memberSince | formatDate }}</td>
+      <td>{{ member.term.end | formatDate }}</td>
       <v-layout align-center justify-center column class="pt-3">
         <LabeledSwitch
-          :switchPredicate="true"
-          :switchValue="props.item.emailNotifications"
-          :switchAction="() => updateNotifications(props.item, 'emailNotifications')"
+          :switchPredicate="!!member.email"
+          :switchValue="!!member.emailNotifications"
+          :switchAction="() => updateNotifications(member, 'emailNotifications')"
           switchLabel="Email Notifications"
           color="primary"
           icon="fa-envelope-o"
         />
         <LabeledSwitch
-          :switchPredicate="props.item.phoneNumber"
-          :switchValue="props.item.textNotifications"
-          :switchAction="() => updateNotifications(props.item, 'smsNotifications')"
+          :switchPredicate="!!member.phoneNumber"
+          :switchValue="!!member.smsNotifications"
+          :switchAction="() => updateNotifications(member, 'smsNotifications')"
           switchLabel="Text Notifications"
           color="secondary"
           icon="fa-commenting-o"
         />
       </v-layout>
       <td class="pl0">
-        <v-btn flat color="primary">renew membership</v-btn>
+        <v-btn
+          flat
+          color="primary"
+          :disabled="!isAbleToRenew(member)"
+          @click="() => renew(member)"
+        >renew membership</v-btn>
       </td>
     </template>
   </v-data-table>
@@ -32,6 +37,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters, mapMutations } from 'vuex';
+import moment from 'moment';
 import LabeledSwitch from '../components/LabeledSwitch.vue';
 export default {
   components: {
@@ -41,7 +47,7 @@ export default {
     headers: [
       { text: 'Name', value: 'name', align: 'left' },
       { text: 'Member Since', value: 'memberSince', align: 'left' },
-      { text: 'Current Term', value: 'currentTerm', align: 'left' },
+      { text: 'Current Term End', value: 'currentTerm', align: 'left' },
       { text: 'Notifications', value: 'notifications', align: 'left' },
       { text: 'Renew', value: 'renew', align: 'left' }
     ]
@@ -58,6 +64,30 @@ export default {
 
   methods: {
     ...mapMutations('snackBar', { showSnackbar: 'show' }),
+    ...mapActions('members', ['renewMembership']),
+
+    isAbleToRenew(member) {
+      const currentTermEnd = moment.utc(member.term.end);
+      const sixMonthsFromNow = moment.utc().add(6, 'months');
+      return currentTermEnd.isSameOrBefore(sixMonthsFromNow, 'days');
+    },
+
+    async renew(member) {
+      try {
+        await this.renewMembership(member.id);
+        this.showSnackbar({
+          text: 'Membership renewed! 🙌',
+          color: 'primary'
+        });
+      } catch (err) {
+        this.showSnackbar({
+          text: `⚠️ Error(s): ${err.data.map((d, i) => `${i + 1} - ${d} `)}`,
+          color: 'black',
+          timeout: 10000
+        });
+      }
+    },
+
     async updateNotifications(member, notificationType) {
       const newNotificationValue = member[notificationType] ? 0 : 1;
       const updatedMember = member.clone();

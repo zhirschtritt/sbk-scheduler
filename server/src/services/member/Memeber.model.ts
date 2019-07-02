@@ -7,15 +7,11 @@ export interface MemberEntity {
   emailnotifications: 1 | 0;
   smsnotifications: 1 | 0;
   phonenumber: string;
-  currenttermstart: string;
   currenttermend: string;
   membersince: string;
 }
 
 export class MemberTerm {
-  @IsDate()
-  start!: Date;
-
   @IsDate()
   end!: Date;
 }

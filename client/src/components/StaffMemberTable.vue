@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" dense flat>
       <v-icon>people</v-icon>
       <v-toolbar-title>Staff Members</v-toolbar-title>
-      <v-spacer/>
+      <v-spacer />
     </v-toolbar>
     <v-data-table
       :headers="headers"
@@ -13,8 +13,8 @@
       :loading="areStaffMembersLoading"
     >
       <template slot="no-data">Loading...</template>
-      <template slot="items" slot-scope="props">
-        <td class="text-capitalize pr-1">{{ props.item.name }}</td>
+      <template slot="items" slot-scope="{item : staffMember}">
+        <td class="text-capitalize pr-1">{{ staffMember.name }}</td>
         <td class="px-1">
           <v-chip
             label
@@ -22,23 +22,23 @@
             :disabled="shift.isPastShift"
             :color="shift.isPastShift ? 'grey' : 'primary'"
             :key="shift.id"
-            v-for="shift in shiftsForStaffMember(props.item.name)"
+            v-for="shift in shiftsForStaffMember(staffMember.name)"
           >{{ shift.date | formatDateWithWeekday }}</v-chip>
         </td>
         <td class="pl-1">
           <v-layout align-center justify-center column class="pt-3">
             <LabeledSwitch
-              :switchPredicate="true"
-              :switchValue="props.item.notifications"
-              :switchAction="() => updateNotifications(props.item)"
+              :switchPredicate="!!staffMember.email"
+              :switchValue="staffMember.notifications"
+              :switchAction="() => updateNotifications(staffMember)"
               switchLabel="Email Notifications"
               color="primary"
               icon="fa-envelope-o"
             />
             <LabeledSwitch
-              :switchPredicate="!!props.item.phoneNumber"
-              :switchValue="props.item.textNotifications"
-              :switchAction="() => updateTextNotifications(props.item)"
+              :switchPredicate="!!staffMember.phoneNumber"
+              :switchValue="staffMember.textNotifications"
+              :switchAction="() => updateTextNotifications(staffMember)"
               switchLabel="Text Notifications"
               color="secondary"
               icon="fa-commenting-o"

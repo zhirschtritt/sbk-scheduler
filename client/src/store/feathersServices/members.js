@@ -7,10 +7,13 @@ const servicePath = 'members';
 const { service } = feathersVuex(feathersClient, { idField: 'id' });
 const servicePlugin = service(servicePath, {
   actions: {
-    async renewMembership({ dispatch }) {
+    async renewMembership({ dispatch }, memberId) {
       // this is a hack that couples with a member service hook that looks for the
       // string: 'renewMembership' and calls the service method registered
-      await dispatch('create', { method: 'renewMembership', arguments: [] });
+      await dispatch('create', {
+        method: 'renewMembership',
+        arguments: [memberId]
+      });
     }
   }
 });
