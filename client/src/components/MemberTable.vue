@@ -64,7 +64,10 @@ export default {
 
   methods: {
     ...mapMutations('snackBar', { showSnackbar: 'show' }),
-    ...mapActions('members', ['renewMembership']),
+    ...mapMutations('members', { setCurrentMember: 'setCurrent' }),
+    ...mapMutations('renewMembershipDialog', {
+      showRenewMembershipDialog: 'show'
+    }),
 
     isAbleToRenew(member) {
       const currentTermEnd = moment.utc(member.term.end);
@@ -73,19 +76,8 @@ export default {
     },
 
     async renew(member) {
-      try {
-        await this.renewMembership(member.id);
-        this.showSnackbar({
-          text: 'Membership renewed! 🙌',
-          color: 'primary'
-        });
-      } catch (err) {
-        this.showSnackbar({
-          text: `⚠️ Error(s): ${err.data.map((d, i) => `${i + 1} - ${d} `)}`,
-          color: 'black',
-          timeout: 10000
-        });
-      }
+      this.setCurrentMember(member);
+      this.showRenewMembershipDialog();
     },
 
     async updateNotifications(member, notificationType) {

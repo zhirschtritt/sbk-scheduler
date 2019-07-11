@@ -70,7 +70,11 @@ export class FeathersApplication {
   }
 
   async start() {
-    await this.boot();
+    try {
+      await this.boot();
+    } catch (err) {
+      throw err;
+    }
 
     const port = this.app.get('port');
     const server = this.app.listen(port);

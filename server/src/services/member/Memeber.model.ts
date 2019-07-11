@@ -1,4 +1,6 @@
 import {IsString, ValidateNested, IsEmail, IsDate, IsBoolean, IsPhoneNumber} from 'class-validator';
+import moment = require('moment');
+import {isBoolean} from 'util';
 
 export interface MemberEntity {
   id: string;
@@ -40,4 +42,7 @@ export class Member {
 
   @ValidateNested()
   term!: MemberTerm;
+
+  @IsBoolean()
+  isTermCurrent!: boolean;
 }

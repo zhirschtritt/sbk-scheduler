@@ -6,10 +6,12 @@ import {LoggerFactory, MinimalLogger} from '../../logger';
 import {MemberRepository} from './MemberRepository';
 import {BaseService} from '../interfaces';
 import {SheetRow} from '../../GoogleSheetsBaseRepo';
-import {Member, MemberEntity} from './Memeber.model';
+import {Member, MemberEntity, MemberTerm} from './Memeber.model';
+import {Term} from '../term/term.interfaces';
+import {start} from 'repl';
 
 export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'> & {
-  renew: (id: string) => Promise<Member>;
+  renew: (id: string, startDate: string) => Promise<Member>;
 };
 
 export class MemberService implements IMemberService {
@@ -44,7 +46,7 @@ export class MemberService implements IMemberService {
     }
   }
 
-  async renew(id: string) {
+  async renew(id: string, startDate: string) {
     const storedMember = await this.repository.findOneById(id);
     const member = this.entityToClass(storedMember);
 
@@ -56,10 +58,7 @@ export class MemberService implements IMemberService {
       throw new FeathersError.Unprocessable('Unable to renew member', errors);
     }
 
-    // if the members current term end is in the future,
-    // set the new start date to current term end, else new start is today
-    const newStart = member.term.end >= new Date() ? member.term.end : new Date();
-    const newEnd = moment(newStart)
+    const newEnd = moment(startDate)
       .add(1, 'year')
       .toDate();
 
@@ -116,6 +115,13 @@ export class MemberService implements IMemberService {
 
   private entityToClass(memberData: MemberEntity): Member {
     const member = new Member();
+
+    const isTermCurrent = (term: Required<MemberTerm>) => {
+      const now = moment();
+      const termEnd = moment(term.end);
+      return termEnd >= now;
+    };
+
     member.name = memberData.name;
     member.id = memberData.id;
     member.email = memberData.email;
@@ -126,6 +132,7 @@ export class MemberService implements IMemberService {
     member.term = {
       end: new Date(memberData.currenttermend),
     };
+    member.isTermCurrent = isTermCurrent(member.term);
     return member;
   }
 

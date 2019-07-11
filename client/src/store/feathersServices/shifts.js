@@ -1,27 +1,27 @@
-import feathersVuex from 'feathers-vuex';
-import moment from 'moment';
-import feathersClient from '../feathersClient';
+import feathersVuex from "feathers-vuex";
+import moment from "moment";
+import feathersClient from "../feathersClient";
 
-const { service } = feathersVuex(feathersClient, { idField: 'id' });
+const { service } = feathersVuex(feathersClient, { idField: "id" });
 
-const servicePath = 'shifts';
+const servicePath = "shifts";
 
 const servicePlugin = service(servicePath, {
   instanceDefaults: {
-    date: '',
-    primary_staff: '',
-    secondary_staff: '',
+    date: "",
+    primary_staff: "",
+    secondary_staff: "",
     fulfilled: 0,
-    updatedAt: ''
+    updatedAt: "",
   },
   mutations: {
     setPastAndUpcomingShifts(state) {
       const shifts = state.keyedById;
       let foundNext = false;
 
-      Object.keys(shifts).forEach(shiftId => {
-        const shiftEod = moment(shifts[shiftId].date).add(24, 'hours');
-        const hoursToNextShift = shiftEod.diff(moment(), 'hours');
+      Object.keys(shifts).forEach((shiftId) => {
+        const shiftEod = moment(shifts[shiftId].date).add(24, "hours");
+        const hoursToNextShift = shiftEod.diff(moment(), "hours");
 
         if (hoursToNextShift <= 0) {
           shifts[shiftId] = { ...shifts[shiftId], isPastShift: true };
@@ -32,7 +32,7 @@ const servicePlugin = service(servicePath, {
             shifts[shiftId] = {
               ...shifts[shiftId],
               isNextUpcoming: true,
-              isPastShift: false
+              isPastShift: false,
             };
             foundNext = true;
           } else {
@@ -40,7 +40,7 @@ const servicePlugin = service(servicePath, {
           }
         }
       });
-    }
+    },
   },
 
   actions: {
@@ -48,9 +48,9 @@ const servicePlugin = service(servicePath, {
       const { currentId, copy: updatedShift } = state;
 
       try {
-        await dispatch('patch', [currentId, updatedShift, {}]);
+        await dispatch("patch", [currentId, updatedShift, {}]);
       } catch (err) {
-        commit('rejectCopy', currentId);
+        commit("rejectCopy", currentId);
         throw err;
       }
     },
@@ -58,13 +58,13 @@ const servicePlugin = service(servicePath, {
     rejectUpdateShift({ commit, state }) {
       const { currentId } = state;
 
-      commit('rejectCopy', currentId);
+      commit("rejectCopy", currentId);
     },
 
     stageUpdateShift({ commit, state }, { staffMemberName, shift, isPrimary }) {
       const shiftCopy = Object.assign({}, shift);
 
-      commit('setCurrent', shiftCopy);
+      commit("setCurrent", shiftCopy);
 
       if (isPrimary) {
         state.copy.primary_staff = staffMemberName;
@@ -77,8 +77,8 @@ const servicePlugin = service(servicePath, {
       );
 
       state.copy.fulfilled = hasAtLeastOneStaff ? 1 : 0;
-    }
-  }
+    },
+  },
 });
 
 export default servicePlugin;

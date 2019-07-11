@@ -1,4 +1,8 @@
 export default function capitalize(value) {
   if (!value) return '';
-  return value.charAt(0).toUpperCase() + value.slice(1);
+
+  return value
+    .split(' ')
+    .map(v => v.charAt(0).toUpperCase() + v.slice(1))
+    .join(' ');
 }

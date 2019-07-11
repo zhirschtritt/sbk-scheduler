@@ -6,19 +6,19 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex';
+import { createNamespacedHelpers } from "vuex";
 const {
   mapActions,
   mapGetters,
   mapMutations,
-  mapState
-} = createNamespacedHelpers('snackBar');
+  mapState,
+} = createNamespacedHelpers("snackBar");
 export default {
   methods: {
-    ...mapMutations(['hide'])
+    ...mapMutations(["hide"]),
   },
   computed: {
-    ...mapState(['text', 'color', 'visable', 'timeout']),
+    ...mapState(["text", "color", "visable", "timeout"]),
 
     snackbar: {
       set() {
@@ -26,8 +26,8 @@ export default {
       },
       get() {
         return this.visable;
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
