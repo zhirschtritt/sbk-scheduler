@@ -50,7 +50,7 @@ export class MemberService implements IMemberService {
     const storedMember = await this.repository.findOneById(id);
     const member = this.entityToClass(storedMember);
 
-    const errors = this.isAbleToRenew(member);
+    const errors = this.isAbleToRenew(member, startDate);
     if (errors.length) {
       errors.forEach(err => {
         this.logger.error(err);
@@ -76,15 +76,20 @@ export class MemberService implements IMemberService {
     }
   }
 
-  private isAbleToRenew(member: Member): string[] {
+  private isAbleToRenew(member: Member, startDate: string): string[] {
     const errors: string[] = [];
     const currentTermEnd = moment.utc(member.term.end);
     const sixMonthsFromNow = moment.utc().add(6, 'months');
     const endLessThenSixMonths = currentTermEnd.isSameOrBefore(sixMonthsFromNow, 'days');
 
+    if (!moment(startDate).isValid()) {
+      errors.push(`Start date, ${startDate}, is not a valid date string`);
+    }
+
     if (!endLessThenSixMonths) {
       errors.push('Cannot renew term, current term end is greater than 6 months from now');
     }
+
     return errors;
   }
 
