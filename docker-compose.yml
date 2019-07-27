@@ -37,6 +37,12 @@ services:
     volumes:
       - ./Caddyfile:/etc/Caddyfile
       - ./client/dist:/srv
+    labels:
+      - "traefik.backend=sbk-sched"
+      - "traefik.docker.network=proxy"
+      - "traefik.enable=true"
+      - "traefik.port=3031"
+      - "traefik.frontend.rule=Host:schedule.somervillebikekitchen.org;PathPrefix:/frontend/"
 
   sbk-sched:
     image: sbk-sched
