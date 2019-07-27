@@ -1,0 +1,8 @@
+localhost:3031
+gzip
+root ./client/dist
+
+rewrite / {
+    if {path} not_match ^/api
+    to {path} /
+}
