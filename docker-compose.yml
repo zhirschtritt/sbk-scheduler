@@ -32,10 +32,6 @@ services:
     networks:
       - proxy
       - default
-    ports:
-      - 8081:8081
-    expose:
-      - "8081"
     labels:
       - "traefik.backend=sbk-sched-web"
       - "traefik.docker.network=proxy"

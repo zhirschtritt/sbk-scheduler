@@ -1,4 +1,4 @@
-localhost:8081, schedule.somervillebikekitchen.org {
+localhost:8081, schedule.somervillebikekitchen.org:443 {
     tls off
     gzip
 
