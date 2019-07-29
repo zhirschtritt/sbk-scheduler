@@ -1,7 +1,8 @@
-localhost:8081
-gzip
+localhost:8081, https://schedule.somervillebikekitchen.org {
+    gzip
 
-rewrite / {
-    if {path} not_match ^/api
-    to {path} /
+    rewrite / {
+        if {path} not_match ^/api
+        to {path} /
+    }
 }
