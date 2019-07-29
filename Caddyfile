@@ -1,6 +1,5 @@
-localhost:3031
+localhost:8081
 gzip
-root ./client/dist
 
 rewrite / {
     if {path} not_match ^/api
