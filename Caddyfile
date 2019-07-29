@@ -1,4 +1,5 @@
-localhost:8081, https://schedule.somervillebikekitchen.org {
+localhost:8081, schedule.somervillebikekitchen.org {
+    tls off
     gzip
 
     rewrite / {
