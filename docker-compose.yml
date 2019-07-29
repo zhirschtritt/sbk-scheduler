@@ -41,7 +41,7 @@ services:
       - "traefik.docker.network=proxy"
       - "traefik.enable=true"
       - "traefik.port=8081"
-      - "traefik.frontend.rule=Host:schedule.somervillebikekitchen.org;PathPrefix:/"
+      - "traefik.frontend.rule=Host:schedule.somervillebikekitchen.org"
 
   sbk-sched:
     build:
