@@ -33,13 +33,14 @@ services:
       - proxy
       - default
     ports:
-      - 3031:3031
+      - 8081:8081
     expose:
-      - "3031"
+      - "8081"
     labels:
+      - "traefik.backend=sbk-sched-web"
       - "traefik.docker.network=proxy"
       - "traefik.enable=true"
-      - "traefik.port=3031"
+      - "traefik.port=8081"
       - "traefik.frontend.rule=Host:schedule.somervillebikekitchen.org;PathPrefix:/"
 
   sbk-sched:
