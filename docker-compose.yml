@@ -29,6 +29,8 @@ services:
       context: .
       dockerfile: Dockerfile.client
     restart: unless-stopped
+    env_file:
+      - ./docker-env.prod
     expose:
       - "2015"
     networks:
