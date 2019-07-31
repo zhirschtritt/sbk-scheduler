@@ -6,5 +6,5 @@ COPY client .
 RUN npm run build
 
 FROM abiosoft/caddy:no-stats
-ADD ./Caddyfile /etc/Caddyfile
 COPY --from=client client/dist /srv
+ADD ./Caddyfile /etc/Caddyfile

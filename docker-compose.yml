@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile.client
     restart: unless-stopped
     expose:
-      - "8081"
+      - "2015"
     networks:
       - proxy
       - default
@@ -38,7 +38,7 @@ services:
       - "traefik.backend=sbk-sched-web"
       - "traefik.docker.network=proxy"
       - "traefik.enable=true"
-      - "traefik.port=8081"
+      - "traefik.port=2015"
       - "traefik.frontend.rule=Host:schedule.somervillebikekitchen.org"
 
   sbk-sched:
