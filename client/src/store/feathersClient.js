@@ -8,7 +8,7 @@ const baseUrl =
   process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3030';
 const socket = io(window.location.origin, {
   transports: ['websocket'],
-  path: '/api/ws'
+  path: '/api'
 });
 
 feathersClient.configure(socketio(socket));
