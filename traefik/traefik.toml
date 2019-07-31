@@ -8,14 +8,14 @@ defaultEntryPoints = ["https","http"]
   address = ":80"
 		[entryPoints.http.redirect]
   	 entryPoint = "https"
-  [entryPoints.traefik-dashboard]
+  [entryPoints.traefik]
 	 address = ":8080"
   [entryPoints.https]
   address = ":443"
     [entryPoints.https.tls]
 		
 [api]
-entryPoint = "traefik-dashboard"
+entryPoint = "traefik"
 dashboard = true
 debug = false
   [api.statistics]

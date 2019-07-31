@@ -15,9 +15,9 @@ services:
       - "traefik.enable=true"
       - "traefik.port=8080"
       - "traefik.docker.network=proxy"
-      - "traefik.backend=traefik-dashboard"
+      - "traefik.backend=traefik"
       - "traefik.frontend.auth.basic=admin:$$apr1$$lHDfomvH$$42CgD8.GE3fLVkX0fSNS01"
-      - "traefik.frontend.rule=Host:schedule.somervillebikekitchen.org;PathPrefix:/traefik"
+      - "traefik.frontend.rule=Host:schedule.somervillebikekitchen.org;PathPrefixStrip:/traefik"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.toml:/traefik.toml
@@ -29,8 +29,6 @@ services:
       context: .
       dockerfile: Dockerfile.client
     restart: unless-stopped
-    ports:
-      - 8081:8081
     expose:
       - "8081"
     networks:
