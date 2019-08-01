@@ -4,8 +4,10 @@ import io from 'socket.io-client';
 
 const feathersClient = feathers();
 
-const baseUrl = 'http://localhost:3030';
-// process.env.NODE_ENV === 'production' ? `${window.location.origin}` : 'http://localhost:3030';
+const baseUrl =
+  process.env.NODE_ENV === 'production'
+    ? `${window.location.origin}/api`
+    : 'http://localhost:3030';
 const socket = io(baseUrl, {
   transports: ['websocket']
 });
