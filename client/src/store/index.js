@@ -4,6 +4,7 @@ import feathersVuex from "feathers-vuex";
 import feathersClient from "./feathersClient";
 import snackBar from "./modules/snackBar.module";
 import renewMembershipDialog from "./modules/renewMembershipDialog.module";
+import editMemberDialog from "./modules/editMemberDialog.module";
 
 const { FeathersVuex } = feathersVuex(feathersClient, { idField: "id" });
 
@@ -24,7 +25,7 @@ const servicePlugins = requireModule
 
 export default new Vuex.Store({
   state: {
-    cancelShiftDialog: false,
+    cancelShiftDialog: false
   },
   actions: {
     // TODO: cancelShiftDialog should have it's own store
@@ -43,8 +44,8 @@ export default new Vuex.Store({
       commit("shifts/clearAll");
       await dispatch("shifts/find", { query: { start, end } });
       commit("shifts/setPastAndUpcomingShifts");
-    },
+    }
   },
   plugins: [...servicePlugins],
-  modules: { snackBar, renewMembershipDialog },
+  modules: { snackBar, renewMembershipDialog, editMemberDialog }
 });

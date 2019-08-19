@@ -5,13 +5,12 @@ import {validate} from 'class-validator';
 import {LoggerFactory, MinimalLogger} from '../../logger';
 import {MemberRepository} from './MemberRepository';
 import {BaseService} from '../interfaces';
-import {SheetRow} from '../../GoogleSheetsBaseRepo';
 import {Member, MemberEntity, MemberTerm} from './Memeber.model';
-import {Term} from '../term/term.interfaces';
-import {start} from 'repl';
+import {SheetRow} from '../../interfaces';
 
 export type IMemberService = Pick<BaseService<Member>, 'find' | 'patch' | 'get'> & {
   renew: (id: string, startDate: string) => Promise<Member>;
+  create: (member: Member) => Promise<void>;
 };
 
 export class MemberService implements IMemberService {
@@ -21,9 +20,9 @@ export class MemberService implements IMemberService {
     this.logger = loggerFactory('MemberService');
   }
 
-  async create(data: any) {
+  async create(member: Member) {
     this.logger.error('Create not implemented');
-    return;
+    throw new Error('NOT IMPLEMENTED');
   }
 
   async get(id: string) {

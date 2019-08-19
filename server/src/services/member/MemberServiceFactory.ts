@@ -13,12 +13,22 @@ export default function(app: Application) {
 
   app.use('/members', memberService);
 
-  // TODO: create factory for this
   const service: Service<Member> = app.service('members');
+  applyCustomMethod(service, memberService.renew, 'renewMembership');
+}
+
+// TODO: export and use where needed
+function applyCustomMethod(
+  service: Service<Member>,
+  concreteImpl: (...args: any) => any,
+  methodName: string,
+  trigger: 'create' = 'create',
+) {
   service.hooks({
     before: {
-      create: customMethodWrapper(service, 'renewMembership'),
+      [trigger]: customMethodWrapper(service, methodName),
     },
   });
-  service.renewMembership = memberService.renew;
+  // Not sure if reassigning this is necessary, probably can use same method name
+  service[methodName] = concreteImpl;
 }

@@ -1,6 +1,7 @@
-import {GoogleSheetsBaseRepository} from '../../GoogleSheetsBaseRepo';
-import {GoogleSpreadSheetClient} from '../../GoogleSheetsClientFactory';
-import {MemberEntity} from './Memeber.model';
+import {GoogleSheetsBaseRepository} from '../../repositories/GoogleSheetsBaseRepo';
+import {MemberEntity, Member} from './Memeber.model';
+import {GoogleSpreadSheetClient} from '../../interfaces';
+import {GetRepository} from 'fireorm';
 
 export class MemberRepository extends GoogleSheetsBaseRepository<MemberEntity> {
   constructor(spreadSheetClient: GoogleSpreadSheetClient) {

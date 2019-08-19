@@ -29,7 +29,7 @@
           <v-layout align-center justify-center column class="pt-3">
             <LabeledSwitch
               :switchPredicate="!!staffMember.email"
-              :switchValue="staffMember.notifications"
+              :switchValue="!!staffMember.notifications"
               :switchAction="() => updateNotifications(staffMember)"
               switchLabel="Email Notifications"
               color="primary"
@@ -37,7 +37,7 @@
             />
             <LabeledSwitch
               :switchPredicate="!!staffMember.phoneNumber"
-              :switchValue="staffMember.textNotifications"
+              :switchValue="!!staffMember.textNotifications"
               :switchAction="() => updateTextNotifications(staffMember)"
               switchLabel="Text Notifications"
               color="secondary"

@@ -1,7 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    visable: false,
+    visable: false
   },
   mutations: {
     show(state) {
@@ -9,12 +9,12 @@ export default {
     },
     toggle(state) {
       state.visable = !state.visable;
-    },
+    }
   },
   actions: {
-    // get/set v-model wants 'hide' to be an action rather than mutation 
+    // get/set v-model wants 'hide' to be an action rather than mutation
     hide({ state }) {
       state.visable = false;
-    },
-  },
+    }
+  }
 };

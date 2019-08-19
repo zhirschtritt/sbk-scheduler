@@ -6,9 +6,9 @@ import MemberView from './pages/MemberView.vue';
 Vue.use(VueRouter);
 
 export const router = new VueRouter({
-  mode: 'history',
+  mode: 'abstract',
   routes: [
-    { path: '/members', component: MemberView },
-    { path: '*', component: StaffSchedule }
+    { path: '/members', name: 'members', component: MemberView },
+    { path: '/staff', name: 'staff', component: StaffSchedule }
   ]
 });

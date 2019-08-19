@@ -1,6 +1,6 @@
-import {GoogleSheetsBaseRepository} from '../../GoogleSheetsBaseRepo';
-import {GoogleSpreadSheetClient} from '../../GoogleSheetsClientFactory';
+import {GoogleSheetsBaseRepository} from '../../repositories/GoogleSheetsBaseRepo';
 import {StaffMemberEntity} from './staffMember.interfaces';
+import {GoogleSpreadSheetClient} from '../../interfaces';
 
 export class StaffMemberRepository extends GoogleSheetsBaseRepository<StaffMemberEntity> {
   constructor(private readonly spreadSheetClient: GoogleSpreadSheetClient) {

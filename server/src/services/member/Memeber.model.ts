@@ -1,6 +1,5 @@
 import {IsString, ValidateNested, IsEmail, IsDate, IsBoolean, IsPhoneNumber} from 'class-validator';
-import moment = require('moment');
-import {isBoolean} from 'util';
+import {Collection} from 'fireorm';
 
 export interface MemberEntity {
   id: string;
@@ -18,6 +17,7 @@ export class MemberTerm {
   end!: Date;
 }
 
+@Collection()
 export class Member {
   @IsString()
   id!: string;

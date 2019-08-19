@@ -1,6 +1,6 @@
-import {GoogleSheetsBaseRepository} from '../../GoogleSheetsBaseRepo';
+import {GoogleSheetsBaseRepository} from '../../repositories/GoogleSheetsBaseRepo';
 import {TermEntity} from './term.interfaces';
-import {GoogleSpreadSheetClient} from '../../GoogleSheetsClientFactory';
+import {GoogleSpreadSheetClient} from '../../interfaces';
 
 export class TermsRepository extends GoogleSheetsBaseRepository<TermEntity> {
   constructor(spreadSheetClient: GoogleSpreadSheetClient) {
