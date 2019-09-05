@@ -2,6 +2,7 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", "config"],
   "compilerOptions": {
+    "types": ["jest"],
     "declaration": false,
     "baseUrl": ".",
     "paths": {"*": ["types/*"]},

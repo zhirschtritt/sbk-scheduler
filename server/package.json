@@ -22,11 +22,10 @@
   "scripts": {
     "build": "tsc",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "mocha": "mocha test/ --recursive --exit",
     "start:debug": "NODE_ENV=development nodemon --config nodemon-debug.json",
     "start:dev": "NODE_ENV=development nodemon",
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
-    "test": "npm run eslint && npm run mocha"
+    "test": "jest"
   },
   "dependencies": {
     "@feathersjs/configuration": "^1.0.2",
@@ -47,7 +46,7 @@
     "feathers-logger": "^0.3.2",
     "feathers-swagger": "^0.7.2",
     "firebase-admin": "^8.3.0",
-    "fireorm": "^0.6.5",
+    "fireorm": "0.7.0",
     "google-spreadsheet": "^2.0.7",
     "googleapis": "^42.0.0",
     "handlebars": "^4.1.1",
@@ -72,6 +71,7 @@
     "@types/feathersjs__express": "^1.1.6",
     "@types/feathersjs__socketio": "^3.0.4",
     "@types/helmet": "0.0.43",
+    "@types/jest": "24.0.0",
     "@types/mailgun-js": "^0.16.3",
     "@types/pino": "^5.8.6",
     "@types/serve-favicon": "^2.2.30",
@@ -82,9 +82,11 @@
     "eslint-config-google": "^0.12.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
+    "jest": "24.0.0",
     "mocha": "^5.2.0",
     "nodemon": "1.19.1",
     "prettier": "^1.16.4",
+    "ts-jest": "^24.0.2",
     "ts-node": "8.3.0",
     "tsconfig-paths": "3.8.0"
   }

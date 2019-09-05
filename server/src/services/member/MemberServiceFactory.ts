@@ -1,14 +1,13 @@
 import {Application} from '@feathersjs/feathers';
 import {MemberService} from './MemberService';
-import {MemberRepository} from './MemberRepository';
 import {loggerFactory} from '../../logger';
 import {Service} from '@feathersjs/feathers';
 import {Member} from './Memeber.model';
 import {customMethodWrapper} from '../customMethodWrapper';
+import {GetRepository} from 'fireorm';
 
 export default function(app: Application) {
-  const sheets = app.get('sheetsClient');
-  const repo = new MemberRepository(sheets);
+  const repo = GetRepository(Member);
   const memberService = new MemberService(repo, loggerFactory);
 
   app.use('/members', memberService);

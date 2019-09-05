@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import favicon from 'serve-favicon';
 import compress from 'compression';
-import {logger} from './logger';
+import {logger, loggerFactory} from './logger';
 import {GoogleSheetsClientFactory} from './repositories/GoogleSheetsClientFactory';
 import socketio from '@feathersjs/socketio';
 import swagger from 'feathers-swagger';
@@ -15,6 +15,7 @@ import {mailgunClientFactory} from './mailer/MailgunClient';
 import {services} from './services';
 import {smsClientFactory} from './twilioSMSClient/smsClientFactory';
 import channels from './channels';
+import {FirestoreClientFactory} from './repositories/firestoreClientFactory';
 
 const appHooks = require('./app.hooks');
 
@@ -25,7 +26,7 @@ export class FeathersApplication {
     this.app = express(feathers());
   }
 
-  private async boot() {
+  async boot() {
     this.app.configure(configuration());
     this.app.use(helmet());
     this.app.use(cors());
@@ -40,6 +41,8 @@ export class FeathersApplication {
       this.app.get('iam_client_email'),
       this.app.get('iam_private_key_base64'),
     ).manufactureLegacyClient();
+
+    new FirestoreClientFactory(loggerFactory).manufacture();
 
     this.app.set('sheetsClient', client);
 

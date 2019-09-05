@@ -17,7 +17,7 @@ export class MemberTerm {
   end!: Date;
 }
 
-@Collection()
+@Collection('Member')
 export class Member {
   @IsString()
   id!: string;
