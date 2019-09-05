@@ -3,12 +3,12 @@
     <v-toolbar dark color="primary" app absolute clipped-left>
       <v-toolbar-title>SBK Schedule</v-toolbar-title>
       <v-spacer />
-      <v-toolbar-items>
+      <!-- <v-toolbar-items>
         <v-container>
           <v-btn class="mr-2" to="members" flat text white--text>members</v-btn>
           <v-btn to="staff" flat text white--text>staff</v-btn>
         </v-container>
-      </v-toolbar-items>
+      </v-toolbar-items> -->
     </v-toolbar>
     <v-content>
       <router-view />
@@ -18,16 +18,16 @@
 </template>
 
 <script>
-import Snackbar from "./components/Snackbar.vue";
+import Snackbar from './components/Snackbar.vue';
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     Snackbar
   },
 
   mounted: function() {
-    this.$router.push("staff");
+    this.$router.push('staff');
   },
 
   computed: {
