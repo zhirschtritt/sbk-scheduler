@@ -27,8 +27,9 @@ export enum TemplateName {
   emptyShift = 'emptyShift',
   upcomingShift = 'upcomingShift',
 }
+export type TemplateType = keyof typeof TemplateName;
 
-export function getTemplateByName(templateName: TemplateName) {
+export function getTemplateByName(templateName: TemplateType) {
   switch (templateName) {
     case TemplateName.cancelledShift:
       return templates(TemplateName.cancelledShift);
@@ -41,10 +42,7 @@ export function getTemplateByName(templateName: TemplateName) {
   }
 }
 
-export function formatEmail(
-  templateName: TemplateName,
-  context: NotificationContext,
-) {
+export function formatEmail(templateName: TemplateType, context: NotificationContext) {
   const template = getTemplateByName(templateName);
   const handlebars = Handlebars.compile(template);
 

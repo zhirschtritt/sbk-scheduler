@@ -1,5 +1,5 @@
 import {NotificationHandlerFactory} from './Handlers';
-import {isNotification} from './notification.interfaces';
+import {isNotification, Notification} from './notification.interfaces';
 import {MinimalLogger} from '../../twilioSMSClient/Interfaces';
 
 export class NotificationService {
@@ -8,15 +8,16 @@ export class NotificationService {
     private readonly logger: MinimalLogger,
   ) {}
 
-  async create(notification: unknown) {
+  async create(notification: Notification) {
     if (!isNotification(notification)) {
-      throw new Error(`Unknown notification type: ${(notification as any).notificationType}`);
+      this.logger.error({notification}, 'Unknown notification type')
+      throw new Error(`Unknown notification type received`);
     }
 
     const notificationHandler = await this.notificationHandlerFactory.manufacture(notification.notificationType);
 
     try {
-      await notificationHandler.handle((notification as any).context);
+      await notificationHandler.handle(notification);
       // feathers plugin requires a unique id be returned to update local store
       return {id: +new Date()};
     } catch (err) {

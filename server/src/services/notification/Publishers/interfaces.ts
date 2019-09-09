@@ -1,4 +1,5 @@
 import {NotificationContext} from '../notification.interfaces';
+import {StaffMember} from '../../staffMember/staffMember.interfaces';
 
 export enum TemplateName {
   upcomingShift = 'upcomingShift',
@@ -19,4 +20,19 @@ export interface NotificationViewModel {
   emailHtml: string;
   subjectText: string;
   smsText: string;
+}
+
+enum PublisherTypes {
+  sms = 'sms',
+  email = 'email',
+}
+
+export type PublisherType = keyof typeof PublisherTypes;
+
+export interface PublisherFactory {
+  manufactureAdminPublisher(): Publisher;
+  manufactureStaffPublisherMap(
+    reciepients: StaffMember[],
+    limitedPublishers?: PublisherType[],
+  ): Map<string, Publisher[]>;
 }

@@ -1,10 +1,10 @@
 import {Shift} from '../shift/shift.interfaces';
 import {StaffMember} from '../staffMember/staffMember.interfaces';
-import {NotificationContext} from 'twilio/lib/rest/api/v2010/account/notification';
 
 export enum NotificationType {
   cancelledShift = 'cancelledShift',
   weeklyShiftUpdate = 'weeklyShiftUpdate',
+  dayOfShiftUpdate = 'dayOfShiftUpdate',
 }
 
 export interface NotificationContext {

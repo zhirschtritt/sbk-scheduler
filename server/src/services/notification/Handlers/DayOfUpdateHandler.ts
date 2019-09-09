@@ -7,7 +7,7 @@ import {formatEmail, TemplateName} from '../../../mailer/templator';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
 import {IShiftService} from '../../shift/ShiftService';
 
-export class WeeklyShiftUpdateHandler implements NotificationHandler {
+export class DayOfUpdateHandler implements NotificationHandler {
   private readonly adminPublisher: Publisher;
   private readonly staffPublishers: Map<string, Publisher[]>;
   constructor(
@@ -16,37 +16,20 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
     publisherFactory: PublisherFactory,
     private readonly staff: StaffMember[],
   ) {
-    this.staffPublishers = publisherFactory.manufactureStaffPublisherMap(staff);
+    this.staffPublishers = publisherFactory.manufactureStaffPublisherMap(staff, ['sms']);
     this.adminPublisher = publisherFactory.manufactureAdminPublisher();
   }
 
-  private async publsihUnmannedShiftWarning(shift: Shift) {
-    this.log.info({shift}, 'Sending empty shift warning notification');
-
-    const vm: NotificationViewModel = {
-      emailHtml: formatEmail(TemplateName.emptyShift, {shift}),
-      subjectText: `⚠️ SBK Reminder: Unassigned Upcoming Shift ${formatDate(shift.date)}`,
-      smsText: '',
-    };
-
-    return await this.adminPublisher.publish(vm);
+  async handle() {
+    const todaysShift = await this.getTodaysShift();
+    if (!todaysShift) {
+      // no shifts for today, logged berlow in getTodaysShift()
+      return;
+    }
+    await this.handleShift(todaysShift);
   }
 
-  private async publishShiftNotification(shift: Shift, assignedStaffMembers: StaffMember[]) {
-    this.log.info({shift, assignedStaffMembers}, 'Sending shift reminder notifications');
-
-    const publishers = getPublishersForStaffMembers(assignedStaffMembers, this.staffPublishers);
-    const vm: NotificationViewModel = {
-      emailHtml: formatEmail(TemplateName.upcomingShift, {shift}),
-      subjectText: `👋 SBK Reminder: Upcoming Shift ${formatDate(shift.date)}`,
-      smsText: `👋 SBK Reminder, you have an upcoming SBK shift this week: ${formatDate(shift.date)}
-      Staff: ${assignedStaffMembers.map(s => capitalize(s.name)).join(', ')}`,
-    };
-
-    return await Promise.all(publishers.map(p => p.publish(vm)));
-  }
-
-  private async handleNextShift(shift: Shift): Promise<void | void[]> {
+  private async handleShift(shift: Shift): Promise<void | void[]> {
     // if shop is closed, no emails
     if (!shift.shop_open) {
       this.log.info({shift}, 'Not sending notifications for upcoming shift, shop closed');
@@ -55,9 +38,8 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
 
     try {
       // if upcoming shift is empty and shop is open, draft email to staff
-      const isStaffAssigned = shift.primary_staff || shift.secondary_staff;
-      if (!isStaffAssigned) {
-        return this.publsihUnmannedShiftWarning(shift);
+      if (!shift.primary_staff && !shift.secondary_staff) {
+        return this.publsihUnstaffedShiftWarning(shift);
       }
 
       // if upcoming shift is staffed, draft emails to all assigned staffMembers
@@ -69,9 +51,42 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
     }
   }
 
-  async handle() {
-    const nextShifts = await getShiftsForWeek(this.shiftService);
-    await Promise.all(nextShifts.map(shift => this.handleNextShift(shift)));
+  private async getTodaysShift(): Promise<Shift | undefined> {
+    const now = moment();
+    const startOfDay = now.startOf('day').toDate();
+    const endOfDay = now.endOf('day').toDate();
+    const [shift] = await this.shiftService.findByDateRange(startOfDay, endOfDay);
+
+    if (!shift) {
+      this.log.debug({date: now.toISOString()}, 'No shifts found for today');
+    }
+    return shift;
+  }
+
+  private async publsihUnstaffedShiftWarning(shift: Shift) {
+    this.log.info({shift}, 'Sending empty shift warning notification');
+
+    const vm: NotificationViewModel = {
+      emailHtml: formatEmail(TemplateName.emptyShift, {shift}),
+      subjectText: `⚠️ Unassigned Shift Today: ${formatDate(shift.date)}`,
+      smsText: '', // admin publisher does not recieve sms
+    };
+
+    return await this.adminPublisher.publish(vm);
+  }
+
+  private async publishShiftNotification(shift: Shift, assignedStaffMembers: StaffMember[]) {
+    this.log.info({shift, assignedStaffMembers}, 'Sending shift reminder notifications');
+
+    const publishers = getPublishersForStaffMembers(assignedStaffMembers, this.staffPublishers);
+    const vm: NotificationViewModel = {
+      emailHtml: formatEmail(TemplateName.upcomingShift, {shift}),
+      subjectText: `👋 SBK Reminder: Shift Today ${formatDate(shift.date)}`,
+      smsText: `👋 SBK Reminder, you are on staff for SBK today: ${formatDate(shift.date)}
+      Staff: ${assignedStaffMembers.map(s => capitalize(s.name)).join(', ')}`,
+    };
+
+    return await Promise.all(publishers.map(p => p.publish(vm)));
   }
 }
 
@@ -79,14 +94,6 @@ function getPublishersForStaffMembers(assignedStaffMembers: StaffMember[], publi
   return assignedStaffMembers.reduce((pubs: Publisher[], staff) => {
     return pubs.concat(publishers.get(staff.id) || []);
   }, []);
-}
-
-async function getShiftsForWeek(shiftService: IShiftService): Promise<Shift[]> {
-  const today = new Date();
-  const endOfWeek = moment()
-    .add(7, 'days')
-    .toDate();
-  return await shiftService.findByDateRange(today, endOfWeek);
 }
 
 function findAssignedStaffForShift(upcomingShift: Shift, staff: StaffMember[]): StaffMember[] {
