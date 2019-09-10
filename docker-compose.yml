@@ -25,9 +25,8 @@ services:
     container_name: traefik
 
   sbk-sched:
-    build:
-      context: .
-      image: sbk-sched-local-build:latest
+    build: .
+    image: sbk-sched-local-build:latest
     restart: unless-stopped
     networks:
       - proxy
