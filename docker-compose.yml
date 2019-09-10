@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   traefik:
@@ -8,16 +8,16 @@ services:
       - 81:80
       - 444:443
     expose:
-     - "444"
+      - "444"
     networks:
       - proxy
-    labels: 
-     -  "traefik.enable=true"    
-     -  "traefik.port=8080"
-     -  "traefik.docker.network=proxy"
-     -  "traefik.backend=traefik-dashboard"
-     -  "traefik.frontend.auth.basic=admin:$$apr1$$lHDfomvH$$42CgD8.GE3fLVkX0fSNS01"
-     -  "traefik.frontend.rule=Path:/_traefik"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=8080"
+      - "traefik.docker.network=proxy"
+      - "traefik.backend=traefik-dashboard"
+      - "traefik.frontend.auth.basic=admin:$$apr1$$lHDfomvH$$42CgD8.GE3fLVkX0fSNS01"
+      - "traefik.frontend.rule=Path:/_traefik"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.toml:/traefik.toml
@@ -25,16 +25,18 @@ services:
     container_name: traefik
 
   sbk-sched:
-    image: sbk-sched
+    build:
+      context: .
+      image: sbk-sched-local-build:latest
     restart: unless-stopped
     networks:
       - proxy
       - default
-    ports: 
-     - 3030:3030
-    expose: 
+    ports:
+      - 3030:3030
+    expose:
       - "3030"
-    env_file: 
+    env_file:
       - ./docker-env.prod
     labels:
       - "traefik.backend=sbk-sched"
