@@ -1,6 +1,7 @@
 import {NotificationHandlerFactory} from './Handlers';
-import {isNotification, Notification} from './notification.interfaces';
+import {Notification} from './notification.interfaces';
 import {MinimalLogger} from '../../twilioSMSClient/Interfaces';
+import {isNotification} from './notification.guards';
 
 export class NotificationService {
   constructor(
@@ -10,7 +11,7 @@ export class NotificationService {
 
   async create(notification: Notification) {
     if (!isNotification(notification)) {
-      this.logger.error({notification}, 'Unknown notification type')
+      this.logger.error({notification}, 'Unknown notification type');
       throw new Error(`Unknown notification type received`);
     }
 

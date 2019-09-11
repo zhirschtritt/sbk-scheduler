@@ -17,46 +17,13 @@ export interface WeeklyNotification {
   notificationType: NotificationType.weeklyShiftUpdate;
 }
 
+export interface DayOfShiftNotification {
+  notificationType: NotificationType.dayOfShiftUpdate;
+}
+
 export interface CancelledShiftNotification {
   notificationType: NotificationType.cancelledShift;
   context: NotificationContext;
 }
 
-export type Notification = WeeklyNotification | CancelledShiftNotification;
-
-export function isNotification(maybeNotification: unknown): maybeNotification is Notification {
-  return (
-    maybeNotification !== undefined &&
-    maybeNotification !== null &&
-    (!!isWeeklyNotification(maybeNotification) || !!isCancelledShiftNotification(maybeNotification))
-  );
-}
-
-export function isWeeklyNotification(maybeWeeklyNotification: unknown): maybeWeeklyNotification is Notification {
-  return (
-    maybeWeeklyNotification !== undefined &&
-    maybeWeeklyNotification !== null &&
-    (maybeWeeklyNotification as any).notificationType === 'weeklyShiftUpdate'
-  );
-}
-
-export function isCancelledShiftNotification(
-  maybeCancelledShiftNotification: unknown,
-): maybeCancelledShiftNotification is Notification {
-  return (
-    maybeCancelledShiftNotification !== undefined &&
-    maybeCancelledShiftNotification !== null &&
-    (maybeCancelledShiftNotification as any).notificationType === 'cancelledShift' &&
-    !!isNotificationContext((maybeCancelledShiftNotification as any).context)
-  );
-}
-
-export function isNotificationContext(maybeNotificationCtx: unknown): maybeNotificationCtx is NotificationContext {
-  return (
-    maybeNotificationCtx &&
-    !!(maybeNotificationCtx as any).shift &&
-    !!(maybeNotificationCtx as any).staffMember &&
-    !!(maybeNotificationCtx as any).customMessage !== null &&
-    !!(maybeNotificationCtx as any).customMessage !== undefined
-  );
-}
+export type Notification = WeeklyNotification | CancelledShiftNotification | DayOfShiftNotification;
