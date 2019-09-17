@@ -16,6 +16,7 @@ function sundayReminder() {
       method: "post",
       payload: { notificationType: NotificationType.weeklyShiftUpdate }
     });
+    Logger.log("Successfully sent sunday reminder job");
   } catch (err) {
     Logger.log(`Error sending sunday reminder job: ${err}`);
   }
@@ -28,6 +29,7 @@ function dayOfReminder() {
       method: "post",
       payload: { notificationType: NotificationType.dayOfShiftUpdate }
     });
+    Logger.log("Successfully sent dayOf reminder job");
   } catch (err) {
     Logger.log(`Error sending sunday reminder job: ${err}`);
   }
