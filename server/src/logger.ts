@@ -3,6 +3,7 @@ import pino from 'pino';
 export const logger = pino({
   level: 'debug',
   prettyPrint: true,
+  timestamp: () => new Date().toISOString(),
 });
 
 export type MinimalLogger = Pick<pino.Logger, 'info' | 'debug' | 'error' | 'warn'>;
