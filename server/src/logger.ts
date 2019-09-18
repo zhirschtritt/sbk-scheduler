@@ -2,8 +2,10 @@ import pino from 'pino';
 
 export const logger = pino({
   level: 'debug',
-  prettyPrint: true,
-  timestamp: () => new Date().toISOString(),
+  prettyPrint: {
+    colorize: true,
+    translateTime: true
+  }
 });
 
 export type MinimalLogger = Pick<pino.Logger, 'info' | 'debug' | 'error' | 'warn'>;
