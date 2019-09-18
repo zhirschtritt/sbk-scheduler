@@ -4,7 +4,7 @@ export const logger = pino({
   level: 'debug',
   prettyPrint: {
     colorize: true,
-    translateTime: 'SYS:standard'
+    translateTime: 'yyyy-mm-dd hh:MM:ss TT Z'
   }
 });
 
