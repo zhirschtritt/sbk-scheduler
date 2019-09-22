@@ -28,14 +28,16 @@ export default {
     terms() {
       const terms = this.findTermsInStore().data;
 
-      return terms.map(term => Object.assign(term, {
-          text: `${formatDate(term.start)} - ${formatDate(term.end)}`,
-        }),);
-    },
+      return terms.map(term =>
+        Object.assign(term, {
+          text: `${formatDate(term.start)} - ${formatDate(term.end)}`
+        })
+      );
+    }
   },
 
   methods: {
-    ...mapActions(['updateSelectedTerm']),
-  },
+    ...mapActions(['updateSelectedTerm'])
+  }
 };
 </script>

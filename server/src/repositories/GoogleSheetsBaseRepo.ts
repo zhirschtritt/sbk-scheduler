@@ -1,18 +1,8 @@
-import {GoogleSpreadSheetClient} from './GoogleSheetsClientFactory';
 import {promisifyAll} from 'bluebird';
-import {loggerFactory} from './logger';
+import {loggerFactory} from '../logger';
+import {GoogleSpreadSheetClient, SheetClient, SheetRow} from '../interfaces';
 
 const logger = loggerFactory('GoogleSheetsBaseRepo');
-
-export type RowEntity = {
-  save(): Promise<void>;
-};
-
-export type SheetRow<T> = T & RowEntity;
-
-export interface SheetClient<T> {
-  getRowsAsync(query: {query?: string}): Promise<SheetRow<T>[]>;
-}
 
 export class GoogleSheetsBaseRepository<T> {
   private readonly sheetClient: SheetClient<T>;
@@ -50,9 +40,11 @@ export class GoogleSheetsBaseRepository<T> {
   }
 
   async findOneById(id: string): Promise<SheetRow<T>> {
+    const query = `id = ${id}`;
     try {
-      const res = await this.sheetClient.getRowsAsync({query: `id = ${id}`});
+      const res = await this.sheetClient.getRowsAsync({query});
       if (!res.length) {
+        logger.error({query, res}, 'No rows matching id query');
         throw new Error('No rows matching id');
       }
       return res[0];

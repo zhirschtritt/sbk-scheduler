@@ -1,18 +1,18 @@
 import moment from 'moment';
 import {NotificationHandler} from './NotificationHandlerFactory';
-import {Publisher} from '../Publishers';
-import {getAdminPublisher} from '../Publishers';
+import {Publisher, PublisherFactory} from '../Publishers';
 import {formatEmail, TemplateName} from '../../../mailer/templator';
-import {NotificationContext} from '../notification.interfaces';
+import {CancelledShiftNotification} from '../notification.interfaces';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
 
 export class CancelledShiftHandler implements NotificationHandler {
   private readonly adminPublisher: Publisher;
-  constructor(private readonly log: MinimalLogger, publishers: Map<string, Publisher[]>) {
-    this.adminPublisher = getAdminPublisher(publishers);
+  constructor(private readonly log: MinimalLogger, publisherFactory: PublisherFactory) {
+    this.adminPublisher = publisherFactory.manufactureAdminPublisher();
   }
 
-  async handle(context: Required<NotificationContext>) {
+  async handle(notification: CancelledShiftNotification) {
+    const {context} = notification;
     const emailHtml = formatEmail(TemplateName.cancelledShift, context);
     const vm = {
       emailHtml,

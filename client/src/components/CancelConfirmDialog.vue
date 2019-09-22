@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 
 export default {
   name: 'CancelConfirmDialog',
@@ -55,13 +56,14 @@ export default {
     form: false,
     emailMessage: '',
     rules: {
-      required: v => !!v || 'This field is required',
-    },
+      required: v => !!v || 'This field is required'
+    }
   }),
   methods: {
+    ...mapMutations('snackBar', { showSnackbar: 'show' }),
     ...mapActions(['toggleCancelShiftDialog']),
     ...mapActions('shifts', ['updateShift', 'rejectUpdateShift']),
-    ...mapActions('notifications', { createNotification: 'create' }),
+    ...mapActions('notifications', { postNotification: 'create' }),
 
     cancelUpdate() {
       this.toggleCancelShiftDialog();
@@ -70,23 +72,27 @@ export default {
 
     async confirmUpdateShift() {
       try {
-        await this.createNotification({
+        await this.postNotification({
           notificationType: 'cancelledShift',
           context: {
             customMessage: JSON.stringify(this.emailMessage),
             shift: this.shift,
-            staffMember: this.getCurrentStaffMember,
-          },
+            staffMember: this.getCurrentStaffMember
+          }
         });
+        this.showSnackbar({ text: 'Notification sent', color: 'primary' });
       } catch (err) {
-        console.error('Could not create new notification');
+        this.showSnackbar({
+          text: 'Error creating notification',
+          color: 'error'
+        });
         throw err;
+      } finally {
+        this.emailMessage = '';
+        this.toggleCancelShiftDialog();
       }
-
-      this.emailMessage = '';
-      this.toggleCancelShiftDialog();
       this.updateShift();
-    },
+    }
   },
   computed: {
     ...mapState(['cancelShiftDialog']),
@@ -112,8 +118,8 @@ export default {
       },
       set() {
         this.toggleCancelShiftDialog();
-      },
-    },
-  },
+      }
+    }
+  }
 };
 </script>

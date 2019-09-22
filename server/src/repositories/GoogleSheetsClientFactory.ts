@@ -1,6 +1,8 @@
 import GoogleSpreadsheet from 'google-spreadsheet';
-import {loggerFactory} from './logger';
+import {google} from 'googleapis';
+import {loggerFactory} from '../logger';
 import {promisifyAll} from 'bluebird';
+import {SheetsV4Client} from '../interfaces';
 
 const logger = loggerFactory('googleSheetsRepo');
 
@@ -11,12 +13,15 @@ export class GoogleSheetsClientFactory {
     private readonly iamPrivateKey: string,
   ) {}
 
-  async manufacture() {
-    const credentials = {
+  private getCredentials() {
+    return {
       client_email: this.iamEmail,
       private_key: Buffer.from(this.iamPrivateKey, 'base64').toString('ascii'),
     };
+  }
 
+  async manufactureLegacyClient() {
+    const credentials = this.getCredentials();
     const client = promisifyAll(new GoogleSpreadsheet(this.sheetId));
 
     try {
@@ -28,23 +33,25 @@ export class GoogleSheetsClientFactory {
 
     try {
       const configuredClient = await (client as any).getInfoAsync();
-      logger.info('Got authorized google sheets client 👌');
+      logger.trace('Got authorized google sheets client');
       return configuredClient;
     } catch (err) {
       logger.error({err}, 'Error connecting to google sheets API');
       throw err;
     }
   }
-}
 
-export interface GoogleWorksheet {
-  id: string;
-  url: string;
-  title: string;
-  rowCount: number;
-  colCount: number;
-}
+  async manufactureV4Client(): Promise<SheetsV4Client> {
+    const credentials = this.getCredentials();
+    const auth = new google.auth.GoogleAuth({credentials});
 
-export interface GoogleSpreadSheetClient {
-  worksheets: GoogleWorksheet[];
+    let authClient;
+    try {
+      authClient = await auth.getClient();
+    } catch (err) {
+      logger.error({err}, 'Error authenticating google api client');
+    }
+
+    return google.sheets({version: 'v4', auth: authClient}).spreadsheets.values;
+  }
 }

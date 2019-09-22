@@ -2,25 +2,25 @@ import moment from 'moment';
 import {Shift} from '../../shift/shift.interfaces';
 import {StaffMember} from '../../staffMember/staffMember.interfaces';
 import {NotificationHandler} from './NotificationHandlerFactory';
-import {NotificationContext} from '../notification.interfaces';
-import {Publisher, NotificationViewModel} from '../Publishers';
+import {Publisher, NotificationViewModel, PublisherFactory} from '../Publishers';
 import {formatEmail, TemplateName} from '../../../mailer/templator';
-import {getAdminPublisher} from '../Publishers';
 import {MinimalLogger} from '../../../twilioSMSClient/Interfaces';
 import {IShiftService} from '../../shift/ShiftService';
 
 export class WeeklyShiftUpdateHandler implements NotificationHandler {
   private readonly adminPublisher: Publisher;
+  private readonly staffPublishers: Map<string, Publisher[]>;
   constructor(
     private readonly log: MinimalLogger,
     private readonly shiftService: IShiftService,
-    private readonly publishers: Map<string, Publisher[]>,
+    publisherFactory: PublisherFactory,
     private readonly staff: StaffMember[],
   ) {
-    this.adminPublisher = getAdminPublisher(this.publishers);
+    this.staffPublishers = publisherFactory.manufactureStaffPublisherMap(staff);
+    this.adminPublisher = publisherFactory.manufactureAdminPublisher();
   }
 
-  private async sendEmptyShiftEmail(shift: Shift) {
+  private async publsihUnmannedShiftWarning(shift: Shift) {
     this.log.info({shift}, 'Sending empty shift warning notification');
 
     const vm: NotificationViewModel = {
@@ -32,10 +32,10 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
     return await this.adminPublisher.publish(vm);
   }
 
-  private async sendUpcomingShiftEmail(shift: Shift, assignedStaffMembers: StaffMember[]) {
+  private async publishShiftNotification(shift: Shift, assignedStaffMembers: StaffMember[]) {
     this.log.info({shift, assignedStaffMembers}, 'Sending shift reminder notifications');
 
-    const publishers = getPublishersForStaffMembers(assignedStaffMembers, this.publishers);
+    const publishers = getPublishersForStaffMembers(assignedStaffMembers, this.staffPublishers);
     const vm: NotificationViewModel = {
       emailHtml: formatEmail(TemplateName.upcomingShift, {shift}),
       subjectText: `👋 SBK Reminder: Upcoming Shift ${formatDate(shift.date)}`,
@@ -57,19 +57,19 @@ export class WeeklyShiftUpdateHandler implements NotificationHandler {
       // if upcoming shift is empty and shop is open, draft email to staff
       const isStaffAssigned = shift.primary_staff || shift.secondary_staff;
       if (!isStaffAssigned) {
-        return this.sendEmptyShiftEmail(shift);
+        return this.publsihUnmannedShiftWarning(shift);
       }
 
       // if upcoming shift is staffed, draft emails to all assigned staffMembers
       const assignedStaffMembers = findAssignedStaffForShift(shift, this.staff);
-      return this.sendUpcomingShiftEmail(shift, assignedStaffMembers);
+      return this.publishShiftNotification(shift, assignedStaffMembers);
     } catch (err) {
       this.log.error({err}, 'could not send upcoming shift notificaiton');
       throw err;
     }
   }
 
-  async handle(context: NotificationContext) {
+  async handle() {
     const nextShifts = await getShiftsForWeek(this.shiftService);
     await Promise.all(nextShifts.map(shift => this.handleNextShift(shift)));
   }

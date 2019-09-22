@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" dense flat>
       <v-icon>people</v-icon>
       <v-toolbar-title>Staff Members</v-toolbar-title>
-      <v-spacer/>
+      <v-spacer />
     </v-toolbar>
     <v-data-table
       :headers="headers"
@@ -13,8 +13,8 @@
       :loading="areStaffMembersLoading"
     >
       <template slot="no-data">Loading...</template>
-      <template slot="items" slot-scope="props">
-        <td class="text-capitalize pr-1">{{ props.item.name }}</td>
+      <template slot="items" slot-scope="{item : staffMember}">
+        <td class="text-capitalize pr-1">{{ staffMember.name }}</td>
         <td class="px-1">
           <v-chip
             label
@@ -22,42 +22,27 @@
             :disabled="shift.isPastShift"
             :color="shift.isPastShift ? 'grey' : 'primary'"
             :key="shift.id"
-            v-for="shift in shiftsForStaffMember(props.item.name)"
+            v-for="shift in shiftsForStaffMember(staffMember.name)"
           >{{ shift.date | formatDateWithWeekday }}</v-chip>
         </td>
         <td class="pl-1">
           <v-layout align-center justify-center column class="pt-3">
-            <v-switch
-              :value="props.item.notifications"
-              :value-comparator="function(val) { return(!!val)}"
+            <LabeledSwitch
+              :switchPredicate="!!staffMember.email"
+              :switchValue="!!staffMember.notifications"
+              :switchAction="() => updateNotifications(staffMember)"
+              switchLabel="Email Notifications"
               color="primary"
-              light
-              debounce="20"
-              @change="updateNotifications(props.item)"
-            >
-              <template v-slot:prepend>
-                <v-tooltip left>
-                  <v-icon slot="activator">fa-envelope-o</v-icon>
-                  <span>Email Notifications</span>
-                </v-tooltip>
-              </template>
-            </v-switch>
-            <v-switch
-              v-if="props.item.phoneNumber"
-              :value="props.item.textNotifications"
-              :value-comparator="function(val) { return(!!val)}"
-              color="#5C6BC0"
-              light
-              debounce="20"
-              @change="updateTextNotifications(props.item)"
-            >
-              <template v-slot:prepend>
-                <v-tooltip left>
-                  <v-icon slot="activator">fa-commenting-o</v-icon>
-                  <span>Text Notifications</span>
-                </v-tooltip>
-              </template>
-            </v-switch>
+              icon="fa-envelope-o"
+            />
+            <LabeledSwitch
+              :switchPredicate="!!staffMember.phoneNumber"
+              :switchValue="!!staffMember.textNotifications"
+              :switchAction="() => updateTextNotifications(staffMember)"
+              switchLabel="Text Notifications"
+              color="secondary"
+              icon="fa-commenting-o"
+            />
           </v-layout>
         </td>
       </template>
@@ -66,15 +51,19 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import LabeledSwitch from './LabeledSwitch.vue';
 
 export default {
+  components: {
+    LabeledSwitch
+  },
   data: () => ({
     headers: [
       { text: 'Staff Member', value: 'name', class: 'pr-0' },
       { text: 'Scheduled Shifts', sortable: false },
-      { text: 'Reminders', sortable: false },
-    ],
+      { text: 'Reminders', sortable: false }
+    ]
   }),
 
   computed: {
@@ -84,16 +73,18 @@ export default {
 
     staffMembers() {
       return this.findStaffMembersInStore().data;
-    },
+    }
   },
 
   methods: {
+    ...mapMutations('snackBar', { showSnackbar: 'show' }),
+
     shiftsForStaffMember(staffMemberName) {
       const query = {
         $or: [
           { primary_staff: staffMemberName },
-          { secondary_staff: staffMemberName },
-        ],
+          { secondary_staff: staffMemberName }
+        ]
       };
       return this.findShiftsInStore({ query }).data;
     },
@@ -109,7 +100,19 @@ export default {
        * so there isn't a weird gui glitchy behavior
        */
       updatedStaffMember.commit();
-      await updatedStaffMember.patch();
+      try {
+        await updatedStaffMember.patch();
+        this.showSnackbar({
+          text: 'Notification preferences updated',
+          color: 'primary'
+        });
+      } catch (err) {
+        this.showSnackbar({
+          text: 'Error updating notification preferences',
+          color: 'secondary'
+        });
+        throw err;
+      }
     },
     async updateTextNotifications(staffMember) {
       const newNotificationValue = staffMember.textNotifications ? 0 : 1;
@@ -122,8 +125,20 @@ export default {
        * so there isn't a weird gui glitchy behavior
        */
       updatedStaffMember.commit();
-      await updatedStaffMember.patch();
-    },
-  },
+      try {
+        await updatedStaffMember.patch();
+        this.showSnackbar({
+          text: 'Notification preferences updated',
+          color: 'primary'
+        });
+      } catch (err) {
+        this.showSnackbar({
+          text: 'Error updating notification preferences',
+          color: 'secondary'
+        });
+        throw err;
+      }
+    }
+  }
 };
 </script>

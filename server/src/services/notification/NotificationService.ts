@@ -1,26 +1,26 @@
-import {NotificationHandlerFactory} from './Handlers/NotificationHandlerFactory';
-import {isNotification} from './notification.interfaces';
-import {IShiftService} from '../shift/ShiftService';
-import {IStaffMemberService} from '../staffMember/staffMember.interfaces';
+import {NotificationHandlerFactory} from './Handlers';
+import {Notification} from './notification.interfaces';
 import {MinimalLogger} from '../../twilioSMSClient/Interfaces';
+import {isNotification} from './notification.guards';
 
 export class NotificationService {
   constructor(
-    staffMembers: IStaffMemberService,
-    shiftsService: IShiftService,
     private readonly notificationHandlerFactory: NotificationHandlerFactory,
     private readonly logger: MinimalLogger,
   ) {}
 
-  async create(notification: unknown) {
+  async create(notification: Notification) {
     if (!isNotification(notification)) {
-      throw new Error(`Unknown notification type: ${(notification as any).notificationType}`);
+      this.logger.error({notification}, 'Unknown notification type');
+      throw new Error(`Unknown notification type received`);
     }
 
     const notificationHandler = await this.notificationHandlerFactory.manufacture(notification.notificationType);
 
     try {
-      return await notificationHandler.handle((notification as any).context);
+      await notificationHandler.handle(notification);
+      // feathers plugin requires a unique id be returned to update local store
+      return {id: +new Date()};
     } catch (err) {
       this.logger.error({err}, 'Error processing notification');
       throw err;

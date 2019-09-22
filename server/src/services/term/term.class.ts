@@ -1,5 +1,4 @@
 import {TermsRepository} from './TermsRepository';
-import moment = require('moment');
 
 export class TermsService {
   constructor(private readonly repository: TermsRepository) {}

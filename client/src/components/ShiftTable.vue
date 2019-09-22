@@ -45,20 +45,20 @@
 
 <script>
 import moment from 'moment';
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import StaffMemberSelector from './StaffMemberSelector.vue';
 
 export default {
   components: {
-    StaffMemberSelector,
+    StaffMemberSelector
   },
 
   data: () => ({
     headers: [
       { text: 'Date', value: 'date' },
       { text: 'Primary Staff', value: 'primary_staff' },
-      { text: 'Secondary Staff', value: 'secondary_staff' },
-    ],
+      { text: 'Secondary Staff', value: 'secondary_staff' }
+    ]
   }),
 
   computed: {
@@ -71,15 +71,16 @@ export default {
     },
     staffMembers() {
       return this.findStaffMembersInStore().data;
-    },
+    }
   },
 
   methods: {
     ...mapActions(['toggleCancelShiftDialog']),
     ...mapActions('shifts', ['updateShift', 'stageUpdateShift']),
     ...mapActions('staffMembers', {
-      setCurrentStaffMember: 'setCurrentByName',
+      setCurrentStaffMember: 'setCurrentByName'
     }),
+    ...mapMutations('snackBar', { showSnackbar: 'show' }),
 
     setNewStaff(staffMemberName, shift, isPrimary) {
       // set current member for use by confirm workflow
@@ -94,10 +95,19 @@ export default {
         this.setCurrentStaffMember(shift.primary_staff);
         this.toggleCancelShiftDialog();
       } else {
-        this.updateShift();
+        try {
+          this.updateShift();
+          this.showSnackbar({
+            text: 'Shift updated',
+            color: 'primary'
+          });
+        } catch (err) {
+          this.showSnackbar({ text: 'Error updating shift', color: 'error' });
+          throw err;
+        }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

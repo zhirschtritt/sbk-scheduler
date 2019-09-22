@@ -8,7 +8,7 @@ import cors from 'cors';
 import favicon from 'serve-favicon';
 import compress from 'compression';
 import {logger} from './logger';
-import {GoogleSheetsClientFactory} from './GoogleSheetsClientFactory';
+import {GoogleSheetsClientFactory} from './repositories/GoogleSheetsClientFactory';
 import socketio from '@feathersjs/socketio';
 import swagger from 'feathers-swagger';
 import {mailgunClientFactory} from './mailer/MailgunClient';
@@ -39,7 +39,7 @@ export class FeathersApplication {
       this.app.get('googleSheetId'),
       this.app.get('iam_client_email'),
       this.app.get('iam_private_key_base64'),
-    ).manufacture();
+    ).manufactureLegacyClient();
 
     this.app.set('sheetsClient', client);
 

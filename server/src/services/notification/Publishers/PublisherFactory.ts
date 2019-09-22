@@ -1,22 +1,20 @@
-import {Publisher} from './interfaces';
+import {Publisher, PublisherType, PublisherFactory} from './interfaces';
 import {TwilioClient} from '../../../twilioSMSClient/TwilioClient';
 import {StaffMember} from '../../staffMember/staffMember.interfaces';
 import {EmailPublsiher} from './EmailPublisher';
 import {SmsPublisher} from './SmsPublisher';
 import {MailgunClient} from '../../../mailer/MailgunClient';
 
-export function getAdminPublisher(publishers: Map<string, Publisher[]>): Publisher {
-  return publishers.get('ADMIN')![0];
-}
-
-export class CompositePublisherFactory {
-  private readonly publisherFactory: PublisherFactory;
+export class CompositePublisherFactory implements PublisherFactory {
   private readonly staffAdmin: StaffMember;
 
-  constructor(emailClient: MailgunClient, smsClient: TwilioClient, staffEmail: string) {
-    this.publisherFactory = new PublisherFactory(emailClient, smsClient);
+  constructor(
+    private readonly emailClient: MailgunClient,
+    private readonly smsClient: TwilioClient,
+    staffEmail: string,
+  ) {
     this.staffAdmin = {
-      id: 'ADMIN',
+      id: '_ADMIN_',
       name: 'admin',
       notifications: 1,
       textNotifications: 0,
@@ -24,28 +22,38 @@ export class CompositePublisherFactory {
     } as StaffMember;
   }
 
-  manufacture(reciepients: StaffMember[]): Map<string, Publisher[]> {
-    const staffPubs = reciepients.reduce((publisherMap: Map<string, Publisher[]>, reciepient: StaffMember) => {
-      return publisherMap.set(reciepient.id, this.publisherFactory.manufacture(reciepient));
-    }, new Map());
+  manufactureAdminPublisher() {
+    // there is only a single publisher for the admin (email)
+    return this.getPublishersForStaff(this.staffAdmin)[0];
+  }
 
-    staffPubs.set(this.staffAdmin.id, this.publisherFactory.manufacture(this.staffAdmin));
+  manufactureStaffPublisherMap(reciepients: StaffMember[], limitedPublishers?: PublisherType[]) {
+    const staffPubs = reciepients.reduce((publisherMap: Map<string, Publisher[]>, reciepient: StaffMember) => {
+      return publisherMap.set(reciepient.id, this.getPublishersForStaff(reciepient, limitedPublishers));
+    }, new Map());
 
     return staffPubs;
   }
-}
 
-export class PublisherFactory {
-  constructor(private readonly emailClient: MailgunClient, private readonly smsClient: TwilioClient) {}
-
-  manufacture(reciepient: StaffMember): Publisher[] {
+  /**
+   *
+   * @param reciepient staffMember
+   * @param limitedPublishers further limit generated publishers to this array only
+   */
+  private getPublishersForStaff(reciepient: StaffMember, limitedPublishers?: PublisherType[]): Publisher[] {
     const publishers = [];
+    const limited = Array.isArray(limitedPublishers) && limitedPublishers.length;
 
     if (reciepient.notifications) {
-      publishers.push(new EmailPublsiher(this.emailClient, reciepient.email));
+      if (!limited || (limited && limitedPublishers!.includes('email'))) {
+        publishers.push(new EmailPublsiher(this.emailClient, reciepient.email));
+      }
     }
+
     if (reciepient.textNotifications) {
-      publishers.push(new SmsPublisher(this.smsClient, reciepient.phoneNumber));
+      if (!limited || (limited && limitedPublishers!.includes('sms'))) {
+        publishers.push(new SmsPublisher(this.smsClient, reciepient.phoneNumber));
+      }
     }
 
     return publishers;

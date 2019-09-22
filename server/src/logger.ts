@@ -2,7 +2,10 @@ import pino from 'pino';
 
 export const logger = pino({
   level: 'debug',
-  prettyPrint: true,
+  prettyPrint: {
+    colorize: true,
+    translateTime: 'yyyy-mm-dd hh:MM:ss TT Z'
+  }
 });
 
 export type MinimalLogger = Pick<pino.Logger, 'info' | 'debug' | 'error' | 'warn'>;
