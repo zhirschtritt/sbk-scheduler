@@ -1,12 +1,13 @@
 {
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "config"],
+  "include": ["src/**/*", "config"],
+  "exclude": ["node_modules", "**/*.spec.ts"],
   "compilerOptions": {
     "declaration": false,
     "baseUrl": ".",
     "paths": {"*": ["types/*"]},
     "target": "esnext",
     "module": "commonjs",
+    "moduleResolution": "node",
     "allowJs": true,
     "checkJs": false,
     "sourceMap": true,
@@ -14,6 +15,7 @@
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "removeComments": true,
     "noLib": false,
     "allowSyntheticDefaultImports": true,

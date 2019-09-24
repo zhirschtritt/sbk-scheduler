@@ -2,7 +2,7 @@
 import createService, {StaffMemberService} from './StaffMemberService';
 import {Application} from '@feathersjs/feathers';
 import {StaffMemberRepository} from './StaffMemberRepository';
-const hooks = require('./staffMember.hooks');
+import hooks from './staffMember.hooks';
 
 export default function(app: Application<any>) {
   const sheets = app.get('sheetsClient');

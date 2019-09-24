@@ -1,6 +1,6 @@
 import moment from 'moment';
 import Handlebars from 'handlebars';
-import templates = require('./templates');
+import templates from './templates';
 import {NotificationContext} from '../services/notification/notification.interfaces';
 
 Handlebars.registerHelper('formatDate', function(date: Date) {

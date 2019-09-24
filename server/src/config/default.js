@@ -5,7 +5,7 @@ module.exports = {
   host: 'localhost',
   port: 3030,
   socketioPort: 3031,
-  public: '../public/',
+  public: '../../public/',
   paginate: {
     default: 10,
     max: 50,

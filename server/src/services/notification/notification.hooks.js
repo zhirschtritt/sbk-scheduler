@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 const ajv = new Ajv({coerceTypes: true});
 import {validateSchema} from 'feathers-hooks-common';
-import schema from './notification.schema';
+import schema from './notification.schema.json';
 
 export const before = {
   all: [],
