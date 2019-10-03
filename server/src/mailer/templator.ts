@@ -1,7 +1,16 @@
+import {promises as fsp} from 'fs';
+import path from 'path';
 import moment from 'moment';
 import Handlebars from 'handlebars';
-import templates = require('./templates');
 import {NotificationContext} from '../services/notification/notification.interfaces';
+
+export enum TemplateName {
+  cancelledShift = 'cancelledShift',
+  emptyShift = 'emptyShift',
+  upcomingShift = 'upcomingShift',
+  upcomingShiftsForWeek = 'upcomingShiftsForWeek',
+}
+export type TemplateType = keyof typeof TemplateName;
 
 Handlebars.registerHelper('formatDate', function(date: Date) {
   return moment(date).format('dddd, MMM D, YYYY');
@@ -22,30 +31,38 @@ Handlebars.registerHelper('replaceLineBreaks', function(value: string) {
   return sanitizedValue.replace(/\n/g, '<br />');
 });
 
-export enum TemplateName {
-  cancelledShift = 'cancelledShift',
-  emptyShift = 'emptyShift',
-  upcomingShift = 'upcomingShift',
-}
-export type TemplateType = keyof typeof TemplateName;
+compileTemplates();
 
-export function getTemplateByName(templateName: TemplateType) {
-  switch (templateName) {
-    case TemplateName.cancelledShift:
-      return templates(TemplateName.cancelledShift);
-    case TemplateName.emptyShift:
-      return templates(TemplateName.emptyShift);
-    case TemplateName.upcomingShift:
-      return templates(TemplateName.upcomingShift);
-    default:
-      return '';
+async function compileTemplates() {
+  const rawTemplates = await Promise.all(Object.keys(TemplateName).map(templateName => {
+    return fsp.readFile(path.join(__dirname, 'templates', `${templateName}.hbs`), 'utf8');
+  }))
+
+  for (const template of rawTemplates) {
+    Handlebars.precompile(template)
   }
 }
 
-export function formatEmail(templateName: TemplateType, context: NotificationContext) {
-  const template = getTemplateByName(templateName);
-  const handlebars = Handlebars.compile(template);
 
-  const compiledTemplate = handlebars(context);
-  return compiledTemplate;
+export type EmailViewModel =
+| {
+    template: TemplateName.cancelledShift,
+    context: Required<NotificationContext>
+  }
+| {
+    template: TemplateName.upcomingShift | TemplateName.emptyShift,
+    context: Pick<NotificationContext, 'shift'>
+  }
+| {
+    template: TemplateName.upcomingShiftsForWeek,
+    context: Pick<NotificationContext, 'shift'>[]
+  }
+
+export function formatEmail(emailViewModel: EmailViewModel) {
+  const template =  Handlebars.templates[emailViewModel.template]
+  if (!template) {
+    throw new Error('No matching template');
+  }
+
+  return template(context)
 }
