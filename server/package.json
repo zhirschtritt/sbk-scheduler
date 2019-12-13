@@ -52,7 +52,7 @@
     "install": "^0.12.2",
     "mailgun-js": "^0.22.0",
     "moment": "^2.22.2",
-    "npm": "^6.11.3",
+    "npm": "^6.13.4",
     "pino": "^5.12.2",
     "pino-pretty": "^2.6.0",
     "reflect-metadata": "^0.1.13",
