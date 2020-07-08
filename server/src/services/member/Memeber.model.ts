@@ -1,4 +1,5 @@
 import {IsString, ValidateNested, IsEmail, IsDate, IsBoolean, IsPhoneNumber} from 'class-validator';
+import {Collection} from 'fireorm';
 
 export interface MemberEntity {
   id: string;

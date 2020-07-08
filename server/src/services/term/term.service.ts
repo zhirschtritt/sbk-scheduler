@@ -1,5 +1,5 @@
 // Initializes the `term` service on path `/terms`
-const hooks = require('./term.hooks');
+import hooks from './term.hooks';
 import {TermsRepository} from './TermsRepository';
 import {TermsService} from './term.class';
 import {Application} from '@feathersjs/feathers';

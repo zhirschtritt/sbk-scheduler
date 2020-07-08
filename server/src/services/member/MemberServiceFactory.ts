@@ -5,9 +5,14 @@ import {loggerFactory} from '../../logger';
 import {Service} from '@feathersjs/feathers';
 import {Member} from './Memeber.model';
 import {customMethodWrapper} from '../customMethodWrapper';
+import {Collection} from 'fireorm';
 
 export default function(app: Application) {
   const sheets = app.get('sheetsClient');
+
+  // not using this as a decorator because globals and import order break everything
+  Collection('member')(Member);
+
   const repo = new MemberRepository(sheets);
   const memberService = new MemberService(repo, loggerFactory);
 

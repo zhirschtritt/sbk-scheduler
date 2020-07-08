@@ -1,22 +1,25 @@
+import path from 'path';
+process.env['NODE_CONFIG_DIR'] = path.join(__dirname, 'config/');
+
 import 'reflect-metadata';
 import express from '@feathersjs/express';
 import feathers from '@feathersjs/feathers';
 import configuration from '@feathersjs/configuration';
-import path from 'path';
 import helmet from 'helmet';
 import cors from 'cors';
 import favicon from 'serve-favicon';
 import compress from 'compression';
-import {logger} from './logger';
+import {logger, loggerFactory} from './logger';
 import {GoogleSheetsClientFactory} from './repositories/GoogleSheetsClientFactory';
 import socketio from '@feathersjs/socketio';
 import swagger from 'feathers-swagger';
+import * as fireorm from 'fireorm';
 import {mailgunClientFactory} from './mailer/MailgunClient';
 import {services} from './services';
 import {smsClientFactory} from './twilioSMSClient/smsClientFactory';
 import channels from './channels';
-
-const appHooks = require('./app.hooks');
+import {FirestoreClientFactory} from './repositories/FirestoreClient';
+import * as appHooks from './app.hooks';
 
 export class FeathersApplication {
   public app: any;
@@ -42,6 +45,9 @@ export class FeathersApplication {
     ).manufactureLegacyClient();
 
     this.app.set('sheetsClient', client);
+
+    const firestore = new FirestoreClientFactory(loggerFactory).manufacture();
+    fireorm.Initialize(firestore);
 
     this.app.configure(mailgunClientFactory);
     this.app.configure(smsClientFactory(logger));

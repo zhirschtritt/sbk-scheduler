@@ -1,9 +1,9 @@
-const Ajv = require('ajv');
-const ajv = new Ajv({ coerceTypes: true });
-const {validateSchema} = require('feathers-hooks-common');
-const schema = require('./staffMember.schema');
+import Ajv from 'ajv';
+const ajv = new Ajv({coerceTypes: true});
+import {validateSchema} from 'feathers-hooks-common';
+import schema from './staffMember.schema.json';
 
-module.exports = {
+export default {
   before: {
     all: [],
     find: [],
@@ -11,7 +11,7 @@ module.exports = {
     create: [validateSchema(schema, ajv)],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   after: {
@@ -21,7 +21,7 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   error: {
@@ -31,6 +31,6 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };

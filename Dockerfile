@@ -11,7 +11,8 @@ COPY server/package.json server/package-lock.json ./
 RUN npm ci
 COPY --from=client client/dist ./client
 COPY server .
+RUN npm run build
 
 EXPOSE 3030 
 
-ENTRYPOINT [ "npm", "start" ]
+ENTRYPOINT [ "npm", "start:only" ]

@@ -1,6 +1,6 @@
 import {GoogleSheetsBaseRepository} from '../../repositories/GoogleSheetsBaseRepo';
 import {ShiftEntity} from './shift.interfaces';
-import moment = require('moment');
+import moment from 'moment';
 import {GoogleSpreadSheetClient} from '../../interfaces';
 
 export class ShiftRepository extends GoogleSheetsBaseRepository<ShiftEntity> {
