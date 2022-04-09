@@ -13,7 +13,7 @@
     "@feathersjs/socketio-client": "^1.1.2",
     "axios": "^0.18.0",
     "feathers-vuex": "^1.4.8",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "socket.io-client": "^2.1.1",
     "vue": "^2.5.18",
     "vue-class-component": "^7.1.0",
