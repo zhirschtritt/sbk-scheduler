@@ -85,7 +85,7 @@
     "eslint-config-google": "^0.12.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
-    "mocha": "6.2.0",
+    "mocha": "10.2.0",
     "node-html-parser": "^1.1.16",
     "nodemon": "1.19.1",
     "prettier": "^1.16.4",
